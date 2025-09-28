@@ -7,14 +7,50 @@
 
 import SwiftUI
 
+enum MenuOption: String, CaseIterable, Identifiable {
+    case home = "HOME"
+    case profile = "PROFILE"
+    case payment = "PAYMENT"
+    case share = "SHARE"
+    case help = "HELP"
+    case tasksHistories = "TASKS HISTORIES"
+    case asTasker = "AS TASKER"
+    case changePassword = "CHANGE PASSWORD"
+    case myShareCode = "MY SHARE CODE"
+    case promotions = "PROMOTIONS"
+    case terms = "TERMS &"
+    case logout = "LOGOUT"
+    
+    var id: String { rawValue }
+    
+    var icon: String {
+        switch self {
+        case .home: return "house.fill"
+        case .profile: return "person.fill"
+        case .payment: return "creditcard.fill"
+        case .share: return "square.and.arrow.up"
+        case .help: return "questionmark.circle.fill"
+        case .tasksHistories: return "arrow.clockwise"
+        case .asTasker: return "car.fill"
+        case .changePassword: return "lock.fill"
+        case .myShareCode: return "arrowshape.turn.up.right.fill"
+        case .promotions: return "tag.fill"
+        case .terms: return "info.circle.fill"
+        case .logout: return "power"
+        }
+    }
+}
+
 
 struct SideMenuView: View {
+    @Binding var isShowing: Bool
+    @Binding var selectedTab: MenuOption
+    
     var body: some View {
         VStack(spacing: 0) {
-            
-            // MARK: Profile Section
+            // Profile Section
             VStack(spacing: 8) {
-                Image(systemName: "person.circle.fill") // Replace with your profile image
+                Image(systemName: "person.circle.fill")
                     .resizable()
                     .frame(width: 80, height: 80)
                     .clipShape(Circle())
@@ -36,25 +72,22 @@ struct SideMenuView: View {
             .padding(.bottom, 20)
             .background(Color.blue)
             
-            // MARK: Menu List
+            // Menu List
             List {
-               
-                    SideMenuRow(icon: "house.fill", title: "HOME")
-                    SideMenuRow(icon: "person.fill", title: "PROFILE")
-                    SideMenuRow(icon: "creditcard.fill", title: "PAYMENT")
-                    SideMenuRow(icon: "square.and.arrow.up", title: "SHARE")
-                    SideMenuRow(icon: "questionmark.circle.fill", title: "HELP")
-                    SideMenuRow(icon: "arrow.clockwise", title: "TASKS HISTORIES")
-                    SideMenuRow(icon: "car.fill", title: "AS TASKER")
-                    SideMenuRow(icon: "lock.fill", title: "CHANGE PASSWORD")
-                    SideMenuRow(icon: "arrowshape.turn.up.right.fill", title: "MY SHARE CODE")
-                    SideMenuRow(icon: "tag.fill", title: "PROMOTIONS")
-                    SideMenuRow(icon: "info.circle.fill", title: "TERMS &")
-                    SideMenuRow(icon: "power", title: "LOGOUT")
-                
-            }
-            .listStyle(.plain) // Removes grouped background
-            .background(Color.blue)
+                            ForEach(MenuOption.allCases) { option in
+                                Button {
+                                    withAnimation {
+                                        self.selectedTab = option
+                                        isShowing = false
+                                    }
+                                } label: {
+                                    SideMenuRow(icon: option.icon, title: option.rawValue)
+                                        .background(Color.blue)
+                                }
+                            }
+                        }
+                        .listStyle(.plain)
+                        .background(Color.blue)
         }
         .background(Color.blue.ignoresSafeArea())
     }
@@ -74,7 +107,7 @@ struct SideMenuRow: View {
                 .foregroundColor(.white)
                 .font(.system(size: 16, weight: .medium))
         }
-        .listRowBackground(Color.blue) // Set row background
+        .listRowBackground(Color.blue)
     }
 }
 
@@ -82,5 +115,8 @@ struct SideMenuRow: View {
 
 
 #Preview {
-    SideMenuView()
+    SideMenuView(
+           isShowing: .constant(true),                 // Always visible in preview
+           selectedTab: .constant(.home)               // Default tab in preview
+       )
 }

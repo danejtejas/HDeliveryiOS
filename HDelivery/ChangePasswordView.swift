@@ -13,6 +13,8 @@ struct ChangePasswordView: View {
     @State private var confirmPassword = ""
     @State var isSideMenuOpen = false
     
+    @State var tab =  MenuOption.changePassword
+    
     var body: some View {
         ZStack {
            
@@ -82,7 +84,7 @@ struct ChangePasswordView: View {
                 Spacer()
             }
             
-            // MARK: - Side Menu Overlay
+//             MARK: - Side Menu Overlay
             if isSideMenuOpen {
                 // Background overlay to close menu when tapped
                 Color.black.opacity(0.3)
@@ -95,10 +97,11 @@ struct ChangePasswordView: View {
                 
                 // Side Menu
                 HStack {
-                    SideMenuView()
+                    
+                    SideMenuView(isShowing: $isSideMenuOpen, selectedTab: $tab)
                         .frame(width: 280)
                         .transition(.move(edge: .leading))
-                    
+//                    
                     Spacer()
                 }
             }

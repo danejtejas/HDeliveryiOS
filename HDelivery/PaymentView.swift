@@ -7,13 +7,12 @@
 
 import SwiftUI
 
-
-
-
-
 struct PaymentView: View {
     @State private var balance: String = "₦199.99"
-    @State var isSideMenuOpen = false
+//    @State var isSideMenuOpen = false
+//    @State var  tab = MenuOption.payment
+    
+    var onSildeMenuTap :  () -> Void
     
     var body: some View {
         GeometryReader { geometry in
@@ -36,8 +35,11 @@ struct PaymentView: View {
                         // Navigation bar
                         HStack {
                             Button(action: {
+                                
+    
                                 withAnimation(.easeInOut(duration: 0.3)) {
-                                    isSideMenuOpen.toggle()
+//                                    isSideMenuOpen.toggle()
+                                    onSildeMenuTap()
                                 }
                             }) {
                                 Image(systemName: "line.horizontal.3")
@@ -133,25 +135,25 @@ struct PaymentView: View {
                 }
                 
                 // MARK: - Side Menu Overlay
-                if isSideMenuOpen {
-                    // Background overlay to close menu when tapped
-                    Color.black.opacity(0.3)
-                        .ignoresSafeArea()
-                        .onTapGesture {
-                            withAnimation(.easeInOut(duration: 0.3)) {
-                                isSideMenuOpen = false
-                            }
-                        }
-                    
-                    // Side Menu
-                    HStack {
-                    SideMenuView()
-                            .frame(width: 280)
-                            .transition(.move(edge: .leading))
-                        
-                        Spacer()
-                    }
-                }
+//                if isSideMenuOpen {
+//                    // Background overlay to close menu when tapped
+//                    Color.black.opacity(0.3)
+//                        .ignoresSafeArea()
+//                        .onTapGesture {
+//                            withAnimation(.easeInOut(duration: 0.3)) {
+//                                isSideMenuOpen = false
+//                            }
+//                        }
+//                    
+//                    // Side Menu
+//                    HStack {
+//                        SideMenuView(isShowing: $isSideMenuOpen, selectedTab: $tab)
+//                            .frame(width: 280)
+//                            .transition(.move(edge: .leading))
+//                        
+//                        Spacer()
+//                    }
+//                }
             }
         }
         .ignoresSafeArea()
@@ -176,5 +178,5 @@ struct WalletActionButton: View {
 }
 
 #Preview {
-    PaymentView()
+    PaymentView(onSildeMenuTap: {})
 }
