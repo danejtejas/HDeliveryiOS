@@ -6,83 +6,6 @@
 //
 
 import SwiftUI
-//
-//struct PaymentView: View {
-//    var body: some View {
-//        ZStack
-//        {
-//            Color.blue
-//                .ignoresSafeArea(edges: .top)
-//            
-//            VStack(spacing: 12) {
-//                Spacer().frame(height: 20)
-//                
-//                // Profile Image
-//                Image(systemName: "pepeal") //
-//                    .resizable()
-//                    .scaledToFill()
-//                    .frame(width: 100, height: 100)
-//                    .clipShape(Circle())
-//                    .overlay(Circle().stroke(Color.white, lineWidth: 3))
-//                
-//                // Name
-//                Text("Rutvik Demo 2")
-//                    .font(.title3)
-//                    .foregroundColor(.white)
-//                
-//                // Rating stars
-//                HStack(spacing: 6) {
-//                    ForEach(0..<5) { _ in
-//                        Image(systemName: "star.fill")
-//                            .foregroundColor(.white)
-//                    }
-//                }
-//                
-//                Spacer().frame(height: 20)
-//            }
-//            .frame(maxWidth: .infinity)
-//            
-//            //                 Hamburger menu
-//            Button(action: {}) {
-//                Image(systemName: "line.3.horizontal")
-//                    .foregroundColor(.white)
-//                    .font(.title2)
-//                    .padding()
-//            }
-//        }
-//        .frame(height: 220)
-//        
-//        VStack(alignment: .center, spacing: 20) {
-//            
-//            Text("$1999.99")
-//            Button("DEPOSIT") {
-//                
-//            }.background(Color.blue)
-//                .foregroundColor(Color.white)
-//            
-//            Button("DEPOSIT") {
-//                
-//            }.background(Color.blue)
-//                .foregroundColor(Color.white)
-//                .frame(height: 50)
-//            Button("DEPOSIT") {
-//                
-//            }.background(Color.blue)
-//                .foregroundColor(Color.white)
-//            Button("DEPOSIT") {
-//                
-//            }.background(Color.blue)
-//                .foregroundColor(Color.white)
-//            
-//        }.frame(width: 200)
-//        
-//    }
-//}
-//
-//#Preview {
-//    PaymentView()
-//}
-
 
 
 
@@ -90,6 +13,7 @@ import SwiftUI
 
 struct PaymentView: View {
     @State private var balance: String = "₦199.99"
+    @State var isSideMenuOpen = false
     
     var body: some View {
         GeometryReader { geometry in
@@ -112,7 +36,9 @@ struct PaymentView: View {
                         // Navigation bar
                         HStack {
                             Button(action: {
-                                // Menu action
+                                withAnimation(.easeInOut(duration: 0.3)) {
+                                    isSideMenuOpen.toggle()
+                                }
                             }) {
                                 Image(systemName: "line.horizontal.3")
                                     .font(.title2)
@@ -203,6 +129,27 @@ struct PaymentView: View {
                             .padding(.bottom, 40)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                         }
+                    }
+                }
+                
+                // MARK: - Side Menu Overlay
+                if isSideMenuOpen {
+                    // Background overlay to close menu when tapped
+                    Color.black.opacity(0.3)
+                        .ignoresSafeArea()
+                        .onTapGesture {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                isSideMenuOpen = false
+                            }
+                        }
+                    
+                    // Side Menu
+                    HStack {
+                    SideMenuView()
+                            .frame(width: 280)
+                            .transition(.move(edge: .leading))
+                        
+                        Spacer()
                     }
                 }
             }

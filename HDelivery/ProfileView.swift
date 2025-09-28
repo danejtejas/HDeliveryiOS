@@ -10,8 +10,12 @@ import SwiftUI
 
 
 struct ProfileView: View {
+    
+    @State var isSideMenuOpen = false
+    
     var body: some View {
-        VStack(spacing: 0) {
+        ZStack {
+            VStack(spacing: 0) {
             
             // MARK: - Header
             ZStack(alignment: .topLeading) {
@@ -47,7 +51,13 @@ struct ProfileView: View {
                 .frame(maxWidth: .infinity)
                 
 //                 Hamburger menu
-                Button(action: {}) {
+                Button(action: {
+                    
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        isSideMenuOpen.toggle()
+                    }
+                    
+                }) {
                     Image(systemName: "line.3.horizontal")
                         .foregroundColor(.white)
                         .font(.title2)
@@ -69,11 +79,42 @@ struct ProfileView: View {
                     ProfileRow(title: "Bank Name", value: "")
                     ProfileRow(title: "Bank Name", value: "")
                     ProfileRow(title: "Bank Account No", value: "133444")
-                    
+                NavigationLink(destination: UpdateProfileScreen()) {
+                    Text("Update Profile")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.blue)
+                        .cornerRadius(8)
+                }.padding(.trailing, 20)
+                
                 }
                 .padding(.leading, 30)
                 .padding(.top, 20)
 
+            }
+            }
+            
+            // MARK: - Side Menu Overlay
+            if isSideMenuOpen {
+                // Background overlay to close menu when tapped
+                Color.black.opacity(0.3)
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            isSideMenuOpen = false
+                        }
+                    }
+                
+                // Side Menu
+                HStack {
+                    SideMenuView()
+                        .frame(width: 280)
+                        .transition(.move(edge: .leading))
+                    
+                    Spacer()
+                }
             }
         }
     }
@@ -97,6 +138,8 @@ struct ProfileRow: View {
 }
 
 #Preview {
-    ProfileView()
+    NavigationView {
+        ProfileView()
+    }
 //    ProfileRow(title: "hi", value: "12345")
 }

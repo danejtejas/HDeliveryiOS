@@ -11,9 +11,11 @@ struct ChangePasswordView: View {
     @State private var currentPassword = ""
     @State private var newPassword = ""
     @State private var confirmPassword = ""
+    @State var isSideMenuOpen = false
     
     var body: some View {
         ZStack {
+           
             Color.blue
                 .ignoresSafeArea()
             
@@ -28,7 +30,9 @@ struct ChangePasswordView: View {
                     
                     HStack {
                         Button(action: {
-                            // Action for menu
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                isSideMenuOpen.toggle()
+                            }
                         }) {
                             Image(systemName: "line.3.horizontal")
                                 .foregroundColor(.white)
@@ -76,6 +80,27 @@ struct ChangePasswordView: View {
                 .padding(.top, 40)
                 
                 Spacer()
+            }
+            
+            // MARK: - Side Menu Overlay
+            if isSideMenuOpen {
+                // Background overlay to close menu when tapped
+                Color.black.opacity(0.3)
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            isSideMenuOpen = false
+                        }
+                    }
+                
+                // Side Menu
+                HStack {
+                    SideMenuView()
+                        .frame(width: 280)
+                        .transition(.move(edge: .leading))
+                    
+                    Spacer()
+                }
             }
         }
     }

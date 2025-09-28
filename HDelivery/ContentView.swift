@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     
     @State var picketLocation: String = ""
+    @State var isSideMenuOpen = false
     
     @State private var pickupAddress = "123 Market St, San Francisco, CA"
         @State private var deliveryAddress = "456 Mission St, San Francisco, CA"
@@ -27,11 +28,8 @@ struct ContentView: View {
             
             Rectangle()
                 .fill(Color.green)
-            // MARK: Main Screen
-           
-            
-            
-            
+                .ignoresSafeArea()
+            // MARK: Main Scr    
             GeometryReader { geo in
                 
               
@@ -135,25 +133,62 @@ struct ContentView: View {
                 }.padding(EdgeInsets(top: 70, leading: 20, bottom: 0, trailing: 20))
                     
             }
-            .navigationTitle("home")
-                        .navigationBarTitleDisplayMode(.large)
+            .navigationTitle("")
+                        .navigationBarTitleDisplayMode(.inline)
                         .toolbar {
+                            ToolbarItem(placement: .principal) {
+                                Text("HOME")
+                                    .font(.system(size: 32, weight: .bold))
+                                    .foregroundColor(.white)
+                            }
                             ToolbarItem(placement: .navigationBarLeading) {
                                 Button(action: {
-                                    // Menu action
+                                    withAnimation(.easeInOut(duration: 0.3)) {
+                                        isSideMenuOpen.toggle()
+                                    }
                                 }) {
                                     Image(systemName: "line.horizontal.3")
                                         .foregroundColor(.white)
                                         .font(.title2)
                                 }
                             }
+                            
+                            ToolbarItem(placement: .navigationBarTrailing) {
+                                Button(action: {
+                                    // Refresh action
+                                    print("Refresh button tapped")
+                                }) {
+                                    Image(systemName: "arrow.clockwise")
+                                        .foregroundColor(.white)
+                                        .font(.title2)
+                                }
+                            }
                          
                         }
-                        .toolbarBackground(Color.black, for: .navigationBar)
-                        .toolbarBackground(.visible, for: .navigationBar)
+                        .toolbarBackground(Color.clear, for: .navigationBar)
+                        .toolbarBackground(.hidden, for: .navigationBar)
+            
+            // MARK: - Side Menu Overlay
+            if isSideMenuOpen {
+                // Background overlay to close menu when tapped
+                Color.black.opacity(0.3)
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            isSideMenuOpen = false
+                        }
+                    }
+                
+                // Side Menu
+                HStack {
+                    SideMenuView()
+                        .frame(width: 280)
+                        .transition(.move(edge: .leading))
+                    
+                    Spacer()
+                }
+            }
         }
-       
-        
     }
 }
 
