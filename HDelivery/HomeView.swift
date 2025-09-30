@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct HomeView : View {
-   
-    @State var picketLocation: String = ""
-//    @State var isSideMenuOpen = false
     
-    @State private var pickupAddress = "123 Market St, San Francisco, CA"
-        @State private var deliveryAddress = "456 Mission St, San Francisco, CA"
-        @State private var isEditingPickup = false
-        @State private var isEditingDelivery = false
+    @State var picketLocation: String = ""
+    
+    
+    @State private var pickupAddress = ""
+    @State private var deliveryAddress = ""
+    @State private var isEditingPickup = false
+    @State private var isEditingDelivery = false
     
     @State var tab = MenuOption.home
     
@@ -26,19 +26,12 @@ struct HomeView : View {
         
         ZStack{
             
-            //            MapView()
+            MapViewWrapper()
+                            .edgesIgnoringSafeArea(.all)
             
             
-            
-            Rectangle()
-                .fill(Color.green)
-                .ignoresSafeArea()
             // MARK: Main Scr
             GeometryReader { geo in
-                
-                
-                
-                
                 
                 VStack(alignment:.leading,spacing: 20){
                     
@@ -73,7 +66,7 @@ struct HomeView : View {
                             .background(Color.red)
                             .foregroundColor(Color.white)
                             .font(Font.system(size: 20))
-                        TextField("Enter pickup address", text: $pickupAddress,  axis: .vertical)
+                        TextField("Enter Drop Address", text: $pickupAddress,  axis: .vertical)
                             .textFieldStyle(PlainTextFieldStyle())
                             .onTapGesture {
                                 isEditingPickup = true
@@ -92,21 +85,38 @@ struct HomeView : View {
                     .shadow(radius: 3)
                     
                     HStack{
-                        Text("C")
-                            .frame(width: 50, height: 50,alignment: .center)
-                            .background(Color.blue)
-                            .foregroundColor(Color.white)
-                            .font(Font.system(size: 20))
-                        TextField("Enter pickup address", text: $pickupAddress,  axis: .vertical)
-                            .textFieldStyle(PlainTextFieldStyle())
-                            .onTapGesture {
-                                isEditingPickup = true
+                        
+                        NavigationLink {
+                            ItemSelectionView()
+                        } label: {
+                            
+                            HStack{
+                                
+                                Text("C")
+                                    .frame(width: 50, height: 50,alignment: .center)
+                                    .background(Color.blue)
+                                    .foregroundColor(Color.white)
+                                    .font(Font.system(size: 20))
+                                TextField("Describe your item", text: $pickupAddress,  axis: .vertical)
+                                    .textFieldStyle(PlainTextFieldStyle())
+                                    .onTapGesture {
+                                        isEditingPickup = true
+                                    }
+                                    .multilineTextAlignment(.center)
+                                    .foregroundColor(Color.blue)
+                                    .font(.system(size: 14))
+                                    .frame(height: 50)
+                                    .padding(.leading,10)
+                                
+                                
                             }
-                            .multilineTextAlignment(.center)
-                            .foregroundColor(Color.blue)
-                            .font(.system(size: 14))
-                            .frame(height: 50)
-                            .padding(.leading,10)
+                            
+                        }
+
+                        
+                       
+                        
+                       
                         
                         
                     }
@@ -119,7 +129,7 @@ struct HomeView : View {
                             .background(Color.brown)
                             .foregroundColor(Color.white)
                             .font(Font.system(size: 20))
-                        TextField("Enter pickup address", text: $pickupAddress,  axis: .vertical)
+                        TextField("Recevier phone number", text: $pickupAddress,  axis: .vertical)
                             .textFieldStyle(PlainTextFieldStyle())
                             .onTapGesture {
                                 isEditingPickup = true
@@ -130,73 +140,78 @@ struct HomeView : View {
                             .frame(height: 50)
                             .padding(.leading,10)
                         
+                        Image(systemName: "phone.fill")
+                            .frame(width: 50, height: 50,alignment: .center)
+                            .foregroundColor(.brown)
+                        
                         
                     }
                     .background(Color.white)
                     .shadow(radius: 3)
-                }.padding(EdgeInsets(top: 70, leading: 20, bottom: 0, trailing: 20))
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        // Action for placing an order
+                        print("Order Placed!")
+                    }) {
+                        Text("Place Order")
+                            .font(.title3)
+                            .foregroundColor(.white)
+                            .padding()
+                            .frame(maxWidth: .infinity)  // Button takes full width
+                            .background(Color.blue)
+                            .cornerRadius(10)
+                    }
+                    
+                }.padding(EdgeInsets(top: 50, leading: 20, bottom: 20, trailing: 20))
+                
+                
                 
             }
-            .navigationTitle("")
             .navigationBarTitleDisplayMode(.inline)
-//            .toolbar {
-//                ToolbarItem(placement: .principal) {
-//                    Text("HOME")
-//                        .font(.system(size: 32, weight: .bold))
-//                        .foregroundColor(.white)
-//                }
-//                ToolbarItem(placement: .navigationBarLeading) {
-//                    Button(action: {
-//                        withAnimation(.easeInOut(duration: 0.3)) {
-//                            isSideMenuOpen.toggle()
-//                        }
-//                    }) {
-//                        Image(systemName: "line.horizontal.3")
-//                            .foregroundColor(.white)
-//                            .font(.title2)
-//                    }
-//                }
-//                
-//                ToolbarItem(placement: .navigationBarTrailing) {
-//                    Button(action: {
-//                        // Refresh action
-//                        print("Refresh button tapped")
-//                    }) {
-//                        Image(systemName: "arrow.clockwise")
-//                            .foregroundColor(.white)
-//                            .font(.title2)
-//                    }
-//                }
-//                
-//            }
-            .toolbarBackground(Color.clear, for: .navigationBar)
-            .toolbarBackground(.hidden, for: .navigationBar)
+            .navigationBarHidden(false)
+            .toolbar{
+                ToolbarItem(placement: .topBarLeading  ) {
+                    Button(action: {
+                        withAnimation { onSildeMenuTap() }
+                    }) {
+                        Image(systemName: "line.horizontal.3")
+                            .font(.title3)
+                            .foregroundColor(.white)
+                    }
+                }
+                
+                // Title Customization
+                ToolbarItem(placement: .principal) {
+                    Text("Home")
+                        .foregroundColor(.white)  // Title color set to white
+                        .font(.system(size: 22, weight: .medium))
+                }
+                
+                ToolbarItem(placement: .topBarTrailing  ) {
+                    Button(action: {
+                        withAnimation {  }
+                    }) {
+                        Image(systemName: "arrow.clockwise")
+                            .font(.title3)
+                            .foregroundColor(.white)
+                    }
+                }
+            }
+            .navigationTitle("Home")
+            .navigationBarBackButtonHidden()
+            .toolbarBackground(AppSetting.ColorSetting.navigationBarBg, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             
-            // MARK: - Side Menu Overlay
-//            if isSideMenuOpen {
-//                // Background overlay to close menu when tapped
-//                Color.black.opacity(0.3)
-//                    .ignoresSafeArea()
-//                    .onTapGesture {
-//                        withAnimation(.easeInOut(duration: 0.3)) {
-//                            isSideMenuOpen = false
-//                        }
-//                    }
-//                
-//                // Side Menu
-//                HStack {
-//                    SideMenuView(isShowing: $isSideMenuOpen, selectedTab: $tab)
-//                        .frame(width: 280)
-//                        .transition(.move(edge: .leading))
-//                    
-//                    Spacer()
-//                }
-//            }
+            
         }
     }
 }
 
 
 #Preview {
-    HomeView(onSildeMenuTap: {})
+    NavigationView{
+        HomeView(onSildeMenuTap: {})
+    }
 }

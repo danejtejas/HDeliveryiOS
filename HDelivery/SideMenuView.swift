@@ -47,12 +47,14 @@ struct SideMenuView: View {
     @Binding var selectedTab: MenuOption
     
     var body: some View {
+        
         VStack(spacing: 0) {
             // Profile Section
+            
             VStack(spacing: 8) {
-                Image(systemName: "person.circle.fill")
+                Image("user")
                     .resizable()
-                    .frame(width: 80, height: 80)
+                    .frame(width: 100, height: 100)
                     .clipShape(Circle())
                     .padding(.top, 40)
                 
@@ -70,26 +72,33 @@ struct SideMenuView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.bottom, 20)
-            .background(Color.blue)
+            //            .background(Color.blue)
             
             // Menu List
             List {
-                            ForEach(MenuOption.allCases) { option in
-                                Button {
-                                    withAnimation {
-                                        self.selectedTab = option
-                                        isShowing = false
-                                    }
-                                } label: {
-                                    SideMenuRow(icon: option.icon, title: option.rawValue)
-                                        .background(Color.blue)
-                                }
-                            }
+                ForEach(MenuOption.allCases) { option in
+                    Button {
+                        withAnimation {
+                            self.selectedTab = option
+                            isShowing = false
                         }
-                        .listStyle(.plain)
-                        .background(Color.blue)
+                    } label: {
+                        SideMenuRow(icon: option.icon, title: option.rawValue)
+//                            .background(Color.blue)
+//                            .border(.brown, width: 1)
+                    }
+                    
+                    .listRowBackground( AppSetting.ColorSetting.appBg)
+                }
+            }
+           
+            .listStyle(.plain)
+            .background( AppSetting.ColorSetting.appBg)
+            
         }
-        .background(Color.blue.ignoresSafeArea())
+        .background( AppSetting.ColorSetting.appBg.ignoresSafeArea().ignoresSafeArea())
+        .navigationBarHidden(true)
+        
     }
 }
 
@@ -101,13 +110,14 @@ struct SideMenuRow: View {
         HStack(spacing: 12) {
             Image(systemName: icon)
                 .foregroundColor(.white)
-                .frame(width: 24, height: 24)
+                .frame(width: 30, height: 30)
+                .font(.title2)
             
             Text(title)
                 .foregroundColor(.white)
-                .font(.system(size: 16, weight: .medium))
+                .font(.system(size: 18, weight: .medium))
         }
-        .listRowBackground(Color.blue)
+        .listRowBackground(Color.clear)
     }
 }
 
@@ -116,7 +126,7 @@ struct SideMenuRow: View {
 
 #Preview {
     SideMenuView(
-           isShowing: .constant(true),                 // Always visible in preview
-           selectedTab: .constant(.home)               // Default tab in preview
-       )
+        isShowing: .constant(true),                 // Always visible in preview
+        selectedTab: .constant(.home)               // Default tab in preview
+    )
 }

@@ -20,32 +20,12 @@ struct PayoutView: View {
         ZStack {
             // Background gradient
            
-            Color.blue.ignoresSafeArea()
+            AppSetting.ColorSetting.appBg.ignoresSafeArea()
             
             VStack(alignment: .leading, spacing: 0) {
                 // Custom Navigation Bar
-                HStack {
-                    Button(action: {
-                        presentationMode.wrappedValue.dismiss()
-                    }) {
-                        Image(systemName: "arrow.left")
-                            .foregroundColor(.white)
-                            .font(.system(size: 20, weight: .medium))
-                    }
-                    
-                    Spacer()
-                    
-                    Text("Payout")
-                        .foregroundColor(.white)
-                        .font(.system(size: 22, weight: .medium))
-                    
-                    Spacer()
-                }
-                .padding(.horizontal, 20)
-                .padding(.top, 10)
+               
                 
-                Spacer()
-                    .frame(height: 40)
                 
                 // Balance Section
                 VStack(alignment: .leading, spacing: 8) {
@@ -83,6 +63,8 @@ struct PayoutView: View {
                            
                     }
                     
+                   
+                    
                     TextField("0", text: $depositAmount)
                         .foregroundColor(.white)
                         .font(.system(size: 18))
@@ -105,19 +87,20 @@ struct PayoutView: View {
                     handleDeposit()
                 }) {
                     HStack {
-//                        Image(systemName: "building.columns")
-//                            .foregroundColor(.black)
-//                            .font(.system(size: 20, weight: .medium))
-//                        
-//                        Image(systemName: "arrow.right")
-//                            .foregroundColor(.black)
-//                            .font(.system(size: 16, weight: .bold))
-//                        
-//                        Spacer()
+                        Image(systemName: "building.columns")
+                            .foregroundColor(.black)
+                            .font(.system(size: 20, weight: .medium))
+                        
+                        Image(systemName: "arrow.right")
+                            .foregroundColor(.black)
+                            .font(.system(size: 16, weight: .bold))
+                        
+                        Spacer()
                         
                         Text("Payout")
                             .foregroundColor(.black)
                             .font(.system(size: 18, weight: .semibold))
+                            .frame(width: 100)
                     }
                     .padding(.horizontal, 20)
                     .padding(.vertical, 15)
@@ -131,7 +114,29 @@ struct PayoutView: View {
                 Spacer()
             }
         }
-        .navigationBarHidden(true)
+        .navigationBarBackButtonHidden()
+        .toolbar {
+            // Back Button (left side of the navigation bar)
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss()  // Dismiss the view
+                }) {
+                    Image(systemName: "arrow.left")
+                        .foregroundColor(.white)  // White back button color
+                        .font(.system(size: 20, weight: .medium))
+                }
+            }
+            
+            // Title Customization
+            ToolbarItem(placement: .principal) {
+                Text("Payout")
+                    .foregroundColor(.white)  // Title color set to white
+                    .font(.system(size: 22, weight: .medium))
+            }
+        }
+        .toolbarBackground(AppSetting.ColorSetting.navigationBarBg, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        .navigationBarHidden(false)
     }
     
     private func handleDeposit() {
@@ -152,5 +157,7 @@ struct PayoutView: View {
 
 
 #Preview {
-    DepositView()
+    NavigationStack {
+        PayoutView()
+    }
 }

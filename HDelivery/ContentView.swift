@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var isSideMenuOpen = false
-    @State private var selectedTab: MenuOption = .payment
+    @State private var selectedTab: MenuOption = .home
     
     var body: some View {
         
@@ -35,6 +35,30 @@ struct ContentView: View {
                         isSideMenuOpen.toggle()
                         
                     })
+                    
+                    
+                case .promotions:
+                    PromotionsView(onSelectedTab: { isSideMenuOpen.toggle()})
+                    
+                case .help:
+                    HelpScreen(onSelectTab: { isSideMenuOpen.toggle()})
+                    
+                case .share:
+                    ShareScreen(onSelectTab: { isSideMenuOpen.toggle()})
+                    
+                case .changePassword:
+                    ChangePasswordView( tabSelectMenu: { isSideMenuOpen.toggle()})
+                    
+                    
+                case .myShareCode:
+                    ShareCodeView(onSelectTab: { isSideMenuOpen.toggle()})
+                    
+                case .tasksHistories:
+                    TaskHistoryScreen(onSelectTab: { isSideMenuOpen.toggle()})
+                    
+                case .asTasker:
+                    AsTaskerView(onSelectTab: { isSideMenuOpen.toggle()})
+                    
                 case .logout:
                     Text("Logging out...")
                 default:
@@ -61,6 +85,7 @@ struct ContentView: View {
                 }
             }
         }
+        
     }
 }
 
@@ -70,64 +95,3 @@ struct ContentView: View {
 }
 
 
-//struct DrawerMainView: View {
-//    @State private var isSideMenuOpen = false
-//    @State private var selectedTab: MenuItem = .home
-//
-//    var body: some View {
-//        NavigationStack {
-//            ZStack(alignment: .leading) {
-//                // Main content
-//                Group {
-//                    switch selectedTab {
-//                    case .home:
-//                        HomeView(onMenuTap: { isSideMenuOpen.toggle() })
-//                    case .payment:
-//                        PaymentView(onMenuTap: { isSideMenuOpen.toggle() })
-//                    case .profile:
-//                        ProfileView(onMenuTap: { isSideMenuOpen.toggle() })
-//                    default:
-//                        PlaceholderView(title: selectedTab.rawValue)
-//                    }
-//                }
-//                .frame(maxWidth: .infinity, maxHeight: .infinity)
-//
-//                // Hamburger button overlay
-//                VStack {
-//                    HStack {
-//                        Button {
-//                            withAnimation { isSideMenuOpen.toggle() }
-//                        } label: {
-//                            Image(systemName: "line.horizontal.3")
-//                                .font(.title2)
-//                                .padding(12)
-//                                .background(Color.blue.opacity(0.8))
-//                                .clipShape(Circle())
-//                        }
-//                        Spacer()
-//                    }
-//                    .padding(.leading, 16)
-//                    .padding(.top, 44)
-//                    Spacer()
-//                }
-//
-//                // Drawer overlay
-//                if isSideMenuOpen {
-//                    Color.black.opacity(0.35)
-//                        .ignoresSafeArea()
-//                        .onTapGesture {
-//                            withAnimation { isSideMenuOpen = false }
-//                        }
-//
-//                    HStack(spacing: 0) {
-//                        SideMenuView(isShowing: $isSideMenuOpen,
-//                                     selectedTab: $selectedTab)
-//                            .frame(width: 280)
-//                            .transition(.move(edge: .leading))
-//                        Spacer()
-//                    }
-//                }
-//            }
-//        } // NavigationStack ends here
-//    }
-//}

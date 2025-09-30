@@ -9,9 +9,21 @@ import SwiftUI
 
 @main
 struct HDeliveryApp: App {
+//    var body: some Scene {
+//        WindowGroup {
+//           ContentView()
+//        }
+//    }
+    
+//    var body: some Scene {
+//        WindowGroup {
+//           OnboardingPageView()
+//        }
+//    }
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+          DeliveryLoginView()
         }
     }
 }

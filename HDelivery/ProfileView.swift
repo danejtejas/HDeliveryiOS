@@ -22,8 +22,10 @@ struct ProfileView: View {
                 
                 // MARK: - Header
                 ZStack(alignment: .topLeading) {
-                    Color.blue
-                        .ignoresSafeArea(edges: .top)
+//                    Color.blue
+//                        .ignoresSafeArea(edges: .top)
+                    
+                    AppSetting.ColorSetting.navigationBarBg.ignoresSafeArea(edges: .top)
                     
                     VStack(spacing: 12) {
                         Spacer().frame(height: 20)

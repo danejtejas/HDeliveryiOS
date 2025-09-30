@@ -44,6 +44,7 @@ struct SignUpView: View {
                                         .clipShape(Circle())
                                 } else {
                                     Image(systemName: "person.fill")
+                                    
                                         .font(.system(size: 50))
                                         .foregroundColor(.gray)
                                 }
@@ -179,7 +180,7 @@ struct SignUpView: View {
                 ),
                 for: .navigationBar
             )
-            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarBackground(AppSetting.ColorSetting.navigationBarBg, for: .navigationBar)
         }
         .navigationBarHidden(false)
     }
