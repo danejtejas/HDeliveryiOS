@@ -26,7 +26,7 @@ struct HomeView : View {
         
         ZStack{
             
-            MapViewWrapper()
+            GoogleMapView()
                             .edgesIgnoringSafeArea(.all)
             
             

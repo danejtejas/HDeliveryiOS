@@ -4,7 +4,7 @@ set -u
 set -o pipefail
 
 function on_error {
-  echo "$(realpath -mq "${0}"):$1: error: Unexpected failure"
+  echo "$(realpathq "${0}"):$1: error: Unexpected failure"
 }
 trap 'on_error $LINENO' ERR
 

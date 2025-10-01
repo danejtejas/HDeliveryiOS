@@ -6,14 +6,22 @@
 //
 
 import SwiftUI
+import GoogleMaps
+import GooglePlaces
 
 @main
 struct HDeliveryApp: App {
-//    var body: some Scene {
-//        WindowGroup {
-//           ContentView()
-//        }
-//    }
+    
+    init() {
+        GMSServices.provideAPIKey(AppSetting.GoogleKeySetting.mapKey)
+        GMSPlacesClient.provideAPIKey(AppSetting.GoogleKeySetting.mapKey)
+    }
+    
+    var body: some Scene {
+        WindowGroup {
+           ContentView()
+        }
+    }
     
 //    var body: some Scene {
 //        WindowGroup {
@@ -27,20 +35,23 @@ struct HDeliveryApp: App {
 //        }
 //    }
     
-    var body: some Scene {
-        
-        WindowGroup {
-            NavigationView {
-                LocationMapView(
-                    viewModel: LocationViewModel(
-                        locationProvider: LocationManager(),
-                        mapService: MapServiceFactory.createMapService(for: .apple)
-                    )
-                )
-                .navigationTitle("Location Map")
-                .navigationBarTitleDisplayMode(.inline)
-            }
-        }
-    }
+//    var body: some Scene {
+//        
+//        WindowGroup {
+//            NavigationView {
+//                LocationMapView(
+//                    viewModel: LocationViewModel(
+//                        locationProvider: LocationManager(),
+//                        mapService: MapServiceFactory.createMapService(for: .apple)
+//                    )
+//                )
+//                .navigationTitle("Location Map")
+//                .navigationBarTitleDisplayMode(.inline)
+//            }
+//        }
+//    }
     
 }
+
+
+

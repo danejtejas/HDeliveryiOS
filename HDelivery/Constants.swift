@@ -156,5 +156,9 @@ struct AppSetting {
         static let appBg =  Color(red: 0.25, green: 0.38, blue: 0.65)
             
     }
+    
+    struct GoogleKeySetting {
+        static let mapKey = "AIzaSyBNg2knQi55GDSz7AewCplxQ6mYwklUwsw"
+    }
 }
 
