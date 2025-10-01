@@ -6,20 +6,23 @@
 //
 
 import SwiftUI
+import GooglePlaces
 
 struct HomeView : View {
-    
-    @State var picketLocation: String = ""
-    
     
     @State private var pickupAddress = ""
     @State private var deliveryAddress = ""
     @State private var isEditingPickup = false
     @State private var isEditingDelivery = false
-    
     @State var tab = MenuOption.home
     
     var onSildeMenuTap : () -> Void
+    
+    @StateObject private var service = GooglePlaceService()
+    
+    @State private var showSearch = false
+    @State private var selectedPlace: String = ""
+    
     
     var body: some View {
         
@@ -27,7 +30,7 @@ struct HomeView : View {
         ZStack{
             
             GoogleMapView()
-                            .edgesIgnoringSafeArea(.all)
+                .edgesIgnoringSafeArea(.all)
             
             
             // MARK: Main Scr
@@ -41,16 +44,20 @@ struct HomeView : View {
                             .background(Color.green)
                             .foregroundColor(Color.white)
                             .font(Font.system(size: 20))
-                        TextField("Enter pickup address", text: $pickupAddress,  axis: .vertical)
+                        
+                        TextField("Enter pickup address", text: $service.query,  axis: .vertical)
                             .textFieldStyle(PlainTextFieldStyle())
-                            .onTapGesture {
-                                isEditingPickup = true
-                            }
                             .multilineTextAlignment(.center)
                             .foregroundColor(Color.green)
                             .font(.system(size: 14))
                             .frame(height: 50)
                             .padding(.leading,10)
+                            .onChange(of: service.query) { newValue in
+                                print("Name changed to \(newValue)!")
+                                showSearch = newValue.isEmpty ? false : true
+                                
+                            }
+                        
                         
                         Image(systemName: "location.circle.fill")
                             .frame(width: 50, height: 50,alignment: .center)
@@ -84,43 +91,37 @@ struct HomeView : View {
                     .background(Color.white)
                     .shadow(radius: 3)
                     
-                   
+                    
+                    
+                    NavigationLink {
+                        ItemSelectionView()
+                    } label: {
                         
-                        NavigationLink {
-                            ItemSelectionView()
-                        } label: {
+                        HStack{
                             
-                            HStack{
-                                
-                                Text("C")
-                                    .frame(width: 50, height: 50,alignment: .center)
-                                    .background(Color.blue)
-                                    .foregroundColor(Color.white)
-                                    .font(Font.system(size: 20))
-//                                Text("Describe your item" )
-//                                   
-//                                    .multilineTextAlignment(.center)
-//                                    .foregroundColor(Color.gray)
-//                                    .font(.system(size: 14))
-//                                    .frame(width: 300,height: 50)
-//                                    .padding(.leading,10)
-                                    
-                                
-                                TextField("Describe your item", text: $pickupAddress,  axis: .vertical)
-                                    .textFieldStyle(PlainTextFieldStyle())
-                                    .onTapGesture {
-                                        isEditingPickup = true
-                                    }
-                                    .multilineTextAlignment(.center)
-                                    .foregroundColor(Color.blue)
-                                    .font(.system(size: 14))
-                                    .frame(height: 50)
-                                    .padding(.leading,10)
-//                                
-                                
-                            }
+                            Text("C")
+                                .frame(width: 50, height: 50,alignment: .center)
+                                .background(Color.blue)
+                                .foregroundColor(Color.white)
+                                .font(Font.system(size: 20))
+                           
+                            
+                            
+                            TextField("Describe your item", text: $pickupAddress,  axis: .vertical)
+                                .textFieldStyle(PlainTextFieldStyle())
+                                .onTapGesture {
+                                    isEditingPickup = true
+                                }
+                                .multilineTextAlignment(.center)
+                                .foregroundColor(Color.blue)
+                                .font(.system(size: 14))
+                                .frame(height: 50)
+                                .padding(.leading,10)
+                            
                             
                         }
+                        
+                    }
                     .background(Color.white)
                     .shadow(radius: 3)
                     
@@ -204,10 +205,23 @@ struct HomeView : View {
             .navigationBarBackButtonHidden()
             .toolbarBackground(AppSetting.ColorSetting.navigationBarBg, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
+            .overlay {
+                if showSearch {
+                    GeometryReader { geo in
+                        PlaceSearchOverlay(predictions: service.predictions) { selectedValue in
+                            print(selectedValue)
+                            //                        service.query = selectedValue
+                            showSearch = false
+                        }
+                        .frame(height: 400)
+                        .padding(EdgeInsets(top: 120, leading: 20, bottom: 20, trailing: 20))
+                    }
+                }
+            }
             
-            
-        }
+        }.animation(.easeIn, value: showSearch)
     }
+
 }
 
 
@@ -216,3 +230,45 @@ struct HomeView : View {
         HomeView(onSildeMenuTap: {})
     }
 }
+
+
+
+struct PlaceSearchOverlay: View {
+    var predictions: [GMSAutocompletePrediction]   // passed from parent
+    var onSelect: (String) -> Void                 // callback to parent
+    
+    
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading) {
+                ForEach(Array(predictions.enumerated()), id: \.element.placeID) { index, prediction in
+                    
+                        // Label
+                        
+                    VStack(alignment: .leading) {
+                        Text(prediction.attributedPrimaryText.string)
+                            .font(.body)
+                        if let secondary = prediction.attributedSecondaryText?.string {
+                            Text(secondary)
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                        }
+                    }
+                    .padding(.vertical, 10)
+                    .padding(.horizontal)
+                    .onTapGesture {
+                        onSelect(prediction.attributedFullText.string)
+                    }
+                    if index != predictions.count - 1 {
+                        Divider()
+                    }
+                   
+                }
+            }
+        }
+        .background(Color.white.ignoresSafeArea())
+    }
+}
+
+
+
