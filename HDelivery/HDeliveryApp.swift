@@ -21,9 +21,26 @@ struct HDeliveryApp: App {
 //        }
 //    }
     
+//    var body: some Scene {
+//        WindowGroup {
+//          DeliveryLoginView()
+//        }
+//    }
+    
     var body: some Scene {
+        
         WindowGroup {
-          DeliveryLoginView()
+            NavigationView {
+                LocationMapView(
+                    viewModel: LocationViewModel(
+                        locationProvider: LocationManager(),
+                        mapService: MapServiceFactory.createMapService(for: .apple)
+                    )
+                )
+                .navigationTitle("Location Map")
+                .navigationBarTitleDisplayMode(.inline)
+            }
         }
     }
+    
 }

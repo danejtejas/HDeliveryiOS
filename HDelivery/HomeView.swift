@@ -84,7 +84,7 @@ struct HomeView : View {
                     .background(Color.white)
                     .shadow(radius: 3)
                     
-                    HStack{
+                   
                         
                         NavigationLink {
                             ItemSelectionView()
@@ -97,6 +97,15 @@ struct HomeView : View {
                                     .background(Color.blue)
                                     .foregroundColor(Color.white)
                                     .font(Font.system(size: 20))
+//                                Text("Describe your item" )
+//                                   
+//                                    .multilineTextAlignment(.center)
+//                                    .foregroundColor(Color.gray)
+//                                    .font(.system(size: 14))
+//                                    .frame(width: 300,height: 50)
+//                                    .padding(.leading,10)
+                                    
+                                
                                 TextField("Describe your item", text: $pickupAddress,  axis: .vertical)
                                     .textFieldStyle(PlainTextFieldStyle())
                                     .onTapGesture {
@@ -107,19 +116,11 @@ struct HomeView : View {
                                     .font(.system(size: 14))
                                     .frame(height: 50)
                                     .padding(.leading,10)
-                                
+//                                
                                 
                             }
                             
                         }
-
-                        
-                       
-                        
-                       
-                        
-                        
-                    }
                     .background(Color.white)
                     .shadow(radius: 3)
                     

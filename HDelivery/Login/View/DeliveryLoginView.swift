@@ -12,6 +12,9 @@ struct DeliveryLoginView: View {
     @State private var password = ""
     @State private var isPasswordVisible = false
     
+    @StateObject private var viewModel = LoginViewModel()
+    
+    
     var body: some View {
         GeometryReader { geometry in
             ScrollView(showsIndicators: false) {
@@ -99,6 +102,7 @@ struct DeliveryLoginView: View {
                             // Login button
                             Button(action: {
                                 // Handle login
+                                viewModel.isLoggedIn = true
                             }) {
                                 Text("Login")
                                     .font(.system(size: 18, weight: .semibold))
@@ -192,6 +196,9 @@ struct DeliveryLoginView: View {
             }
         }
         .ignoresSafeArea(.all, edges: .bottom)
+        .fullScreenCover(isPresented: $viewModel.isLoggedIn) {
+                   ContentView()
+               }
     }
 }
 

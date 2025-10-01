@@ -1,0 +1,391 @@
+//
+//  APIService.swift
+//  HDelivery
+//
+//  Created by user286520 on 9/30/25.
+//
+
+
+import Foundation
+import Combine
+
+// MARK: - Single Responsibility Principle: Each protocol has one clear purpose
+
+/// Defines HTTP methods
+enum HTTPMethod: String {
+    case get = "GET"
+    case post = "POST"
+    case put = "PUT"
+    case delete = "DELETE"
+    case patch = "PATCH"
+}
+
+/// Base protocol for all API requests
+protocol APIRequest {
+    associatedtype Response: Decodable
+    var path: String { get }
+    var method: HTTPMethod { get }
+    var headers: [String: String]? { get }
+    var body: Data? { get }
+    var queryItems: [URLQueryItem]? { get }
+}
+
+// Default implementations
+extension APIRequest {
+    var headers: [String: String]? { nil }
+    var body: Data? { nil }
+    var queryItems: [URLQueryItem]? { nil }
+}
+
+// MARK: - Network Client Protocol (Dependency Inversion)
+
+/// Abstract protocol for network operations
+protocol NetworkClient {
+    func execute<T: APIRequest>(_ request: T) async throws -> T.Response
+    func executePublisher<T: APIRequest>(_ request: T) -> AnyPublisher<T.Response, Error>
+}
+
+// MARK: - URL Builder (Single Responsibility)
+
+protocol URLBuilding {
+    func buildURL(baseURL: String, path: String, queryItems: [URLQueryItem]?) throws -> URL
+}
+
+struct URLBuilder: URLBuilding {
+    enum URLBuilderError: LocalizedError {
+        case invalidBaseURL
+        case invalidComponents
+        
+        var errorDescription: String? {
+            switch self {
+            case .invalidBaseURL: return "Invalid base URL"
+            case .invalidComponents: return "Failed to create URL components"
+            }
+        }
+    }
+    
+    func buildURL(baseURL: String, path: String, queryItems: [URLQueryItem]?) throws -> URL {
+        guard var components = URLComponents(string: baseURL) else {
+            throw URLBuilderError.invalidBaseURL
+        }
+        
+        components.path = path
+        components.queryItems = queryItems
+        
+        guard let url = components.url else {
+            throw URLBuilderError.invalidComponents
+        }
+        
+        return url
+    }
+}
+
+// MARK: - Request Builder (Single Responsibility)
+
+protocol RequestBuilding {
+    func buildRequest<T: APIRequest>(from apiRequest: T, url: URL) throws -> URLRequest
+}
+
+struct RequestBuilder: RequestBuilding {
+    func buildRequest<T: APIRequest>(from apiRequest: T, url: URL) throws -> URLRequest {
+        var request = URLRequest(url: url)
+        request.httpMethod = apiRequest.method.rawValue
+        request.httpBody = apiRequest.body
+        
+        // Set default headers
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        
+        // Add custom headers
+        apiRequest.headers?.forEach { key, value in
+            request.setValue(value, forHTTPHeaderField: key)
+        }
+        
+        return request
+    }
+}
+
+// MARK: - Response Handler (Single Responsibility)
+
+protocol ResponseHandling {
+    func handle<T: Decodable>(data: Data, response: URLResponse) throws -> T
+}
+
+struct ResponseHandler: ResponseHandling {
+    enum NetworkError: LocalizedError {
+        case invalidResponse
+        case httpError(statusCode: Int, data: Data?)
+        case decodingError(Error)
+        case unknown
+        
+        var errorDescription: String? {
+            switch self {
+            case .invalidResponse:
+                return "Invalid response from server"
+            case .httpError(let statusCode, _):
+                return "HTTP Error: \(statusCode)"
+            case .decodingError(let error):
+                return "Decoding failed: \(error.localizedDescription)"
+            case .unknown:
+                return "Unknown error occurred"
+            }
+        }
+    }
+    
+    private let decoder: JSONDecoder
+    
+    init(decoder: JSONDecoder = JSONDecoder()) {
+        self.decoder = decoder
+    }
+    
+    func handle<T: Decodable>(data: Data, response: URLResponse) throws -> T {
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw NetworkError.invalidResponse
+        }
+        
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw NetworkError.httpError(statusCode: httpResponse.statusCode, data: data)
+        }
+        
+        do {
+            return try decoder.decode(T.self, from: data)
+        } catch {
+            throw NetworkError.decodingError(error)
+        }
+    }
+}
+
+// MARK: - API Service (Open/Closed Principle - open for extension via protocols)
+
+final class APIService: NetworkClient {
+    private let baseURL: String
+    private let session: URLSession
+    private let urlBuilder: URLBuilding
+    private let requestBuilder: RequestBuilding
+    private let responseHandler: ResponseHandling
+    
+    init(
+        baseURL: String,
+        session: URLSession = .shared,
+        urlBuilder: URLBuilding = URLBuilder(),
+        requestBuilder: RequestBuilding = RequestBuilder(),
+        responseHandler: ResponseHandling = ResponseHandler()
+    ) {
+        self.baseURL = baseURL
+        self.session = session
+        self.urlBuilder = urlBuilder
+        self.requestBuilder = requestBuilder
+        self.responseHandler = responseHandler
+    }
+    
+    // Async/Await implementation
+    func execute<T: APIRequest>(_ request: T) async throws -> T.Response {
+        let url = try urlBuilder.buildURL(
+            baseURL: baseURL,
+            path: request.path,
+            queryItems: request.queryItems
+        )
+        
+        let urlRequest = try requestBuilder.buildRequest(from: request, url: url)
+        
+        let (data, response) = try await session.data(for: urlRequest)
+        
+        return try responseHandler.handle(data: data, response: response)
+    }
+    
+    // Combine implementation
+    func executePublisher<T: APIRequest>(_ request: T) -> AnyPublisher<T.Response, Error> {
+        do {
+            let url = try urlBuilder.buildURL(
+                baseURL: baseURL,
+                path: request.path,
+                queryItems: request.queryItems
+            )
+            
+            let urlRequest = try requestBuilder.buildRequest(from: request, url: url)
+            
+            return session.dataTaskPublisher(for: urlRequest)
+                .tryMap { [responseHandler] data, response in
+                    try responseHandler.handle(data: data, response: response)
+                }
+                .eraseToAnyPublisher()
+        } catch {
+            return Fail(error: error).eraseToAnyPublisher()
+        }
+    }
+}
+
+// MARK: - Example Usage
+
+// Models
+struct User: Codable, Identifiable {
+    let id: Int
+    let name: String
+    let email: String
+}
+
+struct Post: Codable, Identifiable {
+    let id: Int
+    let userId: Int
+    let title: String
+    let body: String
+}
+
+// API Requests (Interface Segregation - specific requests for specific needs)
+struct GetUsersRequest: APIRequest {
+    typealias Response = [User]
+    var path: String { "/users" }
+    var method: HTTPMethod { .get }
+}
+
+struct GetUserRequest: APIRequest {
+    typealias Response = User
+    let userId: Int
+    var path: String { "/users/\(userId)" }
+    var method: HTTPMethod { .get }
+}
+
+struct CreateUserRequest: APIRequest {
+    typealias Response = User
+    var path: String { "/users" }
+    var method: HTTPMethod { .post }
+    let user: User
+    
+    var body: Data? {
+        try? JSONEncoder().encode(user)
+    }
+}
+
+struct GetPostsRequest: APIRequest {
+    typealias Response = [Post]
+    let userId: Int?
+    
+    var path: String { "/posts" }
+    var method: HTTPMethod { .get }
+    var queryItems: [URLQueryItem]? {
+        guard let userId = userId else { return nil }
+        return [URLQueryItem(name: "userId", value: "\(userId)")]
+    }
+}
+
+// MARK: - Repository Pattern (Liskov Substitution Principle)
+
+protocol UserRepository {
+    func getUsers() async throws -> [User]
+    func getUser(id: Int) async throws -> User
+    func createUser(_ user: User) async throws -> User
+}
+
+final class APIUserRepository: UserRepository {
+    private let networkClient: NetworkClient
+    
+    init(networkClient: NetworkClient) {
+        self.networkClient = networkClient
+    }
+    
+    func getUsers() async throws -> [User] {
+        try await networkClient.execute(GetUsersRequest())
+    }
+    
+    func getUser(id: Int) async throws -> User {
+        try await networkClient.execute(GetUserRequest(userId: id))
+    }
+    
+    func createUser(_ user: User) async throws -> User {
+        try await networkClient.execute(CreateUserRequest(user: user))
+    }
+}
+
+// MARK: - SwiftUI ViewModel Example
+
+@MainActor
+final class UserListViewModel: ObservableObject {
+    @Published var users: [User] = []
+    @Published var isLoading = false
+    @Published var errorMessage: String?
+    
+    private let repository: UserRepository
+    
+    init(repository: UserRepository) {
+        self.repository = repository
+    }
+    
+    func loadUsers() async {
+        isLoading = true
+        errorMessage = nil
+        
+        do {
+            users = try await repository.getUsers()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+        
+        isLoading = false
+    }
+    
+    func createUser(name: String, email: String) async {
+        let newUser = User(id: 0, name: name, email: email)
+        
+        do {
+            let createdUser = try await repository.createUser(newUser)
+            users.append(createdUser)
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+}
+
+// MARK: - Dependency Injection Container
+
+final class AppDependencies {
+    static let shared = AppDependencies()
+    
+    private let apiService: NetworkClient
+    
+    private init() {
+        self.apiService = APIService(baseURL: "https://jsonplaceholder.typicode.com")
+    }
+    
+    func makeUserRepository() -> UserRepository {
+        APIUserRepository(networkClient: apiService)
+    }
+    
+    @MainActor func makeUserListViewModel() -> UserListViewModel {
+        UserListViewModel(repository: makeUserRepository())
+    }
+}
+
+// MARK: - Mock for Testing (Dependency Inversion)
+
+final class MockNetworkClient: NetworkClient {
+    var mockResponse: Any?
+    var shouldFail = false
+    
+    func execute<T: APIRequest>(_ request: T) async throws -> T.Response {
+        if shouldFail {
+            throw ResponseHandler.NetworkError.unknown
+        }
+        
+        guard let response = mockResponse as? T.Response else {
+            throw ResponseHandler.NetworkError.invalidResponse
+        }
+        
+        return response
+    }
+    
+    func executePublisher<T: APIRequest>(_ request: T) -> AnyPublisher<T.Response, Error> {
+        if shouldFail {
+            return Fail(error: ResponseHandler.NetworkError.unknown)
+                .eraseToAnyPublisher()
+        }
+        
+        guard let response = mockResponse as? T.Response else {
+            return Fail(error: ResponseHandler.NetworkError.invalidResponse)
+                .eraseToAnyPublisher()
+        }
+        
+        return Just(response)
+            .setFailureType(to: Error.self)
+            .eraseToAnyPublisher()
+    }
+}
