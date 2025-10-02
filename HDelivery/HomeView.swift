@@ -7,12 +7,15 @@
 
 import SwiftUI
 import GooglePlaces
+import CoreLocation
+
+
 
 struct HomeView : View {
     
     @State private var pickupAddress = ""
     @State private var deliveryAddress = ""
-    @State private var isEditingPickup = false
+    @State private var isEditingLocation = false
     @State private var isEditingDelivery = false
     @State var tab = MenuOption.home
     
@@ -22,6 +25,13 @@ struct HomeView : View {
     
     @State private var showSearch = false
     @State private var selectedPlace: String = ""
+    @State private var isSelectingFromOverlay = false
+    @State private var pickupCoordinate: CLLocationCoordinate2D? = nil
+    @State private var dropCoordinate: CLLocationCoordinate2D? = nil
+    @State private var currentSearchQuery = ""
+    
+    @State private var reciverPhoneNumber = ""
+    @State private var itemDescription = ""
     
     
     var body: some View {
@@ -29,7 +39,10 @@ struct HomeView : View {
         
         ZStack{
             
-            GoogleMapView()
+            GoogleMapView(
+                pickupCoordinate: pickupCoordinate,
+                dropCoordinate: dropCoordinate,
+            )
                 .edgesIgnoringSafeArea(.all)
             
             
@@ -45,23 +58,36 @@ struct HomeView : View {
                             .foregroundColor(Color.white)
                             .font(Font.system(size: 20))
                         
-                        TextField("Enter pickup address", text: $service.query,  axis: .vertical)
+                        TextField("Enter pickup address", text: $pickupAddress,  axis: .vertical)
                             .textFieldStyle(PlainTextFieldStyle())
                             .multilineTextAlignment(.center)
                             .foregroundColor(Color.green)
                             .font(.system(size: 14))
                             .frame(height: 50)
                             .padding(.leading,10)
-                            .onChange(of: service.query) { newValue in
-                                print("Name changed to \(newValue)!")
+                            .onTapGesture {
+                                isEditingLocation = true
+                                isEditingDelivery = false
+                            }
+                            .onChange(of: pickupAddress) { newValue in
+                                print("Pickup address changed to \(newValue)!")
+                                if isSelectingFromOverlay { return }
+                                isEditingLocation = true
+                                isEditingDelivery = false
+                                currentSearchQuery = newValue
+                                service.query = newValue
                                 showSearch = newValue.isEmpty ? false : true
-                                
                             }
                         
                         
-                        Image(systemName: "location.circle.fill")
-                            .frame(width: 50, height: 50,alignment: .center)
-                            .foregroundColor(.green)
+                        Button {
+                            
+                        } label: {
+                            Image(systemName: "location.circle.fill")
+                                .frame(width: 50, height: 50,alignment: .center)
+                                .foregroundColor(.green)
+                        }
+
                     }
                     .background(Color.white)
                     .shadow(radius: 3)
@@ -73,10 +99,20 @@ struct HomeView : View {
                             .background(Color.red)
                             .foregroundColor(Color.white)
                             .font(Font.system(size: 20))
-                        TextField("Enter Drop Address", text: $pickupAddress,  axis: .vertical)
+                        TextField("Enter Drop Address", text: $deliveryAddress,  axis: .vertical)
                             .textFieldStyle(PlainTextFieldStyle())
                             .onTapGesture {
-                                isEditingPickup = true
+                                isEditingDelivery = true
+                                isEditingLocation = false
+                            }
+                            .onChange(of: deliveryAddress) { newValue in
+                                print("Delivery address changed to \(newValue)!")
+                                if isSelectingFromOverlay { return }
+                                isEditingDelivery = true
+                                isEditingLocation = false
+                                currentSearchQuery = newValue
+                                service.query = newValue
+                                showSearch = newValue.isEmpty ? false : true
                             }
                             .multilineTextAlignment(.center)
                             .foregroundColor(Color.red)
@@ -84,14 +120,19 @@ struct HomeView : View {
                             .frame(height: 50)
                             .padding(.leading,10)
                         
-                        Image(systemName: "location.circle.fill")
-                            .frame(width: 50, height: 50,alignment: .center)
-                            .foregroundColor(.red)
+                        
+                        Button {
+                            
+                        } label: {
+                            Image(systemName: "location.circle.fill")
+                                .frame(width: 50, height: 50,alignment: .center)
+                                .foregroundColor(.red)
+                        }
+                        
+            
                     }
                     .background(Color.white)
                     .shadow(radius: 3)
-                    
-                    
                     
                     NavigationLink {
                         ItemSelectionView()
@@ -107,11 +148,8 @@ struct HomeView : View {
                            
                             
                             
-                            TextField("Describe your item", text: $pickupAddress,  axis: .vertical)
+                            TextField("Describe your item", text: $itemDescription,  axis: .vertical)
                                 .textFieldStyle(PlainTextFieldStyle())
-                                .onTapGesture {
-                                    isEditingPickup = true
-                                }
                                 .multilineTextAlignment(.center)
                                 .foregroundColor(Color.blue)
                                 .font(.system(size: 14))
@@ -131,11 +169,9 @@ struct HomeView : View {
                             .background(Color.brown)
                             .foregroundColor(Color.white)
                             .font(Font.system(size: 20))
-                        TextField("Recevier phone number", text: $pickupAddress,  axis: .vertical)
+                        TextField("Recevier phone number", text: $reciverPhoneNumber,  axis: .vertical)
                             .textFieldStyle(PlainTextFieldStyle())
-                            .onTapGesture {
-                                isEditingPickup = true
-                            }
+                           
                             .multilineTextAlignment(.center)
                             .foregroundColor(Color.brown)
                             .font(.system(size: 14))
@@ -208,13 +244,48 @@ struct HomeView : View {
             .overlay {
                 if showSearch {
                     GeometryReader { geo in
-                        PlaceSearchOverlay(predictions: service.predictions) { selectedValue in
-                            print(selectedValue)
-                            //                        service.query = selectedValue
+                        PlaceSearchOverlay(predictions: service.predictions) { selection in
+                            print(selection.text)
+                            isSelectingFromOverlay = true
                             showSearch = false
+                            
+                            // decide whether setting pickup or delivery based on focused field
+                            if isEditingLocation {
+                                pickupAddress = selection.text
+                                service.fetchPlaceDetails(placeID: selection.placeID) { result in
+                                    DispatchQueue.main.async {
+                                        switch result {
+                                        case .success((_, let coord)):
+                                            pickupCoordinate = coord
+                                            print("Pickup coordinate set: \(coord)")
+                                        case .failure(let error):
+                                            print("Failed to get pickup coordinate: \(error)")
+                                        }
+                                    }
+                                }
+                                isEditingLocation = false
+                            }
+                            else if isEditingDelivery {
+                                deliveryAddress = selection.text
+                                service.fetchPlaceDetails(placeID: selection.placeID) { result in
+                                    DispatchQueue.main.async {
+                                        switch result {
+                                        case .success((_, let coord)):
+                                            dropCoordinate = coord
+                                            print("Drop coordinate set: \(coord)")
+                                        case .failure(let error):
+                                            print("Failed to get drop coordinate: \(error)")
+                                        }
+                                    }
+                                }
+                                isEditingDelivery = false
+                            }
+                            DispatchQueue.main.async {
+                                isSelectingFromOverlay = false
+                            }
                         }
                         .frame(height: 400)
-                        .padding(EdgeInsets(top: 120, leading: 20, bottom: 20, trailing: 20))
+                        .padding(EdgeInsets(top: isEditingDelivery  ? 150 : 100, leading: 20, bottom: 20, trailing: 20))
                     }
                 }
             }
@@ -235,38 +306,44 @@ struct HomeView : View {
 
 struct PlaceSearchOverlay: View {
     var predictions: [GMSAutocompletePrediction]   // passed from parent
-    var onSelect: (String) -> Void                 // callback to parent
+    var onSelect: (_ selection: (text: String, placeID: String)) -> Void                 // callback to parent
     
     
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading) {
-                ForEach(Array(predictions.enumerated()), id: \.element.placeID) { index, prediction in
-                    
-                        // Label
+        GeometryReader { proxy in
+            ScrollView {
+                VStack(alignment: .leading) {
+                    ForEach(Array(predictions.enumerated()), id: \.element.placeID) { index, prediction in
                         
-                    VStack(alignment: .leading) {
-                        Text(prediction.attributedPrimaryText.string)
-                            .font(.body)
-                        if let secondary = prediction.attributedSecondaryText?.string {
-                            Text(secondary)
-                                .font(.caption)
-                                .foregroundColor(.gray)
+                            // Label
+                            
+                        VStack(alignment: .leading) {
+                            Text(prediction.attributedPrimaryText.string)
+                                .font(.body)
+                            
+                            if let secondary = prediction.attributedSecondaryText?.string {
+                                Text(secondary)
+                                    .font(.caption)
+                                    .foregroundColor(.gray)
+                            }
                         }
+                        .padding(.vertical, 10)
+                        .padding(.horizontal)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            onSelect((text: prediction.attributedFullText.string, placeID: prediction.placeID ?? ""))
+                        }
+                        if index != predictions.count - 1 {
+                            Divider()
+                        }
+                       
                     }
-                    .padding(.vertical, 10)
-                    .padding(.horizontal)
-                    .onTapGesture {
-                        onSelect(prediction.attributedFullText.string)
-                    }
-                    if index != predictions.count - 1 {
-                        Divider()
-                    }
-                   
                 }
+                .frame(width: proxy.size.width, alignment: .leading)
             }
+            .background(Color.white.ignoresSafeArea())
         }
-        .background(Color.white.ignoresSafeArea())
     }
 }
 

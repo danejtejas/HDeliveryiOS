@@ -160,5 +160,9 @@ struct AppSetting {
     struct GoogleKeySetting {
         static let mapKey = "AIzaSyBNg2knQi55GDSz7AewCplxQ6mYwklUwsw"
     }
+    
+    struct URLS {
+        static let baseURL = "https://hapihyper.com/admin/api/"
+    }
 }
 

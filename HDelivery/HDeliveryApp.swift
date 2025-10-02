@@ -17,11 +17,11 @@ struct HDeliveryApp: App {
         GMSPlacesClient.provideAPIKey(AppSetting.GoogleKeySetting.mapKey)
     }
     
-    var body: some Scene {
-        WindowGroup {
-           ContentView()
-        }
-    }
+//    var body: some Scene {
+//        WindowGroup {
+//           ContentView()
+//        }
+//    }
     
 //    var body: some Scene {
 //        WindowGroup {
@@ -29,11 +29,11 @@ struct HDeliveryApp: App {
 //        }
 //    }
     
-//    var body: some Scene {
-//        WindowGroup {
-//          DeliveryLoginView()
-//        }
-//    }
+    var body: some Scene {
+        WindowGroup {
+          DeliveryLoginView()
+        }
+    }
     
 //    var body: some Scene {
 //        

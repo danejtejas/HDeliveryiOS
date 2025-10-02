@@ -69,13 +69,21 @@ struct URLBuilder: URLBuilding {
             throw URLBuilderError.invalidBaseURL
         }
         
-        components.path = path
+        // Properly append the path to existing base URL path
+        let existingPath = components.path
+        let separator = existingPath.hasSuffix("/") ? "" : "/"
+        let newPath = path.hasPrefix("/") ? String(path.dropFirst()) : path
+        components.path = existingPath + separator + newPath
+        
         components.queryItems = queryItems
         
         guard let url = components.url else {
+            print("Failed to create URL with baseURL: \(baseURL), path: \(path)")
+            print("Final components path: \(components.path)")
             throw URLBuilderError.invalidComponents
         }
         
+        print("Successfully created URL: \(url)")
         return url
     }
 }
@@ -217,12 +225,7 @@ final class APIService: NetworkClient {
 
 // MARK: - Example Usage
 
-// Models
-struct User: Codable, Identifiable {
-    let id: Int
-    let name: String
-    let email: String
-}
+
 
 struct Post: Codable, Identifiable {
     let id: Int
@@ -299,61 +302,61 @@ final class APIUserRepository: UserRepository {
 // MARK: - SwiftUI ViewModel Example
 
 @MainActor
-final class UserListViewModel: ObservableObject {
-    @Published var users: [User] = []
-    @Published var isLoading = false
-    @Published var errorMessage: String?
-    
-    private let repository: UserRepository
-    
-    init(repository: UserRepository) {
-        self.repository = repository
-    }
-    
-    func loadUsers() async {
-        isLoading = true
-        errorMessage = nil
-        
-        do {
-            users = try await repository.getUsers()
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-        
-        isLoading = false
-    }
-    
-    func createUser(name: String, email: String) async {
-        let newUser = User(id: 0, name: name, email: email)
-        
-        do {
-            let createdUser = try await repository.createUser(newUser)
-            users.append(createdUser)
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
-}
+//final class UserListViewModel: ObservableObject {
+//    @Published var users: [User] = []
+//    @Published var isLoading = false
+//    @Published var errorMessage: String?
+//    
+//    private let repository: UserRepository
+//    
+//    init(repository: UserRepository) {
+//        self.repository = repository
+//    }
+//    
+//    func loadUsers() async {
+//        isLoading = true
+//        errorMessage = nil
+//        
+//        do {
+//            users = try await repository.getUsers()
+//        } catch {
+//            errorMessage = error.localizedDescription
+//        }
+//        
+//        isLoading = false
+//    }
+//    
+//    func createUser(name: String, email: String) async {
+//        let newUser = User(id: 0, name: name, email: email)
+//        
+//        do {
+//            let createdUser = try await repository.createUser(newUser)
+//            users.append(createdUser)
+//        } catch {
+//            errorMessage = error.localizedDescription
+//        }
+//    }
+//}
 
 // MARK: - Dependency Injection Container
 
-final class AppDependencies {
-    static let shared = AppDependencies()
-    
-    private let apiService: NetworkClient
-    
-    private init() {
-        self.apiService = APIService(baseURL: "https://jsonplaceholder.typicode.com")
-    }
-    
-    func makeUserRepository() -> UserRepository {
-        APIUserRepository(networkClient: apiService)
-    }
-    
-    @MainActor func makeUserListViewModel() -> UserListViewModel {
-        UserListViewModel(repository: makeUserRepository())
-    }
-}
+//final class AppDependencies {
+//    static let shared = AppDependencies()
+//    
+//    private let apiService: NetworkClient
+//    
+//    private init() {
+//        self.apiService = APIService(baseURL: "https://jsonplaceholder.typicode.com")
+//    }
+//    
+//    func makeUserRepository() -> UserRepository {
+//        APIUserRepository(networkClient: apiService)
+//    }
+//    
+//    @MainActor func makeUserListViewModel() -> UserListViewModel {
+//        UserListViewModel(repository: makeUserRepository())
+//    }
+//}
 
 // MARK: - Mock for Testing (Dependency Inversion)
 

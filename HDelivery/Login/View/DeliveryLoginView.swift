@@ -102,7 +102,8 @@ struct DeliveryLoginView: View {
                             // Login button
                             Button(action: {
                                 // Handle login
-                                viewModel.isLoggedIn = true
+//                                viewModel.isLoggedIn = true
+                                viewModel.login()
                             }) {
                                 Text("Login")
                                     .font(.system(size: 18, weight: .semibold))

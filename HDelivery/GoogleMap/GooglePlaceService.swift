@@ -8,6 +8,7 @@
 import Foundation
 import GooglePlaces
 import Combine
+import CoreLocation
 
 
 class GooglePlaceService: ObservableObject {
@@ -46,6 +47,21 @@ class GooglePlaceService: ObservableObject {
             DispatchQueue.main.async {
                 self.predictions = results ?? []
             }
+        }
+    }
+
+    func fetchPlaceDetails(placeID: String, completion: @escaping (Result<(name: String?, coordinate: CLLocationCoordinate2D), Error>) -> Void) {
+        let fields: GMSPlaceField = [.name, .placeID, .coordinate]
+        placesClient.fetchPlace(fromPlaceID: placeID, placeFields: fields, sessionToken: nil) { place, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            guard let place = place else {
+                completion(.failure(NSError(domain: "GooglePlaceService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Place not found"])) )
+                return
+            }
+            completion(.success((name: place.name, coordinate: place.coordinate)))
         }
     }
 }
