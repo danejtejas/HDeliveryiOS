@@ -21,17 +21,29 @@
 		7CA4A52B2E8C06E1004FF55E /* Exceptions for "HDelivery" folder in "HDelivery" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Driver/TripRepository.swift,
 				Info.plist,
 			);
 			target = 7C244F742E8809E300BF2D48 /* HDelivery */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		96C644472E8F919300F21061 /* Exceptions for "HDelivery" folder in "Copy Bundle Resources" phase from "HDelivery" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = 7C244F732E8809E300BF2D48 /* Resources */;
+			membershipExceptions = (
+				Driver/TripRepository.swift,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		7C244F772E8809E300BF2D48 /* HDelivery */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				7CA4A52B2E8C06E1004FF55E /* Exceptions for "HDelivery" folder in "HDelivery" target */,
+				96C644472E8F919300F21061 /* Exceptions for "HDelivery" folder in "Copy Bundle Resources" phase from "HDelivery" target */,
 			);
 			path = HDelivery;
 			sourceTree = "<group>";

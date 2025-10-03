@@ -37,6 +37,16 @@ extension APIRequest {
     var queryItems: [URLQueryItem]? { nil }
 }
 
+
+// Standard API Response Wrapper
+struct APIResponse<T: Decodable>: Decodable {
+    let status: String
+    let data: T?
+    let message: String?
+    let count: Int?
+}
+
+
 // MARK: - Network Client Protocol (Dependency Inversion)
 
 /// Abstract protocol for network operations

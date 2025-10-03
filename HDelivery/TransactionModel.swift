@@ -18,7 +18,7 @@ struct Transaction {
     let note: String
     let type: TransactionType
     
-    enum TransactionType {
+    enum TransactionType : String {
         case debit
         case credit
         case fee

@@ -1,0 +1,52 @@
+//
+//  HistoryAPI.swift.swift
+//  HDelivery
+//
+//  Created by Tejas on 03/10/25.
+//
+
+// HistoryAPI.swift
+// Trip & Transaction history API requests
+
+import Foundation
+
+// MARK: - Trip History
+struct TripHistoryRequest: APIRequest {
+    typealias Response = APIResponse<[TripDetail]>
+    var path: String { "api/showMyTrip" }
+    var method: HTTPMethod { .post }
+    
+    let token: String
+    let page: String
+    
+    var body: Data? {
+        try? JSONEncoder().encode([
+            "token": token,
+            "page": page
+        ])
+    }
+}
+
+// MARK: - Transaction History
+struct TransactionHistoryRequest: APIRequest {
+    typealias Response = APIResponse<[MockTransactionInfo]>
+    var path: String { "api/transactionHistory" }
+    var method: HTTPMethod { .post }
+    
+    let token: String
+    let page: String
+    
+    var body: Data? {
+        try? JSONEncoder().encode([
+            "token": token,
+            "page": page
+        ])
+    }
+}
+struct MockTransactionInfo: Codable {
+    let id: String
+    let amount: String
+    let method: String
+    let date: String
+    let description: String?
+}
