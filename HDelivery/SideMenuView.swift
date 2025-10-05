@@ -13,6 +13,7 @@ enum MenuOption: String, CaseIterable, Identifiable {
     case payment = "PAYMENT"
     case share = "SHARE"
     case help = "HELP"
+    case online = "ONLINE"
     case tasksHistories = "TASKS HISTORIES"
     case asTasker = "AS TASKER"
     case changePassword = "CHANGE PASSWORD"
@@ -20,6 +21,7 @@ enum MenuOption: String, CaseIterable, Identifiable {
     case promotions = "PROMOTIONS"
     case terms = "TERMS &"
     case logout = "LOGOUT"
+   
     
     var id: String { rawValue }
     
@@ -37,6 +39,8 @@ enum MenuOption: String, CaseIterable, Identifiable {
         case .promotions: return "tag.fill"
         case .terms: return "info.circle.fill"
         case .logout: return "power"
+        case .online:  return "arrowshape.turn.up.right.fill"
+            
         }
     }
 }

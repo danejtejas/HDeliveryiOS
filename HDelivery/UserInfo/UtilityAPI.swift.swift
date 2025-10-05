@@ -30,8 +30,8 @@ struct ShowStateCityRequest: APIRequest {
 
 // MARK: - Get Items
 struct GetItemsRequest: APIRequest {
-    typealias Response = APIResponse<[String]> // Replace with proper Item model if needed
-    var path: String { "api/items" }
+    typealias Response = APIResponse<[DeliveryItem]> // Replace with proper Item model if needed
+    var path: String { "items" }
     var method: HTTPMethod { .get }
     
     let jobType: String
@@ -43,14 +43,16 @@ struct GetItemsRequest: APIRequest {
 
 // MARK: - General Settings
 struct GeneralSettingsRequest: APIRequest {
-    typealias Response = APIResponse<[String: String]> // Replace with actual settings model
+    typealias Response = SettingsResponse // Replace with actual settings model
     var path: String { "api/generalSettings" }
     var method: HTTPMethod { .post }
     
     let token: String
     
     var body: Data? {
-        try? JSONEncoder().encode(["token": token])
+        let string = "token=\(token)"
+        let data = string.data(using: .utf8)
+        return data
     }
 }
 
@@ -65,11 +67,11 @@ struct ShareAppRequest: APIRequest {
     let social: String
     
     var body: Data? {
-        try? JSONEncoder().encode([
-            "token": token,
-            "type": type,
-            "social": social
-        ])
+        
+        let string = "token=\(token)&type=\(type)&social=\(social)"
+        let data = string.data(using: .utf8)
+        return data
+        
     }
 }
 
@@ -83,9 +85,10 @@ struct NeedHelpTripRequest: APIRequest {
     let tripId: String
     
     var body: Data? {
-        try? JSONEncoder().encode([
-            "token": token,
-            "tripId": tripId
-        ])
+        
+        let string = "token=\(token)&tripId=\(tripId)"
+        let data = string.data(using: .utf8)
+        return data
+        
     }
 }

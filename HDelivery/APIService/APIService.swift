@@ -44,6 +44,10 @@ struct APIResponse<T: Decodable>: Decodable {
     let data: T?
     let message: String?
     let count: Int?
+    var isSuccess: Bool {
+        status == "success".uppercased()
+    }
+    
 }
 
 
@@ -111,13 +115,17 @@ struct RequestBuilder: RequestBuilding {
         request.httpBody = apiRequest.body
         
         // Set default headers
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+//        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         
-        // Add custom headers
-        apiRequest.headers?.forEach { key, value in
-            request.setValue(value, forHTTPHeaderField: key)
+        // Add custom header
+        if let headers = apiRequest.headers {
+            headers.forEach { key, value in
+                request.setValue(value, forHTTPHeaderField: key)
+            }
         }
+        
         
         return request
     }
@@ -166,7 +174,13 @@ struct ResponseHandler: ResponseHandling {
         }
         
         do {
-            return try decoder.decode(T.self, from: data)
+            let string = String(data: data, encoding: .utf8)
+            print("API URL: \(String(describing: httpResponse.url))")
+            print("API RESPONSE:")
+            print(string ?? "")
+            let responseObject = try decoder.decode(T.self, from: data)
+            
+            return responseObject
         } catch {
             throw NetworkError.decodingError(error)
         }
@@ -284,89 +298,24 @@ struct GetPostsRequest: APIRequest {
 // MARK: - Repository Pattern (Liskov Substitution Principle)
 
 protocol UserRepository {
-    func getUsers() async throws -> [User]
-    func getUser(id: Int) async throws -> User
-    func createUser(_ user: User) async throws -> User
+    // other user methods ...
+    func showUserInfo(token: String) async throws -> APIResponse<UserInfo>
 }
+
+
 
 final class APIUserRepository: UserRepository {
-    private let networkClient: NetworkClient
+    private let network: NetworkClient
     
-    init(networkClient: NetworkClient) {
-        self.networkClient = networkClient
+    init(network: NetworkClient) {
+        self.network = network
     }
     
-    func getUsers() async throws -> [User] {
-        try await networkClient.execute(GetUsersRequest())
-    }
-    
-    func getUser(id: Int) async throws -> User {
-        try await networkClient.execute(GetUserRequest(userId: id))
-    }
-    
-    func createUser(_ user: User) async throws -> User {
-        try await networkClient.execute(CreateUserRequest(user: user))
+    func showUserInfo(token: String) async throws -> APIResponse<UserInfo> {
+        try await network.execute(ShowUserInfoRequest(token: token))
     }
 }
 
-// MARK: - SwiftUI ViewModel Example
-
-@MainActor
-//final class UserListViewModel: ObservableObject {
-//    @Published var users: [User] = []
-//    @Published var isLoading = false
-//    @Published var errorMessage: String?
-//    
-//    private let repository: UserRepository
-//    
-//    init(repository: UserRepository) {
-//        self.repository = repository
-//    }
-//    
-//    func loadUsers() async {
-//        isLoading = true
-//        errorMessage = nil
-//        
-//        do {
-//            users = try await repository.getUsers()
-//        } catch {
-//            errorMessage = error.localizedDescription
-//        }
-//        
-//        isLoading = false
-//    }
-//    
-//    func createUser(name: String, email: String) async {
-//        let newUser = User(id: 0, name: name, email: email)
-//        
-//        do {
-//            let createdUser = try await repository.createUser(newUser)
-//            users.append(createdUser)
-//        } catch {
-//            errorMessage = error.localizedDescription
-//        }
-//    }
-//}
-
-// MARK: - Dependency Injection Container
-
-//final class AppDependencies {
-//    static let shared = AppDependencies()
-//    
-//    private let apiService: NetworkClient
-//    
-//    private init() {
-//        self.apiService = APIService(baseURL: "https://jsonplaceholder.typicode.com")
-//    }
-//    
-//    func makeUserRepository() -> UserRepository {
-//        APIUserRepository(networkClient: apiService)
-//    }
-//    
-//    @MainActor func makeUserListViewModel() -> UserListViewModel {
-//        UserListViewModel(repository: makeUserRepository())
-//    }
-//}
 
 // MARK: - Mock for Testing (Dependency Inversion)
 
@@ -402,3 +351,5 @@ final class MockNetworkClient: NetworkClient {
             .eraseToAnyPublisher()
     }
 }
+
+

@@ -22,5 +22,8 @@ struct SignupModel {
      var postCode = ""
      var selectedPhoto: PhotosPickerItem? = nil
      var avatarImage: Image? = nil
+     var imageData: String = ""
+    var country : String = ""
+    var account : String = ""
     
 }

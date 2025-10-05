@@ -34,6 +34,10 @@ struct HomeView : View {
     @State private var itemDescription = ""
     
     
+    @StateObject private var viewModel = TripViewModel()
+    @StateObject private var driverSearchViewModel = DriverSearchViewModel()
+
+    
     var body: some View {
         
         
@@ -135,7 +139,9 @@ struct HomeView : View {
                     .shadow(radius: 3)
                     
                     NavigationLink {
-                        ItemSelectionView()
+                        ItemSelectionView { selectedItem in
+                            self.viewModel.selectedItem = selectedItem
+                        }
                     } label: {
                         
                         HStack{
@@ -190,7 +196,12 @@ struct HomeView : View {
                     Spacer()
                     
                     Button(action: {
-                        // Action for placing an order
+                        Task {
+                            //                            await viewModel.createTrip()
+                            await viewModel.createTripRequest(pickupCoordinate: pickupCoordinate, dropCoordinate: dropCoordinate, pickupAddress: pickupAddress, dropAddress: deliveryAddress, receiverPhone: reciverPhoneNumber )
+                        }
+                    
+                        
                         print("Order Placed!")
                     }) {
                         Text("Place Order")
@@ -203,6 +214,8 @@ struct HomeView : View {
                     }
                     
                 }.padding(EdgeInsets(top: 50, leading: 20, bottom: 20, trailing: 20))
+                    .disabled(viewModel.isLoading)
+                    .opacity(viewModel.isLoading ? 0.6 : 1.0)
                 
                 
                 
@@ -241,6 +254,9 @@ struct HomeView : View {
             .navigationBarBackButtonHidden()
             .toolbarBackground(AppSetting.ColorSetting.navigationBarBg, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
+            .sheet(isPresented: $viewModel.isSuccess) {
+                RequestSendView()
+            }
             .overlay {
                 if showSearch {
                     GeometryReader { geo in
@@ -288,9 +304,21 @@ struct HomeView : View {
                         .padding(EdgeInsets(top: isEditingDelivery  ? 150 : 100, leading: 20, bottom: 20, trailing: 20))
                     }
                 }
+                if viewModel.isLoading {
+                        ZStack {
+                            Color.black.opacity(0.4).ignoresSafeArea()
+                            ProgressView("Placing your order...")
+                                .padding()
+                                .background(Color.white)
+                                .cornerRadius(10)
+                        }
+                        .transition(.opacity)
+                    }
+                
             }
             
         }.animation(.easeIn, value: showSearch)
+            
     }
 
 }
@@ -346,6 +374,8 @@ struct PlaceSearchOverlay: View {
         }
     }
 }
+
+
 
 
 

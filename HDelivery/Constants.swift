@@ -158,7 +158,8 @@ struct AppSetting {
     }
     
     struct GoogleKeySetting {
-        static let mapKey = "AIzaSyBNg2knQi55GDSz7AewCplxQ6mYwklUwsw"
+//        static let mapKey = "AIzaSyBNg2knQi55GDSz7AewCplxQ6mYwklUwsw"
+        static let mapKey = "AIzaSyCH7DT_fligrk_4Y3VjMrmHsdyYVuP-_Wg"
     }
     
     struct URLS {

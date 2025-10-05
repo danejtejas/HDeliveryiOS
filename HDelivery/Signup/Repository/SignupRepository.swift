@@ -27,9 +27,31 @@ struct CreateSignupRequestAPIRequest: APIRequest {
     var method: HTTPMethod = .post
     var singupModel : SignupModel
     
-//    var body: Data? {
-//        return try? JSONEncoder().encode(singupModel)
-//    }
+    
+    
+    var parameters: [String: Any]?  {
+        
+        [
+            "full_name": singupModel.fullName,
+            "phone": singupModel.phone,
+            "email": singupModel.email,
+            "password": singupModel.password,
+            "address": singupModel.address,
+            "city": singupModel.city,
+            "country": singupModel.country,
+            "post_code": singupModel.postCode,
+            "account": singupModel.account,
+            "image" :  singupModel.imageData
+        ] 
+        
+    }
+    var body: Data? {
+        let string =  "full_name=\(singupModel.fullName)&phone=\(singupModel.phone)&email=\(singupModel.email)&password=\(singupModel.password)&address=\(singupModel.address)&city=\(singupModel.city)&country=\(singupModel.country)&post_code=\(singupModel.postCode)&account=\(singupModel.account)&image=\(singupModel.imageData)"
+        
+        let data = string.data(using: .utf8)
+        return data
+        
+    }
     
     
 }
@@ -63,5 +85,8 @@ struct SignupRepository: SignupRepositoryProtocol {
         
     }
     
+//    func testSingup(createSingupRequest: CreateSignupRequestAPIRequest) async throws -> APIResponse<Int> {
+//      return  try self.networkClient.execute(createSingupRequest)
+//    }
     
 }

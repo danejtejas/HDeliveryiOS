@@ -17,9 +17,13 @@ struct GoogleMapView: UIViewRepresentable {
     let dropTitle: String = "B"
 
     func makeUIView(context: Context) -> GMSMapView {
+        
+        let latCor =  LocationManager.shared.currentLocation?.coordinate.latitude ??  37.7749
+        let long  =  LocationManager.shared.currentLocation?.coordinate.longitude ?? -122.4194
+        
         let camera = GMSCameraPosition.camera(
-            withLatitude: 37.7749,   // Example: San Francisco
-            longitude: -122.4194,
+            withLatitude: latCor,   // Example: San Francisco
+            longitude: long,
             zoom: 12.0
         )
         let mapView = GMSMapView.map(withFrame: .zero, camera: camera)

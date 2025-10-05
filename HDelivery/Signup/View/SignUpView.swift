@@ -21,10 +21,12 @@ struct SignUpView: View {
     @State private var avatarImage: Image? = nil
     
     
+    @Environment(\.dismiss) private var dismiss
     
+    @StateObject var viewmodel: SignupViewModel = .init()
     
     var body: some View {
-        NavigationView {
+       
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 20) {
                     // Avatar Section
@@ -151,10 +153,11 @@ struct SignUpView: View {
             )
             .navigationTitle("Sign Up")
             .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden()
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
-                        // Handle back navigation
+                         dismiss()
                     }) {
                         Image(systemName: "chevron.left")
                             .foregroundColor(.white)
@@ -162,9 +165,19 @@ struct SignUpView: View {
                     }
                 }
                 
+                ToolbarItem(placement: .principal) {
+                    Text("Sign Up")
+                        .foregroundColor(.white)
+                        .font(.title2)
+                   
+                }
+                
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
                         // Handle save/submit
+                        
+                        viewmodel.signup(fullName: fullName, phone: phone, email: email, password: password, address: address, state: state, city: city, postCode: postCode)
+                        
                     }) {
                         Image(systemName: "doc.fill")
                             .foregroundColor(.white)
@@ -184,8 +197,13 @@ struct SignUpView: View {
                 for: .navigationBar
             )
             .toolbarBackground(AppSetting.ColorSetting.navigationBarBg, for: .navigationBar)
-        }
-        .navigationBarHidden(false)
+            .overlay {
+                if viewmodel.isLoading {
+                    LoadView()
+                }
+            }
+        
+       
     }
 }
 

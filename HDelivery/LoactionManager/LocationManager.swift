@@ -24,9 +24,11 @@ class LocationManager: NSObject, ObservableObject, LocationProviding {
     @Published var currentLocation: CLLocation?
     @Published var authorizationStatus: CLAuthorizationStatus
     
+    static let shared = LocationManager()
+    
     private let locationManager = CLLocationManager()
     
-    override init() {
+     override init() {
         self.authorizationStatus = locationManager.authorizationStatus
         super.init()
         locationManager.delegate = self
@@ -49,6 +51,7 @@ class LocationManager: NSObject, ObservableObject, LocationProviding {
 extension LocationManager: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         currentLocation = locations.last
+        stopUpdatingLocation()
     }
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {

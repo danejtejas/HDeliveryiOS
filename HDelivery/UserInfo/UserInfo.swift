@@ -17,29 +17,119 @@ struct ShowUserInfoRequest: APIRequest {
     let token: String
     
     var body: Data? {
-        try? JSONEncoder().encode(["token": token])
+//        try? JSONEncoder().encode(["token": token])
+        let string = "token=\(token)"
+        let data = string.data(using: .utf8)
+        return data
     }
 }
 
-struct UserInfo: Codable {
-    let id: String
-    let full_name: String
-    let email: String
-    let phone: String
-    let address: String?
-    let city: String?
-    let country: String?
+struct UserInfo: Codable, Identifiable {
+   var id: String?
+   var fullName: String?
+   var image: String?
+   var email: String?
+   var description: String?
+   var isActive: String?
+   var gender: String?
+   var phone: String?
+   var dob: String?
+   var address: String?
+   var balance: String?
+   var isOnline: String?
+   var passengerRate: String?
+   var passengerRateCount: String?
+   var stateId: String?
+   var stateName: String?
+   var cityId: String?
+   var cityName: String?
+   var typeAccount: String?
+   var account: String?
+   var driver: [DriverInfo]?
+   var car: String?
 }
 
 
-// Models.swift
-// Shared API response and data models
-
-import Foundation
 
 
+// MARK: - Trip Detail
+struct TripDetailResponse: Codable {
+   var id: String?
+   var passengerId: String?
+   var passenger: Passenger?
+   var driverId: String?
+   var driver: Driver?
+   var requestTime: String?
+   var link: String?
+   var startTime: String?
+   var startLat: String?
+   var startLong: String?
+   var startLocation: String?
+   var endLat: String?
+   var endLong: String?
+   var endLocation: String?
+   var passengerRate: String?
+   var estimateFare: String?
+   var itemPrice: String?
+   var itemList: [Item]?
+    
+    enum CodingKeys: String, CodingKey {
+        case id, passengerId, passenger, driverId, driver, requestTime, link, startTime, startLat, startLong, startLocation, endLat, endLong, endLocation, passengerRate
+        case estimateFare = "estimate_fare"
+        case itemPrice = "item_price"
+        case itemList = "item_list"
+    }
+}
 
-// MARK: - Common Entities
+// MARK: - User (Passenger)
+struct Passenger: Codable {
+    var id: String?
+    var fullName: String?
+    var image: String?
+    var email: String?
+    var description: String?
+    var gender: String?
+    var phone: String?
+    var dob: String?
+    var address: String?
+    var balance: String?
+    var isOnline: String?
+    var rate: String?
+    var rateCount: String?
+}
+
+// MARK: - Driver
+struct Driver: Codable {
+    let id: String?
+    let fullName: String?
+    let image: String?
+    let email: String?
+    let description: String?
+    let gender: String?
+    let phone: String?
+    let dob: String?
+    let address: String?
+    let balance: String?
+    let isOnline: String?
+    let rate: String?
+    let rateCount: String?
+    let carPlate: String?
+    let carImages: CarImages?
+}
+
+// MARK: - Car Images
+struct CarImages: Codable {
+    var image1: String?
+    var image2: String?
+}
+
+// MARK: - Item (empty array but included for safety)
+//struct Item: Codable {}
+
+
+
+
+
 
 
 struct TripDetail: Codable {
@@ -53,6 +143,7 @@ struct TripDetail: Codable {
     let estimateDistance: String
     let driverId: String?
     let status: String
+    var isWattingConfirm : Int? = 0
 }
 
 

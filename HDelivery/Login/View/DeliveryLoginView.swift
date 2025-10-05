@@ -16,6 +16,7 @@ struct DeliveryLoginView: View {
     
     
     var body: some View {
+        NavigationView{
         GeometryReader { geometry in
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
@@ -49,7 +50,7 @@ struct DeliveryLoginView: View {
                         
                         Spacer()
                     }
-//                    .frame(height: max(geometry.size.height * 0.6, 300))
+                    //                    .frame(height: max(geometry.size.height * 0.6, 300))
                     .frame(height: 350)
                     .background(Color(UIColor.systemBackground))
                     
@@ -102,8 +103,8 @@ struct DeliveryLoginView: View {
                             // Login button
                             Button(action: {
                                 // Handle login
-//                                viewModel.isLoggedIn = true
-                                viewModel.login()
+                                //                                viewModel.isLoggedIn = true
+                                viewModel.login(email: email, password: password)
                             }) {
                                 Text("Login")
                                     .font(.system(size: 18, weight: .semibold))
@@ -139,40 +140,39 @@ struct DeliveryLoginView: View {
                                 
                                 
                                 AsyncImage(url: URL(string: "https://developers.google.com/identity/images/g-logo.png")) { image in
-                                                                       image
-                                                                           .resizable()
-                                                                           .aspectRatio(contentMode: .fit)
-                                                                           .frame(width: 24, height: 24)
-                                                                   } placeholder: {
-                                                                       // Fallback if image doesn't load
-                                                                       Text("G")
-                                                                           .font(.system(size: 16, weight: .bold))
-                                                                           .foregroundColor(.blue)
-                                                                   }
+                                    image
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 24, height: 24)
+                                } placeholder: {
+                                    // Fallback if image doesn't load
+                                    Text("G")
+                                        .font(.system(size: 16, weight: .bold))
+                                        .foregroundColor(.blue)
+                                }
                                 
-//                                Image(systemName: "globe")
-//                                    .font(.system(size: 24))
-//                                    .foregroundColor(.red)
-//                                    .frame(width: 40, height: 40)
-//                                    .background(
-//                                        Circle()
-//                                            .fill(
-//                                                RadialGradient(
-//                                                    gradient: Gradient(colors: [.red, .yellow, .green, .blue]),
-//                                                    center: .center,
-//                                                    startRadius: 5,
-//                                                    endRadius: 20
-//                                                )
-//                                            )
-//                                    )
+                                //                                Image(systemName: "globe")
+                                //                                    .font(.system(size: 24))
+                                //                                    .foregroundColor(.red)
+                                //                                    .frame(width: 40, height: 40)
+                                //                                    .background(
+                                //                                        Circle()
+                                //                                            .fill(
+                                //                                                RadialGradient(
+                                //                                                    gradient: Gradient(colors: [.red, .yellow, .green, .blue]),
+                                //                                                    center: .center,
+                                //                                                    startRadius: 5,
+                                //                                                    endRadius: 20
+                                //                                                )
+                                //                                            )
+                                //                                    )
                             }
                         }
                         .padding(.top, 20)
                         
                         // Create new account
-                        Button(action: {
-                            // Handle create account
-                        }) {
+                        
+                        NavigationLink(destination: SignUpView()) {
                             Text("CREATE NEW ACCOUNT")
                                 .font(.system(size: 14, weight: .medium))
                                 .foregroundColor(.black)
@@ -181,6 +181,8 @@ struct DeliveryLoginView: View {
                                 .background(Color.white)
                         }
                         .padding(.top, 40)
+                        
+                        
                     }
                     .frame(minHeight: max(geometry.size.height * 0.4, 400))
                     .background(
@@ -196,10 +198,21 @@ struct DeliveryLoginView: View {
                 }
             }
         }
+    }
         .ignoresSafeArea(.all, edges: .bottom)
         .fullScreenCover(isPresented: $viewModel.isLoggedIn) {
                    ContentView()
                }
+        .overlay {
+            if self.viewModel.isLoading {
+                ZStack {
+                    Color.black.opacity(0.5)
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .opacity(viewModel.isLoading ? 1 : 0)
+                }
+            }
+        }
     }
 }
 

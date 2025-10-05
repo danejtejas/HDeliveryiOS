@@ -5,9 +5,14 @@
 //  Created by Tejas on 02/10/25.
 //
 
+import SwiftUI
 
-struct HomeViewModel {
+
+
+class HomeViewModel: ObservableObject {
+    
+    
+    
     
 }
-
 

@@ -20,10 +20,14 @@ struct TripHistoryRequest: APIRequest {
     let page: String
     
     var body: Data? {
-        try? JSONEncoder().encode([
-            "token": token,
-            "page": page
-        ])
+        
+        let string = "token=\(token)&page=\(page)"
+        let data = string.data(using: .utf8)!
+        return data
+//        try? JSONEncoder().encode([
+//            "token": token,
+//            "page": page
+//        ])
     }
 }
 

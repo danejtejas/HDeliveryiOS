@@ -41,9 +41,10 @@ class ItemViewModel: ObservableObject {
                 case .finished:
                     break
                 }
-            } receiveValue: { [weak self] items in
-                self?.items = items
-                print("Successfully fetched \(items.count) items")
+            } receiveValue: { [weak self] deliverItems in
+                self?.items = deliverItems.toItems()
+//                self?.items = []
+                print("Successfully fetched \(self?.items.count) items")
             }
             .store(in: &cancellables)
     }
@@ -107,5 +108,28 @@ class ItemViewModel: ObservableObject {
     /// Retry fetching items
     func retry() {
         fetchAllItems()
+    }
+}
+
+
+
+extension DeliveryItem {
+    func toItem() -> Item {
+        Item(
+            id: self.id,
+            name: self.name,
+            price: Int(self.price) ?? 0,
+            isSelected: false,
+            description: "",     // fallback until API provides real description
+            imageUrl: nil,          // can be filled if API provides image
+            category: jobType,      // map jobType to category
+            isAvailable: true
+        )
+    }
+}
+
+extension Array where Element == DeliveryItem {
+    func toItems() -> [Item] {
+        self.map { $0.toItem() }
     }
 }

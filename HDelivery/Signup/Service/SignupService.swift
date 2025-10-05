@@ -25,4 +25,8 @@ class SignupService {
         return self.repository.signup(createSingupRequest: createSingupRequest)
     }
     
+//    func singup(singupModel : SignupModel) -> APIResponse<String>{
+//        return self.repository.signup(createSingupRequest: CreateSignupRequestAPIRequest(singupModel:singupModel ))
+//    }
+    
 }

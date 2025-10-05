@@ -10,6 +10,18 @@ target 'HDelivery' do
   pod 'GoogleMaps'
   pod 'Google-Maps-iOS-Utils'
   pod 'GooglePlaces'
+  
+  
+  # Firebase Core (required)
+  pod 'Firebase/Core'
+
+  
+
+  # Firebase Cloud Messaging (Push Notifications)
+  pod 'Firebase/Messaging'
+
+ 
+  
 
 end
 
@@ -32,3 +44,4 @@ post_install do |installer|
     File.write(script_path, text)
   end
 end
+

@@ -27,9 +27,15 @@ struct CreateTripRequest: APIRequest {
     let endLocation: String
     let estimateDistance: String
     let itemId: String // JSON string of items
+    let receiver_phone : String
     
-    var body: Data? {
-        try? JSONEncoder().encode([
+    
+    var headers: [String: String] {
+        return ["Content-Type": "application/x-www-form-urlencoded"]
+    }
+    
+    var parameters: [String: String]? {
+      return  [
             "token": token,
             "link": link,
             "startLat": startLat,
@@ -39,9 +45,30 @@ struct CreateTripRequest: APIRequest {
             "endLong": endLong,
             "endLocation": endLocation,
             "estimateDistance": estimateDistance,
-            "item_id": itemId
-        ])
+            "item_id": itemId,
+            "receiver_phone" : receiver_phone
+        ]
     }
+    
+    var body: Data? {
+        
+        
+        var parts: [String] = []
+
+        for key in parameters!.keys.sorted() {
+            let value = parameters![key] ?? ""
+            let stringValue = "\(value)"
+            let encoded = stringValue.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+            parts.append("\(key)=\(encoded)")
+        }
+        
+        let formString = parts.joined(separator: "&")
+
+        return formString.data(using: .utf8)
+        
+       }
+    
+    
 }
 
 // MARK: - Driver Confirm Trip
@@ -129,27 +156,58 @@ struct CancelRequest: APIRequest {
     let token: String
     let driver: String // "0" for passenger
     
-    var body: Data? {
-        try? JSONEncoder().encode([
+    var parameters: [String: String]? {
+      return  [
             "token": token,
             "driver": driver
-        ])
+        ]
+    }
+    
+    var body: Data? {
+        var parts: [String] = []
+
+        for key in parameters!.keys.sorted() {
+            let value = parameters![key] ?? ""
+            let stringValue = "\(value)"
+            let encoded = stringValue.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+            parts.append("\(key)=\(encoded)")
+        }
+        
+        let formString = parts.joined(separator: "&")
+
+        return formString.data(using: .utf8)
     }
 }
 
 // MARK: - Show My Request
 struct ShowMyRequest: APIRequest {
-    typealias Response = APIResponse<[TripDetail]>
+    typealias Response = APIResponse<[TripDetailResponse]>
     var path: String { "api/showMyRequest" }
     var method: HTTPMethod { .post }
     
     let token: String
     let driver: String?
     
+    var parameters: [String: String]? {
+        return  [
+            "token": token,
+            "driver": driver ?? ""
+        ]
+    }
+    
     var body: Data? {
-        var dict: [String: String] = ["token": token]
-        if let driver = driver { dict["driver"] = driver }
-        return try? JSONSerialization.data(withJSONObject: dict)
+        var parts: [String] = []
+
+        for key in parameters!.keys.sorted() {
+            let value = parameters![key] ?? ""
+            let stringValue = "\(value)"
+            let encoded = stringValue.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+            parts.append("\(key)=\(encoded)")
+        }
+        
+        let formString = parts.joined(separator: "&")
+
+        return formString.data(using: .utf8)
     }
 }
 
@@ -220,5 +278,27 @@ struct ShowDistanceRequest: APIRequest {
             "token": token,
             "tripId": tripId
         ])
+    }
+}
+
+
+
+
+
+
+extension Dictionary where Key == String, Value == Any {
+    /// Converts a dictionary into `application/x-www-form-urlencoded` data.
+    func toFormURLEncodedData() -> Data? {
+        var parts: [String] = []
+
+        for key in self.keys.sorted() {
+            let value = self[key] ?? ""
+            let stringValue = "\(value)"
+            let encoded = stringValue.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+            parts.append("\(key)=\(encoded)")
+        }
+
+        let formString = parts.joined(separator: "&")
+        return formString.data(using: .utf8)
     }
 }

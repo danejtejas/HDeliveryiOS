@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>768317598176-crorvc7nds7v6obvnfdr0dbg70vq53a9.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.768317598176-crorvc7nds7v6obvnfdr0dbg70vq53a9</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>768317598176-33veh1rcls965ensqncq7335hm2jkigk.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDSjx_x-XPGO66lWZxeajvX2aCYV5OT6qg</string>
+	<key>GCM_SENDER_ID</key>
+	<string>768317598176</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.hapihyper.delivery</string>
+	<key>PROJECT_ID</key>
+	<string>hapihyper-delive-1606110644296</string>
+	<key>STORAGE_BUCKET</key>
+	<string>hapihyper-delive-1606110644296.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:768317598176:ios:84db6f8892b503837ce385</string>
+	<key>DATABASE_URL</key>
+	<string>https://hapihyper-delive-1606110644296.firebaseio.com</string>
+</dict>
+</plist>

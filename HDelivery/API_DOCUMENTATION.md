@@ -316,6 +316,15 @@ GET /api/forgotPassword?email=user@example.com
 }
 ```
 
+**Exmaple Response**:
+```json
+{ "status":"SUCCESS", | "ERROR"
+  "data":"",
+  "is_active":"0",
+    "message":"OK"
+}
+```
+
 ---
 
 ### 3.2 Update Driver Profile

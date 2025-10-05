@@ -6,7 +6,5 @@
 	<array>
 		<string>en</string>
 	</array>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>We need your location to show you on the map</string>
 </dict>
 </plist>

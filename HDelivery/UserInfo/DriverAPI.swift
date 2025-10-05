@@ -33,8 +33,9 @@ struct DriverRegisterRequest: APIRequest {
     let documentId: String
     let documentIdName: String
     
-    var body: Data? {
-        var dict: [String: String] = [
+    var parameters: [String: Any] {
+        
+        let dict: [String: String] = [
             "token": token,
             "carPlate": carPlate,
             "identity": identity,
@@ -51,8 +52,20 @@ struct DriverRegisterRequest: APIRequest {
             "document_id": documentId,
             "document_id_name": documentIdName
         ]
-        if let referredBy = referredBy { dict["referred_by"] = referredBy }
-        return try? JSONSerialization.data(withJSONObject: dict)
+        
+        return dict
+        
+    }
+    
+    var body: Data? {
+        var parts: [String] = []
+        for key in parameters.keys.sorted() {
+            let value = "\(parameters[key] ?? "")"
+            let encoded = value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+            parts.append("\(key)=\(encoded)")
+        }
+        let formString = parts.joined(separator: "&")
+        return formString.data(using: .utf8)
     }
 }
 
@@ -69,7 +82,7 @@ struct UpdateDriverProfileRequest: APIRequest {
     }
 }
 
-// MARK: - Driver Online/Offline Status
+// MARK: - Driver Online/Offline Status -> Done
 struct DriverOnlineStatusRequest: APIRequest {
     typealias Response = APIResponse<String>
     var path: String { "api/online" }
@@ -78,11 +91,17 @@ struct DriverOnlineStatusRequest: APIRequest {
     let token: String
     let status: String
     
-    var body: Data? {
-        try? JSONEncoder().encode([
+    var params: [String: String] {
+        [
             "token": token,
             "status": status
-        ])
+        ]
+    }
+    
+    var body: Data? {
+        let formateString = "token=\(token)&status=\(status)"
+        let data = formateString.data(using: .utf8)
+        return data
     }
 }
 
@@ -118,7 +137,7 @@ struct GetDriverLocationRequest: APIRequest {
     }
 }
 
-// MARK: - Search Drivers
+// MARK: - Search Drivers ->Done
 struct SearchDriverRequest: APIRequest {
     typealias Response = APIResponse<[DriverInfo]>
     var path: String { "api/searchDriver" }

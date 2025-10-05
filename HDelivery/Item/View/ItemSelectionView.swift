@@ -3,7 +3,9 @@ import SwiftUI
 struct ItemSelectionView: View {
     @StateObject private var viewModel = ItemViewModel()
     @Environment(\.presentationMode) var presentationMode
-
+   
+    var onDismiss: ((_ selectedItem: [Item]) -> Void)?
+   
     
     var body: some View {
         
@@ -65,6 +67,9 @@ struct ItemSelectionView: View {
                 // Total Footer
                 Button(action: {
                     print("Selected items: \(viewModel.selectedItems)")
+                   if let handler = onDismiss {
+                       handler(viewModel.selectedItems)
+                    }
                     presentationMode.wrappedValue.dismiss()
                 }) {
                     Text("Total: ₦ \(viewModel.totalPrice) (\(viewModel.selectedItemsCount) items)")
