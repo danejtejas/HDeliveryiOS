@@ -12,7 +12,10 @@ protocol TripRepository {
     func endTrip(token: String, tripId: String, distance: String) async throws -> APIResponse<String>
     func cancelTrip(token: String, tripId: String) async throws -> APIResponse<String>
     func cancelRequest(token: String, driver: String) async throws -> APIResponse<String>
-    func showMyRequests(token: String, driver: String?) async throws -> APIResponse<[TripDetailResponse]>
+    
+    func showMyUserRequests(token: String, driver: String?) async throws -> APIResponse<[TripDetailResponse]>
+    func showMyDriverRequests(token: String) async throws -> APIResponse<[TripDetailResponse]>
+    
     func driverArrived(token: String, tripId: String) async throws -> APIResponse<String>
     func changeStatus(token: String, tripId: String, status: String) async throws -> APIResponse<String>
     func showTripDetail(token: String, tripId: String) async throws -> APIResponse<TripDetail>

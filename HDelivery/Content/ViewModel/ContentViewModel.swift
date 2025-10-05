@@ -21,6 +21,8 @@ class ContentViewModel: ObservableObject {
             let token = try StorageManager.shared.getAuthToken() ?? ""
             let request = try await repository.generalSettings(token: token)
             if request.isSuccess {
+               let appSettings = request.data
+                let link_type = request.listJob.first?.link
                 Task {
                   await showUserInfo()
                 }
@@ -41,7 +43,12 @@ class ContentViewModel: ObservableObject {
                 let isDriver = StorageManager.shared.isDriver()
                 if isDriver {
                     Task {
-                     await showMyTripHistoryDriver()
+                     await showMyTripHistoryDriver() // check online
+                    }
+                }
+                else {
+                    Task {
+                      await  checkOnlineUser() // check online user
                     }
                 }
             }
@@ -52,16 +59,21 @@ class ContentViewModel: ObservableObject {
     
     
     // for driver
-    func showMyTripHistoryDriver() async {
-        let repository =  AppDependencies.shared.makeHistoryRepository()
+    func showMyTripHistoryDriver() async {   // check driver online
+        let repository =  AppDependencies.shared.makeTripRepository()
         do {
             let token = try StorageManager.shared.getAuthToken() ?? ""
-            let request = try await repository.getTripHistory(token: token, page: "1") // page -> 1 is defualt
+        
+            let request = try await repository.showMyDriverRequests(token: token) // page -> 1 is defualt
             if request.isSuccess {
                 let tripData = request.data ?? []
                 if tripData.count > 0 {
-                   if tripData[0].isWattingConfirm == 1 {
+                    let tripStaus = tripData[0].status
+                    let  passengerRate =  tripData[0].passengerRate ?? "0"
+                    
+                    if tripData[0].isWattingConfirm == "1" {
                         // Move to Request Screen
+                        
                     }
                 }
             }
@@ -69,5 +81,30 @@ class ContentViewModel: ObservableObject {
             print("error \(error.localizedDescription)")
         }
     }
+    
+   
+    func checkOnlineUser() async  {   // check user online
+        let repository =  AppDependencies.shared.makeTripRepository()
+        do {
+            let token = try StorageManager.shared.getAuthToken() ?? ""
+        
+            
+            let request = try await  repository.showMyUserRequests(token: token, driver: "0")
+            if request.isSuccess {
+               if  let tripData = request.data, tripData.count > 0 {
+                   let tripId  = tripData[0].id
+                   let tripStaus = tripData[0].status  //
+                    
+                   
+                   // Go To -> Request Send
+                   
+                }
+                  
+            }
+        } catch {
+            print("error \(error.localizedDescription)")
+        }
+    }
+
     
 }

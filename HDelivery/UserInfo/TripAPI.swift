@@ -180,7 +180,7 @@ struct CancelRequest: APIRequest {
 }
 
 // MARK: - Show My Request
-struct ShowMyRequest: APIRequest {
+struct ShowMyRequestForUser: APIRequest {
     typealias Response = APIResponse<[TripDetailResponse]>
     var path: String { "api/showMyRequest" }
     var method: HTTPMethod { .post }
@@ -210,6 +210,39 @@ struct ShowMyRequest: APIRequest {
         return formString.data(using: .utf8)
     }
 }
+
+
+// MARK: - Show My Request
+struct ShowMyRequestForDriver: APIRequest {
+    typealias Response = APIResponse<[TripDetailResponse]>
+    var path: String { "api/showMyRequest" }
+    var method: HTTPMethod { .post }
+    
+    let token: String
+    
+    var parameters: [String: String]? {
+        return  [
+            "token": token,
+        ]
+    }
+    
+    var body: Data? {
+        var parts: [String] = []
+
+        for key in parameters!.keys.sorted() {
+            let value = parameters![key] ?? ""
+            let stringValue = "\(value)"
+            let encoded = stringValue.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+            parts.append("\(key)=\(encoded)")
+        }
+        
+        let formString = parts.joined(separator: "&")
+
+        return formString.data(using: .utf8)
+    }
+}
+
+
 
 // MARK: - Driver Arrived
 struct DriverArrivedRequest: APIRequest {

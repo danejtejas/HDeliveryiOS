@@ -72,12 +72,16 @@ struct TripDetailResponse: Codable {
    var estimateFare: String?
    var itemPrice: String?
    var itemList: [Item]?
+   var status : String?
+   var isWattingConfirm : String?
     
     enum CodingKeys: String, CodingKey {
         case id, passengerId, passenger, driverId, driver, requestTime, link, startTime, startLat, startLong, startLocation, endLat, endLong, endLocation, passengerRate
         case estimateFare = "estimate_fare"
         case itemPrice = "item_price"
         case itemList = "item_list"
+        case status
+        case isWattingConfirm
     }
 }
 
@@ -143,7 +147,8 @@ struct TripDetail: Codable {
     let estimateDistance: String
     let driverId: String?
     let status: String
-    var isWattingConfirm : Int? = 0
+    var isWattingConfirm : String = "0"
+    var passengerRate : String?
 }
 
 
