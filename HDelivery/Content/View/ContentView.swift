@@ -64,6 +64,9 @@ struct ContentView: View {
                 case .online:
                     RequestScreen(onSelectTab: { isSideMenuOpen.toggle()})
                     
+                case .terms:
+                     TermConditionView(onSelectTab: { isSideMenuOpen.toggle()})
+                    
                 case .logout:
                     Text("Logging out...")
                 default:

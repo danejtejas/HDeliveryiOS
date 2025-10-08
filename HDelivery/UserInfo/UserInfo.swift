@@ -24,36 +24,11 @@ struct ShowUserInfoRequest: APIRequest {
     }
 }
 
-struct UserInfo: Codable, Identifiable {
-   var id: String?
-   var fullName: String?
-   var image: String?
-   var email: String?
-   var description: String?
-   var isActive: String?
-   var gender: String?
-   var phone: String?
-   var dob: String?
-   var address: String?
-   var balance: String?
-   var isOnline: String?
-   var passengerRate: String?
-   var passengerRateCount: String?
-   var stateId: String?
-   var stateName: String?
-   var cityId: String?
-   var cityName: String?
-   var typeAccount: String?
-   var account: String?
-   var driver: [DriverInfo]?
-   var car: String?
-}
-
 
 
 
 // MARK: - Trip Detail
-struct TripDetailResponse: Codable {
+struct TripDetailResponse: Codable, Identifiable {
    var id: String?
    var passengerId: String?
    var passenger: Passenger?
@@ -84,6 +59,7 @@ struct TripDetailResponse: Codable {
         case isWattingConfirm
     }
 }
+
 
 // MARK: - User (Passenger)
 struct Passenger: Codable {
@@ -364,3 +340,75 @@ struct ForgotPasswordRequest: Encodable {
     let email: String
     
 }
+
+
+// MARK: - Driver Profile Data
+struct UserInfo: Codable {
+    var id: String?
+    var fullName: String?
+    var image: String?
+    var email: String?
+    var description: String?
+    var isActive: String?
+    var gender: String?
+    var phone: String?
+    var dob: String?
+    var address: String?
+    var balance: String?
+    var isOnline: String?
+    var passengerRate: String?
+    var passengerRateCount: String?
+    var stateId: String?
+    var stateName: String?
+    var cityId: String?
+    var cityName: String?
+    var typeAccount: String?
+    var account: String?
+    var driver: DriverInfoData?
+    var car: CarInfo?
+}
+
+// MARK: - Driver Details
+struct DriverInfoData: Codable {
+    var driverRate: String?
+    var driverRateCount: String?
+    var bankAccount: String?
+    var status: String?
+    var isOnline: String?
+    var document: String?
+    var isActive: String?
+    var identity: String?
+    var updatePending: String?
+    var linkType: String?
+}
+
+
+
+
+// MARK: - Car Details
+struct CarInfo: Codable {
+    var id: String?
+    var carPlate: String?
+    var brand: String?
+    var model: String?
+    var year: String?
+    var status: String?
+    var document: String?
+    var identificationDocument: String?
+    var dateCreated: String?
+    var images: CarImages?
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case carPlate
+        case brand
+        case model
+        case year
+        case status
+        case document
+        case identificationDocument = "identification_document"
+        case dateCreated
+        case images
+    }
+}
+

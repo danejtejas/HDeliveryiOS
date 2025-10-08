@@ -3,12 +3,14 @@
 //  HDelivery
 //
 //  Created by user286520 on 9/30/25.
-//
+// user for this scren Driver request and set online link offline
 
 import SwiftUI
 
+
+
 struct RequestScreen: View {
-   
+    
     var onSelectTab : () -> Void
     @StateObject private var onllineViewModel = OnlineViewModel()
     
@@ -106,13 +108,25 @@ struct RequestScreen: View {
                         .lineSpacing(4)
                         .padding(.top, 10)
                 }
+                Spacer()
+                if onllineViewModel.isOnline && onllineViewModel.trips.count > 0 {
+                    
+                   
+                    TripRowRequestView(trips: $onllineViewModel.trips) { index in
+                        Task {
+                            let trip = onllineViewModel.trips[index]
+                            await onllineViewModel.confrimDriverRequest(requestId: trip.id ?? "" , startLat: trip.startLat ?? "", startLong: trip.startLong ?? "", startLocation: trip.startLocation ?? "")
+                        }
+                    }
+                    
+                    
+                    
+                }
                 
-                Spacer()
-                Spacer()
             }
-            
-           
-           
+        }
+        .fullScreenCover(isPresented:$onllineViewModel.isRequestConformed) {
+            GoogleMapNavigationView(tripData: $onllineViewModel.tripData)
         }
     }
 }
@@ -120,4 +134,47 @@ struct RequestScreen: View {
 
 #Preview {
     RequestScreen(onSelectTab:{})
+}
+
+
+
+struct TripRowRequestView : View {
+    
+    @Binding var trips : [TripDetailResponse]
+    
+    var onSelectTrip : (Int) -> Void
+    
+    
+    var body: some View {
+        
+        
+            
+            
+            ForEach(Array(trips.enumerated()), id: \.offset) { index, trip in
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Passenger: \(trip.passenger?.fullName ?? "Unknown")")
+                    Text("Driver: \(trip.driver?.fullName ?? "Unknown")")
+                    Text("From: \(trip.startLocation ?? "-")")
+                    Text("To: \(trip.endLocation ?? "-")")
+                    Text("Fare: \(trip.estimateFare ?? "-")")
+                        .fontWeight(.bold)
+                        .foregroundColor(.green)
+                }
+                .onTapGesture {
+                    
+                    onSelectTrip(index)
+                    
+                    
+                }
+                .padding()
+                .background(Color(.systemGray6))
+                .cornerRadius(12)
+                .shadow(radius: 1)
+            }
+            
+            
+            
+        
+        
+    }
 }

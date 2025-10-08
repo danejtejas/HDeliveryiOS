@@ -22,7 +22,7 @@ class TaskHistoryViewModel: ObservableObject {
         let repository: TripRepository = AppDependencies.shared.makeTripRepository()
         do {
             let token = try StorageManager.shared.getAuthToken() ?? ""
-            let response = try await repository.showMyRequests(token: token, driver: "0")
+            let response = try await repository.showMyUserRequests(token: token, driver: "0")
             if response.isSuccess, let data = response.data {
                 trips = data
             } else {

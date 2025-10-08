@@ -139,7 +139,7 @@ struct GetDriverLocationRequest: APIRequest {
 
 // MARK: - Search Drivers ->Done
 struct SearchDriverRequest: APIRequest {
-    typealias Response = APIResponse<[DriverInfo]>
+    typealias Response = APIResponse<[DriverSearch]>
     var path: String { "api/searchDriver" }
     var method: HTTPMethod { .get }
     

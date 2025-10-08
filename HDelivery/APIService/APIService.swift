@@ -28,6 +28,7 @@ protocol APIRequest {
     var headers: [String: String]? { get }
     var body: Data? { get }
     var queryItems: [URLQueryItem]? { get }
+
 }
 
 // Default implementations
@@ -49,6 +50,11 @@ struct APIResponse<T: Decodable>: Decodable {
     }
     
 }
+
+
+
+
+
 
 
 // MARK: - Network Client Protocol (Dependency Inversion)
