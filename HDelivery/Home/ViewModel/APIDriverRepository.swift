@@ -10,7 +10,7 @@ import CoreLocation
 
 @MainActor
 class DriverSearchViewModel: ObservableObject {
-    @Published var drivers: [DriverInfo] = []
+    @Published var drivers: [DriverSearch] = []
     @Published var errorMessage: String?
     @Published var isLoading = false
     
@@ -29,7 +29,7 @@ class DriverSearchViewModel: ObservableObject {
                 lat: latCor,
                 long: long,
                 carType: "2",
-                distance: "6.2516703605651855"
+                distance: "1000000"
             )
         }
 

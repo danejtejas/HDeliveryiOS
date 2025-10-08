@@ -21,10 +21,14 @@ class ContentViewModel: ObservableObject {
             let token = try StorageManager.shared.getAuthToken() ?? ""
             let request = try await repository.generalSettings(token: token)
             if request.isSuccess {
-               let appSettings = request.data
-                let link_type = request.listJob.first?.link
+               let appConfig = request.data
+                try StorageManager.shared.setAppConfig(appConfig: appConfig)
+                let link_type = request.listJob.first?.link ?? ""
+                 StorageManager.shared.setLinkType(link: link_type)
+                 
                 Task {
                   await showUserInfo()
+                  await showMyTripHistoryDriver()
                 }
             }
         } catch {
@@ -38,19 +42,8 @@ class ContentViewModel: ObservableObject {
         do {
             let token = try StorageManager.shared.getAuthToken() ?? ""
             let request = try await repository.showUserInfo(token: token)
-            if request.isSuccess {
-                
-                let isDriver = StorageManager.shared.isDriver()
-                if isDriver {
-                    Task {
-                     await showMyTripHistoryDriver() // check online
-                    }
-                }
-                else {
-                    Task {
-                      await  checkOnlineUser() // check online user
-                    }
-                }
+            if request.isSuccess, let userInfo = request.data {
+                try StorageManager.shared.setUserInfo(userInfo)
             }
         } catch {
             print("error \(error.localizedDescription)")
@@ -64,7 +57,7 @@ class ContentViewModel: ObservableObject {
         do {
             let token = try StorageManager.shared.getAuthToken() ?? ""
         
-            let request = try await repository.showMyDriverRequests(token: token) // page -> 1 is defualt
+            let request = try await repository.showMyDriverRequests(token: token)
             if request.isSuccess {
                 let tripData = request.data ?? []
                 if tripData.count > 0 {

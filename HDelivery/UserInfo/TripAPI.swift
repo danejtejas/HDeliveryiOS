@@ -73,7 +73,7 @@ struct CreateTripRequest: APIRequest {
 
 // MARK: - Driver Confirm Trip
 struct DriverConfirmRequest: APIRequest {
-    typealias Response = APIResponse<String>
+    typealias Response = APIResponse<TripData>
     var path: String { "api/driverConfirm" }
     var method: HTTPMethod { .post }
     
@@ -83,14 +83,19 @@ struct DriverConfirmRequest: APIRequest {
     let startLong: String
     let startLocation: String
     
-    var body: Data? {
-        try? JSONEncoder().encode([
+    var param : [String: Any] {
+        [
             "token": token,
             "requestId": requestId,
             "startLat": startLat,
             "startLong": startLong,
             "startLocation": startLocation
-        ])
+        ]
+    }
+    
+    
+    var body: Data? {
+       return param.toFormURLEncodedData()
     }
 }
 
@@ -246,7 +251,7 @@ struct ShowMyRequestForDriver: APIRequest {
 
 // MARK: - Driver Arrived
 struct DriverArrivedRequest: APIRequest {
-    typealias Response = APIResponse<String>
+    typealias Response = APIResponse<TripData>
     var path: String { "api/driverArrived" }
     var method: HTTPMethod { .get }
     

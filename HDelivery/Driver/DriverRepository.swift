@@ -21,7 +21,7 @@ protocol DriverRepository {
     
     func getDriverLocation(driverId: String) async throws -> APIResponse<DriverInfo>
     
-    func searchDrivers(startLat: String, startLong: String, carType: String, distance: String) async throws -> APIResponse<[DriverInfo]>
+    func searchDrivers(startLat: String, startLong: String, carType: String, distance: String) async throws -> APIResponse<[DriverSearch]>
 }
 
 final class APIDriverRepository: DriverRepository {
@@ -49,7 +49,7 @@ final class APIDriverRepository: DriverRepository {
         try await network.execute(GetDriverLocationRequest(driverId: driverId))
     }
     
-    func searchDrivers(startLat: String, startLong: String, carType: String, distance: String) async throws -> APIResponse<[DriverInfo]> {
+    func searchDrivers(startLat: String, startLong: String, carType: String, distance: String) async throws -> APIResponse<[DriverSearch]> {
         try await network.execute(SearchDriverRequest(startLat: startLat, startLong: startLong, carType: carType, distance: distance))
     }
 }

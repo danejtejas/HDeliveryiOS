@@ -68,9 +68,10 @@ final class TripViewModel: ObservableObject {
             if !response.isSuccess {
                 
                 errorMessage = response.message
-                
             }
             else {
+                
+                
                 
                 isSuccess = true
             }

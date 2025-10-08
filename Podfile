@@ -20,7 +20,7 @@ target 'HDelivery' do
   # Firebase Cloud Messaging (Push Notifications)
   pod 'Firebase/Messaging'
 
- 
+  pod 'GoogleSignIn' 
   
 
 end
@@ -44,4 +44,5 @@ post_install do |installer|
     File.write(script_path, text)
   end
 end
+
 

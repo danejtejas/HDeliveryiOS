@@ -1171,6 +1171,7 @@ GET /api/instruction
 - `7` - Arrived B (Driver arrived at destination)
 - `8` - Start Task (Task started)
 
+
 ### Driver Status
 - `1` - Online/Available
 - `0` - Offline/Busy

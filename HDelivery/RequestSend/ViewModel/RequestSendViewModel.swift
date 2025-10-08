@@ -64,7 +64,7 @@ final class RequestSendViewModel: ObservableObject {
         do {
             
             let token = try  StorageManager.shared.getAuthToken()  ?? ""
-            let request = try await repository.showMyRequests(token: token, driver: "0")
+            let request = try await repository.showMyUserRequests(token: token, driver: "0")
             if self.isSuccess {
                 if let trip =  request.data {
                     self.tripDetails = trip
