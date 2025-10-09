@@ -301,7 +301,7 @@ struct UpdateProfileRequest: APIRequest {
     let image: String? // base64
     
     var body: Data? {
-        var dict: [String: String] = ["token": token]
+        var dict: [String: Any] = ["token": token]
         if let description = description { dict["description"] = description }
         if let fullName = fullName { dict["full_name"] = fullName }
         if let address = address { dict["address"] = address }
@@ -312,7 +312,7 @@ struct UpdateProfileRequest: APIRequest {
         if let typeDevice = typeDevice { dict["type_device"] = typeDevice }
         if let image = image { dict["image"] = image }
         
-        return try? JSONSerialization.data(withJSONObject: dict)
+       return dict.toFormURLEncodedData()
     }
 }
 

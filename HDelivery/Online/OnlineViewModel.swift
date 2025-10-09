@@ -86,10 +86,10 @@ class OnlineViewModel: ObservableObject {
         do {
             let token = try  StorageManager.shared.getAuthToken()  ?? ""
             let repsone = try await rep.confirmTrip(DriverConfirmRequest(token: token, requestId: requestId, startLat: startLat, startLong: startLong, startLocation: startLocation))
-            if  repsone.isSuccess {
-                print(repsone.data)
+            if  repsone.isSuccess, let data  = repsone.data {
+                print(data   )
                 self.isRequestConformed = true
-                self.tripData = repsone.data
+                self.tripData = data
             }
             else {
                 print(repsone.message ?? "")

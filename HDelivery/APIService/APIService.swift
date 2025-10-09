@@ -306,6 +306,15 @@ struct GetPostsRequest: APIRequest {
 protocol UserRepository {
     // other user methods ...
     func showUserInfo(token: String) async throws -> APIResponse<UserInfo>
+    
+    func changePassword(token: String, oldPassword: String, newPassword: String) async throws -> APIResponse<String>
+    
+    
+    func updateProfile(request: UpdateProfileRequest) async throws -> APIResponse<UserInfo>
+    
+    
+
+    
 }
 
 
@@ -320,6 +329,17 @@ final class APIUserRepository: UserRepository {
     func showUserInfo(token: String) async throws -> APIResponse<UserInfo> {
         try await network.execute(ShowUserInfoRequest(token: token))
     }
+    
+
+    func changePassword(token: String, oldPassword: String, newPassword: String) async throws -> APIResponse<String> {
+           try await network.execute(ChangePasswordRequest(token: token, oldPassword: oldPassword, newPassword: newPassword))
+       }
+    
+    func updateProfile(request: UpdateProfileRequest) async throws -> APIResponse<UserInfo> {
+        try await network.execute(request)
+    }
+    
+    
 }
 
 

@@ -19,6 +19,8 @@ struct UpdateProfileScreen: View {
     @State private var bankName: String = "Bank Name"
     @State private var bankAccountNo: String = "Bank Account No"
     
+    @State private var viewModel = UpdateProfileViewModel()
+    
     var body: some View {
         ZStack {
             // Blue background
@@ -40,7 +42,12 @@ struct UpdateProfileScreen: View {
                         Spacer()
                         
                         Button(action: {
-                            // Save/Done action
+                           
+                            Task{
+                                await viewModel.updateProfile(fullName: fullName, phone: phone, address: address, cityId: "7", stateId: "7", description: "adf", account: bankName, typeDevice: "2")
+                            }
+                            
+                            
                         }) {
                             Image(systemName: "doc.text")
                                 .font(.title2)
@@ -136,6 +143,10 @@ struct UpdateProfileScreen: View {
                     .padding(.horizontal, 20)
                     .padding(.bottom, 50)
                 }
+            }
+        }.overlay {
+            if viewModel.isLoading {
+                LoadView()
             }
         }
     }

@@ -91,6 +91,8 @@ struct ContentView: View {
                         Spacer()
                     }
                 }
+            }.fullScreenCover(isPresented: $viewModel.isNavToGoogleNavigaation) {
+                GoogleMapNavigationView(tripData: $viewModel.tripHistory)
             }
         }
         

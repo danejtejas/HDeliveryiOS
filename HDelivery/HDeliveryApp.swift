@@ -18,13 +18,16 @@ struct HDeliveryApp: App {
         let mananer = LocationManager.shared
         GMSServices.provideAPIKey(AppSetting.GoogleKeySetting.mapKey)
         GMSPlacesClient.provideAPIKey(AppSetting.GoogleKeySetting.mapKey)
-//        try? StorageManager.shared.storeAuthToken("95a47771a27336ed1d1f5e86fd2ad6ed")
+        try? StorageManager.shared.storeAuthToken("c08ae527ff9c471d9ebd95dad8e4f564") // driver
+        try? StorageManager.shared.setUserId(userId: "204")
     }
     
     
     var body: some Scene {
         WindowGroup {
-            if StorageManager.shared.isUserLoggedIn() {
+            
+//            GoogleMapNavigationView()
+            if StorageManager.shared.isUserLoggedIn() || true {
                 ContentView()
             }else {
                 DeliveryLoginView()

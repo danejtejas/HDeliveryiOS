@@ -13,6 +13,8 @@ import Foundation
 
 
 
+
+
 struct TripData: Codable {
     let id: String
     let passengerId: String

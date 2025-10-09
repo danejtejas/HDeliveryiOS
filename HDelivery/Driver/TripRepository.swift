@@ -8,7 +8,7 @@
 protocol TripRepository {
     func createTrip(_ request: CreateTripRequest) async throws -> APIResponse<String>
     
-    func confirmTrip(_ request: DriverConfirmRequest) async throws -> APIResponse<TripData>
+    func confirmTrip(_ request: DriverConfirmRequest) async throws -> APIResponse<TripData?>
     func startTrip(token: String, tripId: String) async throws -> APIResponse<String>
     func endTrip(token: String, tripId: String, distance: String) async throws -> APIResponse<String>
     func cancelTrip(token: String, tripId: String) async throws -> APIResponse<String>
