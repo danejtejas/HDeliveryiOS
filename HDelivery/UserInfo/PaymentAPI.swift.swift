@@ -38,13 +38,11 @@ struct DriverConfirmPaymentRequest: APIRequest {
     let tripId: String
     let paymentMethod: String // should be "2" for cash
     let action: String        // "1" confirm, "0" cancel
+    let token : String
     
     var body: Data? {
-        try? JSONEncoder().encode([
-            "tripId": tripId,
-            "paymentMethod": paymentMethod,
-            "action": action
-        ])
+        let dic : [String : Any] = ["tripId": tripId, "paymentMethod": paymentMethod, "action": action ,"token": token]
+        return dic.toFormURLEncodedData()
     }
 }
 

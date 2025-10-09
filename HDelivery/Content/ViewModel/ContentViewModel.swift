@@ -38,6 +38,7 @@ enum TripStatus: String, Codable {
 class ContentViewModel: ObservableObject {
     
     @Published var isNavToGoogleNavigaation : Bool = false
+    @Published var isNavToPayment : Bool = false
     @Published  var tripHistory : TripHistory?
     
     init() {
@@ -286,8 +287,8 @@ extension ContentViewModel {
                 case .inProgress:
 //                      GoogleMapNavigationView() // navigate to start screen
                     isNavToGoogleNavigaation = true
-                case .pendingPayment: break
-                    
+                case .pendingPayment: 
+                    isNavToPayment = true
                 case .finished:  break
                     
                 case .arrivedA:
