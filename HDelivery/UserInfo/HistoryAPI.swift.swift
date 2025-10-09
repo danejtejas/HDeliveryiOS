@@ -12,7 +12,7 @@ import Foundation
 
 // MARK: - Trip History
 struct TripHistoryRequest: APIRequest {
-    typealias Response = APIResponse<[TripDetail]>
+    typealias Response = APIResponse<[TripHistory]>
     var path: String { "api/showMyTrip" }
     var method: HTTPMethod { .post }
     

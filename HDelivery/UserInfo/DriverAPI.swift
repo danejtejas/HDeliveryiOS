@@ -116,11 +116,8 @@ struct UpdateDriverCoordinateRequest: APIRequest {
     let long: String
     
     var body: Data? {
-        try? JSONEncoder().encode([
-            "token": token,
-            "lat": lat,
-            "long": long
-        ])
+       let dic : [String:Any] = ["token":token,"lat":lat,"long":long]
+        return dic.toFormURLEncodedData()
     }
 }
 

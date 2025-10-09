@@ -19,7 +19,7 @@ final class APITripRepository: TripRepository {
         try await network.execute(request)
     }
     
-    func confirmTrip(_ request: DriverConfirmRequest) async throws -> APIResponse<TripData> { try await network.execute(request) }
+    func confirmTrip(_ request: DriverConfirmRequest) async throws -> APIResponse<TripData?> { try await network.execute(request) }
     
     func startTrip(token: String, tripId: String) async throws -> APIResponse<String> { try await network.execute(StartTripRequest(token: token, tripId: tripId)) }
     
@@ -41,6 +41,7 @@ final class APITripRepository: TripRepository {
         try await network.execute(DriverArrivedRequest(token: token, tripId: tripId))
     }
     func changeStatus(token: String, tripId: String, status: String) async throws -> APIResponse<String> { try await network.execute(ChangeStatusRequest(token: token, tripId: tripId, status: status)) }
+    
     func showTripDetail(token: String, tripId: String) async throws -> APIResponse<TripDetail> { try await network.execute(ShowTripDetailRequest(token: token, tripId: tripId)) }
     func showDistance(token: String, tripId: String) async throws -> APIResponse<String> { try await network.execute(ShowDistanceRequest(token: token, tripId: tripId)) }
 }

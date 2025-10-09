@@ -133,7 +133,9 @@ struct ShareCodeView: View {
     }
     
     func shareContent() {
-        let text = "Join H Delivery and use my code \(viewModel.promotionCode) to earn money!"
+        var code = viewModel.promotionCode ?? ""
+        
+        let text = "Join H Delivery and use my code \(code) to earn money!"
         let activityVC = UIActivityViewController(activityItems: [text], applicationActivities: nil)
         
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,

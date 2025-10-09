@@ -73,7 +73,7 @@ struct CreateTripRequest: APIRequest {
 
 // MARK: - Driver Confirm Trip
 struct DriverConfirmRequest: APIRequest {
-    typealias Response = APIResponse<TripData>
+    typealias Response = APIResponse<TripData?>
     var path: String { "api/driverConfirm" }
     var method: HTTPMethod { .post }
     

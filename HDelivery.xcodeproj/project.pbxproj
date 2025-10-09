@@ -81,7 +81,6 @@
 		96AFF6642E9682F40013B937 /* TripAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF6012E9682F40013B937 /* TripAPI.swift */; };
 		96AFF6652E9682F40013B937 /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF6022E9682F40013B937 /* UserInfo.swift */; };
 		96AFF6662E9682F40013B937 /* UtilityAPI.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF6032E9682F40013B937 /* UtilityAPI.swift.swift */; };
-		96AFF6672E9682F40013B937 /* ChangePasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF6072E9682F40013B937 /* ChangePasswordView.swift */; };
 		96AFF6682E9682F40013B937 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF6082E9682F40013B937 /* Constants.swift */; };
 		96AFF6692E9682F40013B937 /* DepositView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF6092E9682F40013B937 /* DepositView.swift */; };
 		96AFF66A2E9682F40013B937 /* HDeliveryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF60C2E9682F40013B937 /* HDeliveryApp.swift */; };
@@ -174,7 +173,6 @@
 		96AFF6032E9682F40013B937 /* UtilityAPI.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UtilityAPI.swift.swift; sourceTree = "<group>"; };
 		96AFF6052E9682F40013B937 /* API_DOCUMENTATION.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = API_DOCUMENTATION.md; sourceTree = "<group>"; };
 		96AFF6062E9682F40013B937 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		96AFF6072E9682F40013B937 /* ChangePasswordView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordView.swift; sourceTree = "<group>"; };
 		96AFF6082E9682F40013B937 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		96AFF6092E9682F40013B937 /* DepositView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositView.swift; sourceTree = "<group>"; };
 		96AFF60A2E9682F40013B937 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -221,6 +219,16 @@
 		96AFF6982E96A4820013B937 /* Profile */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Profile;
+			sourceTree = "<group>";
+		};
+		96B264022E976E50000CCA4D /* Model */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Model;
+			sourceTree = "<group>";
+		};
+		96B469FA2E96C9E100192C86 /* ChangePassword */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ChangePassword;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -316,6 +324,7 @@
 		96AFF5982E9682F40013B937 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				96B264022E976E50000CCA4D /* Model */,
 				96AFF5972E9682F40013B937 /* ContentView.swift */,
 			);
 			path = View;
@@ -755,7 +764,7 @@
 				96AFF6042E9682F40013B937 /* UserInfo */,
 				96AFF6052E9682F40013B937 /* API_DOCUMENTATION.md */,
 				96AFF6062E9682F40013B937 /* Assets.xcassets */,
-				96AFF6072E9682F40013B937 /* ChangePasswordView.swift */,
+				96B469FA2E96C9E100192C86 /* ChangePassword */,
 				96AFF6082E9682F40013B937 /* Constants.swift */,
 				96AFF6092E9682F40013B937 /* DepositView.swift */,
 				96AFF60A2E9682F40013B937 /* GoogleService-Info.plist */,
@@ -839,6 +848,8 @@
 				96AFF68D2E969A060013B937 /* ShareMyCode */,
 				96AFF6942E96A0610013B937 /* SideMneu */,
 				96AFF6982E96A4820013B937 /* Profile */,
+				96B264022E976E50000CCA4D /* Model */,
+				96B469FA2E96C9E100192C86 /* ChangePassword */,
 			);
 			name = HDelivery;
 			productName = HDelivery;
@@ -1036,7 +1047,6 @@
 				96AFF6642E9682F40013B937 /* TripAPI.swift in Sources */,
 				96AFF6652E9682F40013B937 /* UserInfo.swift in Sources */,
 				96AFF6662E9682F40013B937 /* UtilityAPI.swift.swift in Sources */,
-				96AFF6672E9682F40013B937 /* ChangePasswordView.swift in Sources */,
 				96AFF6682E9682F40013B937 /* Constants.swift in Sources */,
 				96AFF6692E9682F40013B937 /* DepositView.swift in Sources */,
 				96AFF66A2E9682F40013B937 /* HDeliveryApp.swift in Sources */,
