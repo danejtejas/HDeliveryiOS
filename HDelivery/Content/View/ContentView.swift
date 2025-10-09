@@ -69,9 +69,7 @@ struct ContentView: View {
                     
                 case .logout:
                     Text("Logging out...")
-                default:
-                    Text("\(selectedTab.rawValue) coming soon...")
-                        .font(.largeTitle)
+               
                     
                 }
                 
@@ -93,6 +91,8 @@ struct ContentView: View {
                 }
             }.fullScreenCover(isPresented: $viewModel.isNavToGoogleNavigaation) {
                 GoogleMapNavigationView(tripData: $viewModel.tripHistory)
+            }.fullScreenCover(isPresented:$viewModel.isNavToPayment) {
+                DriverRateView(tripData: viewModel.tripHistory)
             }
         }
         

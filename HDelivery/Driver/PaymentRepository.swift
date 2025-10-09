@@ -11,15 +11,23 @@ import Foundation
 
 protocol PaymentRepository {
     func tripPayment(token: String, tripId: String, paymentMethod: String) async throws -> APIResponse<String>
-    func driverConfirmPayment(tripId: String, paymentMethod: String, action: String) async throws -> APIResponse<String>
+    
+    func driverConfirmPayment(token : String,tripId: String, paymentMethod: String, action: String) async throws -> APIResponse<String>
+    
     func pointExchange(token: String, amount: String, transactionId: String, paymentMethod: String) async throws -> APIResponse<String>
+   
     func pointRedeem(token: String, amount: String) async throws -> APIResponse<String>
+    
     func pointTransfer(token: String, amount: String, receiverEmail: String, note: String) async throws -> APIResponse<String>
+    
     func searchUser(token: String, email: String) async throws -> APIResponse<UserInfo>
+    
     func stripePayment(token: String, amount: String, email: String) async throws -> String
 }
 
 final class APIPaymentRepository: PaymentRepository {
+   
+    
     private let network: NetworkClient
     init(network: NetworkClient) { self.network = network }
     
@@ -27,8 +35,8 @@ final class APIPaymentRepository: PaymentRepository {
         try await network.execute(TripPaymentRequest(token: token, tripId: tripId, paymentMethod: paymentMethod))
     }
     
-    func driverConfirmPayment(tripId: String, paymentMethod: String, action: String) async throws -> APIResponse<String> {
-        try await network.execute(DriverConfirmPaymentRequest(tripId: tripId, paymentMethod: paymentMethod, action: action))
+    func driverConfirmPayment(token : String,tripId: String, paymentMethod: String, action: String) async throws -> APIResponse<String> {
+        try await network.execute(DriverConfirmPaymentRequest(tripId: tripId, paymentMethod: paymentMethod, action: action, token: token))
     }
     
     func pointExchange(token: String, amount: String, transactionId: String, paymentMethod: String) async throws -> APIResponse<String> {

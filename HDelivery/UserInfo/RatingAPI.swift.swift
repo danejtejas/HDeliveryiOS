@@ -21,11 +21,12 @@ struct RateDriverRequest: APIRequest {
     let rate: String
     
     var body: Data? {
-        try? JSONEncoder().encode([
+        let dic: [String : Any] = [
             "token": token,
             "tripId": tripId,
             "rate": rate
-        ])
+        ]
+        return dic.toFormURLEncodedData()
     }
 }
 
@@ -40,10 +41,11 @@ struct RatePassengerRequest: APIRequest {
     let rate: String
     
     var body: Data? {
-        try? JSONEncoder().encode([
+        let dic: [String : Any] = [
             "token": token,
             "tripId": tripId,
             "rate": rate
-        ])
+        ]
+        return dic.toFormURLEncodedData()
     }
 }

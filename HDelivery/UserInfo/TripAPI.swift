@@ -277,11 +277,12 @@ struct ChangeStatusRequest: APIRequest {
     let status: String
     
     var body: Data? {
-        try? JSONEncoder().encode([
+        let dic : [String : Any] = [
             "token": token,
             "tripId": tripId,
             "status": status
-        ])
+        ]
+        return dic.toFormURLEncodedData()
     }
 }
 
