@@ -126,7 +126,7 @@ struct RequestScreen: View {
             }
         }
         .fullScreenCover(isPresented:$onllineViewModel.isRequestConformed) {
-//            GoogleMapNavigationView(tripData: $onllineViewModel.tripData)
+//            GoogleMapNavigationView(tripData: $onllineViewModel.tripData?.toTripHistory())
         }
     }
 }

@@ -21,9 +21,9 @@ final class APITripRepository: TripRepository {
     
     func confirmTrip(_ request: DriverConfirmRequest) async throws -> APIResponse<TripData?> { try await network.execute(request) }
     
-    func startTrip(token: String, tripId: String) async throws -> APIResponse<String> { try await network.execute(StartTripRequest(token: token, tripId: tripId)) }
+    func startTrip(token: String, tripId: String) async throws -> APIResponse<TripHistory?> { try await network.execute(StartTripRequest(token: token, tripId: tripId)) }
     
-    func endTrip(token: String, tripId: String, distance: String) async throws -> APIResponse<String> { try await network.execute(EndTripRequest(token: token, tripId: tripId, distance: distance)) }
+    func endTrip(token: String, tripId: String, distance: String) async throws -> APIResponse<TripHistory?> { try await network.execute(EndTripRequest(token: token, tripId: tripId, distance: distance)) }
     
     func cancelTrip(token: String, tripId: String) async throws -> APIResponse<String> { try await network.execute(CancelTripRequest(token: token, tripId: tripId)) }
     

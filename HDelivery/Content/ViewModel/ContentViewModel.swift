@@ -34,7 +34,7 @@ enum TripStatus: String, Codable {
 
 
 
-
+@MainActor
 class ContentViewModel: ObservableObject {
     
     @Published var isNavToGoogleNavigaation : Bool = false
@@ -190,7 +190,7 @@ extension ContentViewModel {
             //            navigateToConfirmPayByCash(tripId: tripId)  // navigate to payment screen
         }
         else {
-            if driver.status ==  "1" {
+            if driver?.status ==  "1" {
                 //                countMyRequest()
             } else {
                 switch status {
@@ -217,7 +217,7 @@ extension ContentViewModel {
         do {
             let token = try StorageManager.shared.getAuthToken() ?? ""
             let response = try await repository.getTripHistory(token: token, page: "1")
-            if response.isSuccess, let data = response.data {
+            if response.isSuccess, let data = response.data , data.count > 0 {
                 print(data)
                 let trip = data[0]
                 let status = trip.status
@@ -232,8 +232,8 @@ extension ContentViewModel {
                 case .inProgress:
 //                      GoogleMapNavigationView() // navigate to start screen
                     isNavToGoogleNavigaation = true
-                case .pendingPayment: break
-                    
+                case .pendingPayment:
+                     isNavToPayment = true
                 case .finished:  break
                     
                 case .arrivedA:

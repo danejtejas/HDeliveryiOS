@@ -92,7 +92,7 @@ struct ContentView: View {
             }.fullScreenCover(isPresented: $viewModel.isNavToGoogleNavigaation) {
                 GoogleMapNavigationView(tripData: $viewModel.tripHistory)
             }.fullScreenCover(isPresented:$viewModel.isNavToPayment) {
-                DriverRateView(tripData: viewModel.tripHistory)
+                UserRateView(tripData: viewModel.tripHistory)
             }
         }
         

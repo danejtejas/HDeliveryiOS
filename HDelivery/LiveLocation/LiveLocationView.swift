@@ -22,12 +22,19 @@ struct GoogleMapNavigationView: View {
     
     var body: some View {
         ZStack(alignment: .top) {
-            GoogleMapLiveView(userLocation: $locationManager.userLocation, destination:  CLLocationCoordinate2D(latitude: tripData?.endLat!.toCLLocationDegrees() ??  0, longitude: tripData?.endLong?.toCLLocationDegrees() ?? 0 ))
+            GoogleMapLiveView(userLocation: $locationManager.userLocation,
+                              pickupLocation: CLLocationCoordinate2D(latitude: tripData?.startLat!.toCLLocationDegrees() ??  0, longitude: tripData?.startLong?.toCLLocationDegrees() ?? 0 ),
+                              destination:  CLLocationCoordinate2D(latitude: tripData?.endLat!.toCLLocationDegrees() ??  0, longitude: tripData?.endLong?.toCLLocationDegrees() ?? 0 ))
                 .edgesIgnoringSafeArea(.all)
             
             // Top bar
             HStack {
-                Button(action: {}) {
+                Button(action: {
+                    Task{
+                      await  liveLocationViewModel.cancelTrip(tripData?.id ?? "")
+                    }
+                    
+                }) {
                     HStack {
                         Image(systemName: "chevron.left")
                         Text("CANCEL").bold()
@@ -55,7 +62,7 @@ struct GoogleMapNavigationView: View {
                     
                     HStack(spacing: 10) {
                         VStack(alignment: .leading, spacing: 6) {
-                            Text(tripData?.passenger.fullName ?? "")
+                            Text(tripData?.passenger?.fullName ?? "")
                                 .font(.headline)
                             HStack {
                                 Button(action: callNumber) {
@@ -74,7 +81,7 @@ struct GoogleMapNavigationView: View {
                         }
                         Spacer()
                         Button(action: arrivedAction) {
-                            Text(  TripStatus(rawValue: tripData?.status ?? "") == .arrivedA ?  "Arrived B" : "Arrived A" )
+                            Text(  getButtonTitle() )
                             .bold()
                             .foregroundColor(.white)
                             .frame(width: 90, height: 90)
@@ -97,13 +104,13 @@ struct GoogleMapNavigationView: View {
     }
     
     private func callNumber() {
-        if let url = URL(string: "tel://\(tripData?.passenger.phone ?? "")") {
+        if let url = URL(string: "tel://\(tripData?.passenger?.phone ?? "")") {
             UIApplication.shared.open(url)
         }
     }
     
     private func sendSMS() {
-        if let url = URL(string: "sms:\(tripData?.passenger.phone ?? "")") {
+        if let url = URL(string: "sms:\(tripData?.passenger?.phone ?? "")") {
             UIApplication.shared.open(url)
         }
     }
@@ -111,16 +118,41 @@ struct GoogleMapNavigationView: View {
     private func arrivedAction() {
         print("Arrived tapped")
         Task{
-            if TripStatus(rawValue: tripData?.status ?? "") == .arrivedA {
-                await liveLocationViewModel.changeTripRequest(tripData?.id ?? "") // Arived B
-               
-                
-            }
-            else { //
-                await liveLocationViewModel.driverArrivedRequest(tripData?.id ?? "") // Arivered A
-            }
             
+            let status =  TripStatus(rawValue: tripData?.status ?? "")
+            switch status {
+                
+            case .arrivedA:
+                await liveLocationViewModel.startGotoBTrip(tripData?.id ?? "") //
+            case .inProgress:
+                await liveLocationViewModel.endTripArrivedB(tripData?.id ?? "") // G
+            case .startTask:
+                await liveLocationViewModel.startGotoBTrip(tripData?.id ?? "") // Go To start
+                
+            default :
+                break
+            }
         }
+    }
+    
+    private func getButtonTitle() -> String {
+        let status =  TripStatus(rawValue: tripData?.status ?? "")
+        switch status {
+        
+        case .inProgress: return "Arrived B"
+            
+        case .arrivedA:
+            return "Go To B"
+        case .arrivedB: return "Fineded"
+            
+        case .startTask:
+            return "Arrived B"
+            
+        default :
+            return "Arrived B"
+        }
+        
+        
     }
 }
 
@@ -130,7 +162,8 @@ struct GoogleMapNavigationView: View {
 
 struct GoogleMapLiveView: UIViewRepresentable {
     @Binding var userLocation: CLLocation?
-    let destination: CLLocationCoordinate2D
+    let pickupLocation: CLLocationCoordinate2D?
+    let destination: CLLocationCoordinate2D?
     
     private let mapView = GMSMapView()
     
@@ -140,11 +173,18 @@ struct GoogleMapLiveView: UIViewRepresentable {
         mapView.settings.compassButton = true
         
         // Destination marker
-        let marker = GMSMarker(position: destination)
-        marker.title = "Destination"
-        marker.icon = GMSMarker.markerImage(with: .red)
-        marker.map = mapView
-        
+        if let pickupLocation = pickupLocation {
+            let marker = GMSMarker(position: pickupLocation)
+            marker.title = "Pickup"
+            marker.icon =  UIImage(named: "my_marker_A")
+            marker.map = mapView
+        }
+        if let destination = destination  {
+            let marker = GMSMarker(position: destination)
+            marker.title = "Destination"
+            marker.icon =  UIImage(named: "my_marker_A")
+            marker.map = mapView
+        }
         return mapView
     }
     
@@ -157,7 +197,9 @@ struct GoogleMapLiveView: UIViewRepresentable {
             
             // Draw route between source and destination
             //            drawRoute(from: location.coordinate, to: destination, on: uiView)
-            drawRoute(from: location.coordinate, to: destination, on: uiView)
+            if let destination = self.destination {
+                drawRoute(from: location.coordinate, to: destination, on: uiView)
+            }
         }
     }
     
@@ -246,8 +288,8 @@ final class GMSLocationManager: NSObject, ObservableObject, CLLocationManagerDel
             //            message = response.message
             //            isSuccess = response.isSuccess
         } catch {
-            //            message = "❌ \(error.localizedDescription)"
-            //            isSuccess = false
+        print("\(error.localizedDescription)")
+           
         }
     }
     
