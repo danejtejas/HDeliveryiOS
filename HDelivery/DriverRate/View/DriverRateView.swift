@@ -14,15 +14,14 @@ struct DriverRateView: View {
     @State private var showAlert = false
     @State private var alertMessage = ""
     
-    // These would normally come from your backend
-    let driverId = "204"
-    let token = "your_auth_token_here"
+    
 
-    @StateObject private var driverRateViewModel = DriverRateViewModel()
+    @StateObject private var driverRateViewModel =  DriverRateViewModel()
     @StateObject private var driverPaymentViewModel  = DriverPaymentViewModel()
     
     var tripData : TripHistory?
     
+    @Environment(\.presentationMode) var isPresentationMode
     
     var body: some View {
         ScrollView {
@@ -64,11 +63,11 @@ struct DriverRateView: View {
                 
                 // Trip Info
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("Type: move my parcel").foregroundColor(.white)
-                    Text("From A: Madhav Mall, Thakkarbapa Nagar Road, Ahmedabad").foregroundColor(.white)
-                    Text("To B: Rajhans Cinemas, Nikol, Ahmedabad").foregroundColor(.white)
-                    Text("Car Plate: demo 1").foregroundColor(.white)
-                    Text("Identity: demo id").foregroundColor(.white)
+                    Text("Type: ").foregroundColor(.white)
+                    Text("From A:" ).foregroundColor(.white)
+                    Text("To B:  ").foregroundColor(.white)
+                    Text("Car Plate: ").foregroundColor(.white)
+                    Text("Identity: ").foregroundColor(.white)
                     
                     // Rating Section
                     VStack(alignment: .leading, spacing: 8) {
@@ -171,6 +170,3 @@ struct DriverRateView: View {
 }
 
 
-#Preview {
-    DriverRateView()
-}

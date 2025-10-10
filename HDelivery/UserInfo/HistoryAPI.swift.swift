@@ -41,12 +41,14 @@ struct TransactionHistoryRequest: APIRequest {
     let page: String
     
     var body: Data? {
-        try? JSONEncoder().encode([
+        let dic : [String:Any] =  [
             "token": token,
             "page": page
-        ])
+        ]
+        return dic.toFormURLEncodedData()
     }
 }
+
 struct MockTransactionInfo: Codable {
     let id: String
     let amount: String

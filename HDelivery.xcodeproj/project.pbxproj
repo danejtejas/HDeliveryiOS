@@ -241,6 +241,21 @@
 			path = ChangePassword;
 			sourceTree = "<group>";
 		};
+		96B5EE062E98F02B005796E1 /* View */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = View;
+			sourceTree = "<group>";
+		};
+		96B5EE092E98F06D005796E1 /* ViewModel */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		96B5EE102E9920C5005796E1 /* UserGoogleMap */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = UserGoogleMap;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -748,6 +763,8 @@
 		96AFF61C2E9682F40013B937 /* HDelivery */ = {
 			isa = PBXGroup;
 			children = (
+				96B5EE102E9920C5005796E1 /* UserGoogleMap */,
+				96B5EE052E98F019005796E1 /* DriverRate */,
 				96B436242E97ECF5003DC99E /* UserRate */,
 				96AFF6792E9682FC0013B937 /* WebView */,
 				96AFF58C2E9682F40013B937 /* APIService */,
@@ -827,6 +844,15 @@
 			path = UserRate;
 			sourceTree = "<group>";
 		};
+		96B5EE052E98F019005796E1 /* DriverRate */ = {
+			isa = PBXGroup;
+			children = (
+				96B5EE092E98F06D005796E1 /* ViewModel */,
+				96B5EE062E98F02B005796E1 /* View */,
+			);
+			path = DriverRate;
+			sourceTree = "<group>";
+		};
 		EBF86C3CA46C6B3F49E88AFF /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -872,6 +898,9 @@
 				96B436252E97ED07003DC99E /* View */,
 				96B436292E97ED31003DC99E /* ViewModel */,
 				96B469FA2E96C9E100192C86 /* ChangePassword */,
+				96B5EE062E98F02B005796E1 /* View */,
+				96B5EE092E98F06D005796E1 /* ViewModel */,
+				96B5EE102E9920C5005796E1 /* UserGoogleMap */,
 			);
 			name = HDelivery;
 			productName = HDelivery;

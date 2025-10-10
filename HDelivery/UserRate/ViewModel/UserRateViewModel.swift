@@ -29,9 +29,9 @@ class UserRateViewModel: ObservableObject {
         defer { isLoading = false }
         
         do {
-            let token = try StorageManager.shared.getFCMToken() ?? ""
+            let token = try StorageManager.shared.getAuthToken() ?? ""
             
-            let response = try await repository.ratePassenger(token: token, tripId: tripId, rate: "10")
+            let response = try await repository.rateDriver(token: token, tripId: tripId, rate: "9")
             print("response: \(response)")
             
             message = response.message

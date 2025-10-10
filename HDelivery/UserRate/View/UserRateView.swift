@@ -171,6 +171,6 @@ struct UserRateView: View {
 }
 
 
-#Preview {
-    UserRateView()
-}
+//#Preview {
+//    UserRateView()
+//}

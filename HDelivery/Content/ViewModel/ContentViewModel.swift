@@ -39,7 +39,9 @@ class ContentViewModel: ObservableObject {
     
     @Published var isNavToGoogleNavigaation : Bool = false
     @Published var isNavToPayment : Bool = false
+    @Published var isNavToPaymentDriver : Bool = false
     @Published  var tripHistory : TripHistory?
+    @Published  var isNavToUserGoogleMap : Bool = false
     
     init() {
         Task {
@@ -233,7 +235,7 @@ extension ContentViewModel {
 //                      GoogleMapNavigationView() // navigate to start screen
                     isNavToGoogleNavigaation = true
                 case .pendingPayment:
-                     isNavToPayment = true
+                    isNavToPaymentDriver = true
                 case .finished:  break
                     
                 case .arrivedA:
@@ -243,7 +245,7 @@ extension ContentViewModel {
                     //  GoogleMapNavigationView()
                     isNavToGoogleNavigaation = true
                 case .startTask:
-//                    GoogleMapNavigationView()
+//
                     isNavToGoogleNavigaation = true
                 case .unknown:
                     print("unknown")
@@ -280,26 +282,26 @@ extension ContentViewModel {
                 let tripStatus =  TripStatus(rawValue: status ?? "") ?? .unknown
                 switch tripStatus {
                 
-                case .approaching:
+                case .approaching:break
 //                    GoogleMapNavigationView() // navigate to start screen
-                    isNavToGoogleNavigaation = true
+//                    isNavToGoogleNavigaation = true
                     
                 case .inProgress:
 //                      GoogleMapNavigationView() // navigate to start screen
-                    isNavToGoogleNavigaation = true
-                case .pendingPayment: 
+                    isNavToUserGoogleMap = true
+                case .pendingPayment:
                     isNavToPayment = true
-                case .finished:  break
+                case .finished:break
                     
                 case .arrivedA:
                     // GoogleMapNavigationView()
                     isNavToGoogleNavigaation = true
                 case .arrivedB:
                     //  GoogleMapNavigationView()
-                    isNavToGoogleNavigaation = true
+                    isNavToUserGoogleMap = true
                 case .startTask:
 //                    GoogleMapNavigationView()
-                    isNavToGoogleNavigaation = true
+                    isNavToUserGoogleMap = true
                 case .unknown:
                     print("unknown")
                 }

@@ -36,7 +36,7 @@ struct HomeView : View {
     
     @StateObject private var viewModel = TripViewModel()
     @StateObject private var driverSearchViewModel = DriverSearchViewModel()
-
+    
     
     var body: some View {
         
@@ -47,7 +47,7 @@ struct HomeView : View {
                 pickupCoordinate: pickupCoordinate,
                 dropCoordinate: dropCoordinate,
             )
-                .edgesIgnoringSafeArea(.all)
+            .edgesIgnoringSafeArea(.all)
             
             
             // MARK: Main Scr
@@ -86,12 +86,15 @@ struct HomeView : View {
                         
                         Button {
                             
+//                            self.setPickupAddres()
+                            
+                            
                         } label: {
                             Image(systemName: "location.circle.fill")
                                 .frame(width: 50, height: 50,alignment: .center)
                                 .foregroundColor(.green)
                         }
-
+                        
                     }
                     .background(Color.white)
                     .shadow(radius: 3)
@@ -126,6 +129,7 @@ struct HomeView : View {
                         
                         
                         Button {
+//                            self.setDropAddres()
                             
                         } label: {
                             Image(systemName: "location.circle.fill")
@@ -133,7 +137,7 @@ struct HomeView : View {
                                 .foregroundColor(.red)
                         }
                         
-            
+                        
                     }
                     .background(Color.white)
                     .shadow(radius: 3)
@@ -177,7 +181,7 @@ struct HomeView : View {
                             .font(Font.system(size: 20))
                         TextField("Recevier phone number", text: $reciverPhoneNumber,  axis: .vertical)
                             .textFieldStyle(PlainTextFieldStyle())
-                           
+                        
                             .multilineTextAlignment(.center)
                             .foregroundColor(Color.brown)
                             .font(.system(size: 14))
@@ -200,7 +204,7 @@ struct HomeView : View {
                             //                            await viewModel.createTrip()
                             await viewModel.createTripRequest(pickupCoordinate: pickupCoordinate, dropCoordinate: dropCoordinate, pickupAddress: pickupAddress, dropAddress: deliveryAddress, receiverPhone: reciverPhoneNumber )
                         }
-                    
+                        
                         
                         print("Order Placed!")
                     }) {
@@ -264,7 +268,6 @@ struct HomeView : View {
                             print(selection.text)
                             isSelectingFromOverlay = true
                             showSearch = false
-                            
                             // decide whether setting pickup or delivery based on focused field
                             if isEditingLocation {
                                 pickupAddress = selection.text
@@ -305,22 +308,49 @@ struct HomeView : View {
                     }
                 }
                 if viewModel.isLoading {
-                        ZStack {
-                            Color.black.opacity(0.4).ignoresSafeArea()
-                            ProgressView("Placing your order...")
-                                .padding()
-                                .background(Color.white)
-                                .cornerRadius(10)
-                        }
-                        .transition(.opacity)
-                    }
+                    LoadView()
+                }
                 
             }
             
         }.animation(.easeIn, value: showSearch)
-            
+        
     }
-
+    
+    
+    
+    
+    func setPickupAddres() {
+//        service.getPlaceID { (result: Result<(String, CLLocationCoordinate2D), Error>) in
+//            DispatchQueue.main.async {
+//                switch result {
+//                case .success(let (name, coord)):
+//                    self.pickupCoordinate = coord
+//                    self.pickupAddress = name
+//                    print("✅ Pickup coordinate set: \(coord)")
+//                case .failure(let error):
+//                    print("❌ Failed to get pickup coordinate: \(error.localizedDescription)")
+//                }
+//            }
+//        }
+    }
+    
+    
+    func setDropAddres() {
+//        service.getPlaceID { (result: Result<(String, CLLocationCoordinate2D), Error>) in
+//            DispatchQueue.main.async {
+//                switch result {
+//                case .success(let (name, coord)):
+//                    self.dropCoordinate = coord
+//                    self.deliveryAddress = name
+//                    print("✅ Pickup coordinate set: \(coord)")
+//                case .failure(let error):
+//                    print("❌ Failed to get pickup coordinate: \(error.localizedDescription)")
+//                }
+//            }
+//        }
+    }
+    
 }
 
 
@@ -343,8 +373,8 @@ struct PlaceSearchOverlay: View {
                 VStack(alignment: .leading) {
                     ForEach(Array(predictions.enumerated()), id: \.element.placeID) { index, prediction in
                         
-                            // Label
-                            
+                        // Label
+                        
                         VStack(alignment: .leading) {
                             Text(prediction.attributedPrimaryText.string)
                                 .font(.body)
@@ -365,7 +395,7 @@ struct PlaceSearchOverlay: View {
                         if index != predictions.count - 1 {
                             Divider()
                         }
-                       
+                        
                     }
                 }
                 .frame(width: proxy.size.width, alignment: .leading)

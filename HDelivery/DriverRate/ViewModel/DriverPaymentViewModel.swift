@@ -1,9 +1,10 @@
 //
-//  Untitled.swift
+//  DriverPaymentViewModel.swift
 //  HDelivery
 //
-//  Created by Tejas on 09/10/25.
+//  Created by Tejas on 10/10/25.
 //
+
 
 import SwiftUI
 
@@ -20,16 +21,16 @@ class DriverPaymentViewModel: ObservableObject {
         self.repository = repository
     }
     
-    func confirmDriverPayment(tripId: String) async {
+     func confirmDriverPayment(tripId: String) async {
         isLoading = true
         defer { isLoading = false }
-        
+
         do {
-            let token = try StorageManager.shared.getFCMToken() ?? ""
-            
+            let token = try StorageManager.shared.getAuthToken() ?? ""
+
             let response = try await repository.driverConfirmPayment(token: token, tripId: tripId, paymentMethod: "2", action: "1")
             print("response: \(response)")
-            
+
             message = response.message
             isSuccess = response.isSuccess
         } catch {
