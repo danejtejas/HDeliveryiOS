@@ -43,7 +43,7 @@ struct GoogleMapView: UIViewRepresentable {
             print("Adding pickup marker at: \(pickupCoordinate)")
             let marker = GMSMarker(position: pickupCoordinate)
             marker.title = pickupTitle
-            marker.icon = GMSMarker.markerImage(with: UIColor.systemGreen)
+            marker.icon = UIImage(named: "my_marker_A")
             marker.map = uiView
             bounds = GMSCoordinateBounds(coordinate: pickupCoordinate, coordinate: pickupCoordinate)
         } else  {
@@ -54,7 +54,7 @@ struct GoogleMapView: UIViewRepresentable {
             print("Adding drop marker at: \(dropCoordinate)")
             let marker = GMSMarker(position: dropCoordinate)
             marker.title = dropTitle
-            marker.icon = GMSMarker.markerImage(with: UIColor.systemRed)
+            marker.icon = UIImage(named: "my_marker_B")
             marker.map = uiView
             if let existing = bounds {
                 bounds = existing.includingCoordinate(dropCoordinate)

@@ -48,4 +48,59 @@ class LiveLocationViewModel: ObservableObject {
         }
     }
     
+    func cancelTrip(_ tripId: String) async {
+        
+        let rep = AppDependencies.shared.makeTripRepository()
+        do {
+            guard let token = try StorageManager.shared.getAuthToken() else { print("No Token Found");  return  }
+          let response  =   try await rep.cancelTrip(token: token, tripId: tripId)
+            if  response.isSuccess{
+                print(response)
+             }
+             else {
+                 print(response.message ?? "")
+             }
+        }
+        catch {
+            print("eror message = > " ,error.localizedDescription)
+        }
+    }
+    
+    func startGotoBTrip(_ tripId: String) async {
+       
+        let rep = AppDependencies.shared.makeTripRepository()
+        do {
+            guard let token = try StorageManager.shared.getAuthToken() else { print("No Token Found");  return  }
+            let response  =   try await rep.startTrip(token: token, tripId: tripId)
+            if  response.isSuccess{
+                print(response)
+             }
+             else {
+                 print(response.message ?? "")
+             }
+        }
+        catch {
+            print("eror message = > " ,error.localizedDescription)
+        }
+        
+    }
+    
+    func endTripArrivedB(_ tripId: String)  async {
+        
+        let rep = AppDependencies.shared.makeTripRepository()
+        do {
+            guard let token = try StorageManager.shared.getAuthToken() else { print("No Token Found");  return  }
+            let response  =   try await rep.endTrip(token: token, tripId: tripId, distance: "0")
+            if  response.isSuccess{
+                print(response)
+             }
+             else {
+                 print(response.message ?? "")
+             }
+        }
+        catch {
+            print("eror message = > " ,error.localizedDescription)
+        }
+    }
+    
 }

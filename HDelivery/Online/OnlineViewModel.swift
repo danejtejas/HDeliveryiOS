@@ -89,7 +89,7 @@ class OnlineViewModel: ObservableObject {
             if  repsone.isSuccess, let data  = repsone.data {
                 print(data   )
                 self.isRequestConformed = true
-                self.tripData = data
+                self.tripData =  data
             }
             else {
                 print(repsone.message ?? "")

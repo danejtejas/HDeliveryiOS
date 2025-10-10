@@ -101,7 +101,7 @@ struct DriverConfirmRequest: APIRequest {
 
 // MARK: - Start Trip
 struct StartTripRequest: APIRequest {
-    typealias Response = APIResponse<String>
+    typealias Response = APIResponse<TripHistory?>
     var path: String { "api/startTrip" }
     var method: HTTPMethod { .post }
     
@@ -109,16 +109,14 @@ struct StartTripRequest: APIRequest {
     let tripId: String
     
     var body: Data? {
-        try? JSONEncoder().encode([
-            "token": token,
-            "tripId": tripId
-        ])
+        let dic : [String : Any] = ["token": token, "tripId": tripId]
+        return dic.toFormURLEncodedData()
     }
 }
 
 // MARK: - End Trip
 struct EndTripRequest: APIRequest {
-    typealias Response = APIResponse<String>
+    typealias Response = APIResponse<TripHistory?>
     var path: String { "api/endTrip" }
     var method: HTTPMethod { .post }
     
@@ -127,11 +125,14 @@ struct EndTripRequest: APIRequest {
     let distance: String
     
     var body: Data? {
-        try? JSONEncoder().encode([
+        
+        let dic : [String : Any] = [
             "token": token,
             "tripId": tripId,
             "distance": distance
-        ])
+        ]
+        
+        return  dic.toFormURLEncodedData()
     }
 }
 
@@ -145,10 +146,13 @@ struct CancelTripRequest: APIRequest {
     let tripId: String
     
     var body: Data? {
-        try? JSONEncoder().encode([
+        
+        let dic : [String : Any] = [
             "token": token,
             "tripId": tripId
-        ])
+        ]
+        
+      return  dic.toFormURLEncodedData()
     }
 }
 
