@@ -300,10 +300,13 @@ struct ShowTripDetailRequest: APIRequest {
     let tripId: String
     
     var body: Data? {
-        try? JSONEncoder().encode([
+        
+        let dic : [String:Any] = [
             "token": token,
             "tripId": tripId
-        ])
+        ]
+        
+        return dic.toFormURLEncodedData()
     }
 }
 
@@ -317,10 +320,13 @@ struct ShowDistanceRequest: APIRequest {
     let tripId: String
     
     var body: Data? {
-        try? JSONEncoder().encode([
+        
+        let dic : [String:Any] = [
             "token": token,
             "tripId": tripId
-        ])
+        ]
+        
+        return dic.toFormURLEncodedData()
     }
 }
 

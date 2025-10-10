@@ -2,15 +2,10 @@
 //  DriverRateViewModel.swift
 //  HDelivery
 //
-//  Created by Tejas on 09/10/25.
+//  Created by Tejas on 10/10/25.
 //
 
-
-import Foundation
-import Combine
 import SwiftUI
-
-
 
 @MainActor
 class DriverRateViewModel: ObservableObject {
@@ -29,9 +24,9 @@ class DriverRateViewModel: ObservableObject {
         defer { isLoading = false }
         
         do {
-            let token = try StorageManager.shared.getFCMToken() ?? ""
+            let token = try StorageManager.shared.getAuthToken() ?? ""
             
-            let response = try await repository.ratePassenger(token: token, tripId: tripId, rate: "10")
+            let response = try await repository.ratePassenger(token: token, tripId: tripId, rate: "9")
             print("response: \(response)")
             
             message = response.message
@@ -42,4 +37,3 @@ class DriverRateViewModel: ObservableObject {
         }
     }
 }
-
