@@ -42,8 +42,8 @@ class LoginViewModel: ObservableObject {
         let gcm_id = getFCMToken
         let ime  = "123456"
         let pass =  password //"Rutvik123@"
-        let lat  =  LocationManager.shared.currentLocation?.coordinate.lat() ?? "0.0"
-        let long = LocationManager.shared.currentLocation?.coordinate.lon() ?? "0.0"
+        let lat  =   "0.0"
+        let long =  "0.0"
         
         let loginRequest =  LoginRequest(email: emailId, gcm_id: gcm_id!, ime: ime, password: pass, lat: lat, long: long)
         

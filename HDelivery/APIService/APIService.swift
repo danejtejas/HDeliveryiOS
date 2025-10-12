@@ -188,6 +188,7 @@ struct ResponseHandler: ResponseHandling {
             
             return responseObject
         } catch {
+            print("JSON Decoding Error:  \(error.localizedDescription) ")
             throw NetworkError.decodingError(error)
         }
     }

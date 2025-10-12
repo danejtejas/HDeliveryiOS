@@ -21,17 +21,17 @@ class DriverSearchViewModel: ObservableObject {
         
         
          
-        let latCor =  LocationManager.shared.currentLocation?.coordinate.lat() ?? ""
-        let long  =  LocationManager.shared.currentLocation?.coordinate.lon() ?? ""
-        
-        Task {
-            await searchDrivers(
-                lat: latCor,
-                long: long,
-                carType: "2",
-                distance: "1000000"
-            )
-        }
+//        let latCor =  LocationManager.shared.currentLocation?.coordinate.lat() ?? ""
+//        let long  =  LocationManager.shared.currentLocation?.coordinate.lon() ?? ""
+//        
+//        Task {
+//            await searchDrivers(
+//                lat: latCor,
+//                long: long,
+//                carType: "2",
+//                distance: "1000000"
+//            )
+//        }
 
     }
     

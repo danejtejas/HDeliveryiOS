@@ -20,8 +20,8 @@ enum TripStatus: String, Codable {
 
     var description: String {
         switch self {
-        case .approaching: return "Approaching (Driver confirmed and approaching)"
-        case .inProgress: return "In Progress (Trip started)"
+        case .approaching: return "Approaching (Driver confirmed and approaching)"  // Driver Confirmed
+        case .inProgress: return "In Progress (Trip started)"     // 
         case .pendingPayment: return "Pending Payment (Trip ended, waiting for payment)"
         case .finished: return "Finished (Trip completed)"
         case .arrivedA: return "Arrived at Pickup (A)"
@@ -182,18 +182,17 @@ extension ContentViewModel {
     func handleDriverStatus(tripData :  TripHistory) {
         
         let driver = tripData.driver
-        
-        
+
         let status = tripData.status
         let passengerRate = tripData.passengerRate
         let isWaitDriverConfirm =  tripData.isWattingConfirm
         
         if isWaitDriverConfirm == "1" {
-            //            navigateToConfirmPayByCash(tripId: tripId)  // navigate to payment screen
+           
         }
         else {
             if driver?.status ==  "1" {
-                //                countMyRequest()
+                                countMyRequest()
             } else {
                 switch status {
                 case "3", "4":
@@ -282,9 +281,9 @@ extension ContentViewModel {
                 let tripStatus =  TripStatus(rawValue: status ?? "") ?? .unknown
                 switch tripStatus {
                 
-                case .approaching:break
+                case .approaching:
 //                    GoogleMapNavigationView() // navigate to start screen
-//                    isNavToGoogleNavigaation = true
+                    isNavToUserGoogleMap = true
                     
                 case .inProgress:
 //                      GoogleMapNavigationView() // navigate to start screen
@@ -295,7 +294,7 @@ extension ContentViewModel {
                     
                 case .arrivedA:
                     // GoogleMapNavigationView()
-                    isNavToGoogleNavigaation = true
+                    isNavToUserGoogleMap = true
                 case .arrivedB:
                     //  GoogleMapNavigationView()
                     isNavToUserGoogleMap = true

@@ -22,9 +22,9 @@ struct TaskHistoryScreen: View {
     
     var body: some View {
         
-        List(rides) { ride in
+        List($viewModel.tripHistory, id: \.id) { trip in
             
-            TaskCardView(task: ride)
+            TaskCardView(task: trip)
             
             
         }
@@ -51,6 +51,11 @@ struct TaskHistoryScreen: View {
         }
         .toolbarBackground(AppSetting.ColorSetting.navigationBarBg, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
+        .overlay{
+            if viewModel.isLoading {
+                LoadView()
+            }
+        }
         .onAppear {
             Task {
                 await viewModel.showMyTrip()
@@ -63,7 +68,7 @@ struct TaskHistoryScreen: View {
 
 // MARK: - Task Card View
 struct TaskCardView: View {
-    let task: Ride
+    @Binding var task: TripHistory
     
     var body: some View {
         VStack(spacing: 0) {
@@ -72,18 +77,18 @@ struct TaskCardView: View {
                 Image(systemName: "car.fill")
                     .foregroundColor(.black)
                 
-                Text(formattedDate(task.date))
+                Text(task.dateCreated ?? "")
                     .font(.system(size: 16))
                     .foregroundColor(.black)
                 
                 Spacer()
                 
-                Text(String(format: "%.2f", task.amount))
+                Text(String(format: "%.2f", task.estimateFare ?? "0"))
                     .font(.system(size: 20, weight: .bold))
                     .foregroundColor(.white)
                     .padding(.horizontal, 15)
                     .padding(.vertical, 10)
-                    .background(task.amount < 0 ? Color.red : Color.green)
+                    .background(Int(task.fareInt) < 0 ? Color.red : Color.green)
             }
             .padding(.horizontal, 15)
             .padding(.vertical, 12)
@@ -92,12 +97,12 @@ struct TaskCardView: View {
             // Task details
             VStack(alignment: .leading, spacing: 12) {
                 DetailRow(label: "Task Id", value: "\(task.id)")
-                DetailRow(label: "Type", value: task.type)
-                DetailRow(label: "From A", value: task.fromAddress)
-                DetailRow(label: "To B:", value: task.toAddress)
-                DetailRow(label: "Trip", value: task.trip)
-                DetailRow(label: "Task", value: task.ride)
-                DetailRow(label: "Payment", value: task.payment)
+                DetailRow(label: "Type", value:  "")
+                DetailRow(label: "From A", value: task.startLocation ?? "")
+                DetailRow(label: "To B:", value: task.endLocation ?? "")
+                DetailRow(label: "Trip", value: task.distanceFormat)
+                DetailRow(label: "Task", value:  "0")
+                DetailRow(label: "Payment", value: task.paymentMode )
             }
             .padding(15)
             .background(Color(red: 0.25, green: 0.35, blue: 0.65))

@@ -15,7 +15,9 @@ class OnlineViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var trips = [TripDetailResponse] ()
     @Published var isRequestConformed: Bool = false
+    
     var tripData : TripData?
+    @Published var tripHistory : TripHistory?
     
     init(repository: DriverRepository = AppDependencies.shared.makeDriverRepository()){
         self.repository = repository
@@ -87,9 +89,10 @@ class OnlineViewModel: ObservableObject {
             let token = try  StorageManager.shared.getAuthToken()  ?? ""
             let repsone = try await rep.confirmTrip(DriverConfirmRequest(token: token, requestId: requestId, startLat: startLat, startLong: startLong, startLocation: startLocation))
             if  repsone.isSuccess, let data  = repsone.data {
-                print(data   )
+                print(data )
                 self.isRequestConformed = true
                 self.tripData =  data
+                self.tripHistory = self.tripData?.toTripHistory()
             }
             else {
                 print(repsone.message ?? "")

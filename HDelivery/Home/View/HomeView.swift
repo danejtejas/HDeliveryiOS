@@ -36,6 +36,10 @@ struct HomeView : View {
     
     @StateObject private var viewModel = TripViewModel()
     @StateObject private var driverSearchViewModel = DriverSearchViewModel()
+    @StateObject private var homeViewModel: HomeViewModel = .init()
+    
+//    @StateObject private var locationManager : LocationManager = .shared
+    
     
     
     var body: some View {
@@ -45,7 +49,7 @@ struct HomeView : View {
             
             GoogleMapView(
                 pickupCoordinate: pickupCoordinate,
-                dropCoordinate: dropCoordinate,
+                dropCoordinate: dropCoordinate, region: $homeViewModel.cameraPosition,
             )
             .edgesIgnoringSafeArea(.all)
             
@@ -313,7 +317,16 @@ struct HomeView : View {
                 
             }
             
-        }.animation(.easeIn, value: showSearch)
+        }.onAppear(perform: {
+            if  homeViewModel.locationStatus == "Not Determined" {
+                homeViewModel.requestPermission()
+            }
+            else {
+                homeViewModel.startTracking()
+            }
+        })
+        .animation(.easeIn, value: showSearch)
+            
         
     }
     

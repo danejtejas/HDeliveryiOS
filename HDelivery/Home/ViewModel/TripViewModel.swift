@@ -19,6 +19,7 @@ final class TripViewModel: ObservableObject {
     private let repository: TripRepository
     
     @Published var isSuccess = false
+    @Published var itemDescription : String?
     
     var selectedItem : [Item] = []
     
@@ -33,7 +34,7 @@ final class TripViewModel: ObservableObject {
         errorMessage = nil
        
         do {
-            let token = try await StorageManager.shared.getAuthToken() ?? ""
+            let token = try  StorageManager.shared.getAuthToken() ?? ""
             
             let startLat = pickupCoordinate?.lat() ?? ""
             let startLong = pickupCoordinate?.lon() ?? ""

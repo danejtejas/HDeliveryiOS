@@ -7,6 +7,7 @@
 
 import SwiftUI
 import GoogleMaps
+import GoogleMapsUtils
 import CoreLocation
 import UIKit
 
@@ -16,19 +17,37 @@ struct GoogleMapView: UIViewRepresentable {
     let pickupTitle: String = "A"
     let dropTitle: String = "B"
 
+    @Binding var region: GMSCameraPosition?
+    
+    
+  
+    
     func makeUIView(context: Context) -> GMSMapView {
         
-        let latCor =  LocationManager.shared.currentLocation?.coordinate.latitude ??  37.7749
-        let long  =  LocationManager.shared.currentLocation?.coordinate.longitude ?? -122.4194
+        let latCor =   37.7749 //  LocationManager.shared.currentLocation?.coordinate.latitude ??
+        let long  =  -122.4194 //LocationManager.shared.currentLocation?.coordinate.longitude ??
         
         let camera = GMSCameraPosition.camera(
             withLatitude: latCor,   // Example: San Francisco
             longitude: long,
             zoom: 12.0
         )
-        let mapView = GMSMapView.map(withFrame: .zero, camera: camera)
-        mapView.isMyLocationEnabled = true
-        return mapView
+        //
+        
+        if let cameraRegion = region {
+            print("GoogleMapView initial camera region set: \(cameraRegion)")
+            let mapView = GMSMapView.map(withFrame: .zero, camera: cameraRegion)
+            mapView.isMyLocationEnabled = true
+            mapView.settings.myLocationButton = true
+            return mapView
+        }
+        else {
+            let mapView = GMSMapView.map(withFrame: .zero, camera: camera )
+            mapView.isMyLocationEnabled = true
+            mapView.settings.myLocationButton = true
+            return mapView
+        }
+        
     }
 
     func updateUIView(_ uiView: GMSMapView, context: Context) {
@@ -37,6 +56,8 @@ struct GoogleMapView: UIViewRepresentable {
         
         uiView.clear()
 
+        uiView.camera = region ??  uiView.camera
+        
         var bounds: GMSCoordinateBounds? = nil
 
         if let pickupCoordinate {
