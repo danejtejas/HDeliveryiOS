@@ -16,9 +16,6 @@ class ProfileViewModel: ObservableObject {
     @Published var bankACNumber : String?
  
    
- 
-  
-   
     @Published var postCode : String?
     @Published var state: String = ""
    
@@ -28,7 +25,17 @@ class ProfileViewModel: ObservableObject {
     @Published var phone : String?
     @Published var cityName : String?
       
+    
+    @Published var carPlate : String?
+    @Published var yearOfManufacture : String?
+    @Published  var  make  : String?
      
+    
+    @Published var taskType : String = "Task Type"
+    
+    
+    
+    
      init() {
          let url = URL(string: StorageManager.shared.getUserInfo()?.image ?? "")
          prfileImageUrl = url
@@ -38,9 +45,23 @@ class ProfileViewModel: ObservableObject {
          email = StorageManager.shared.getUserInfo()?.email ?? ""
          phone = StorageManager.shared.getUserInfo()?.phone ?? ""
          cityName = StorageManager.shared.getUserInfo()?.cityName ?? ""
-         postCode = "222"
-         bankName = ""
-         bankACNumber = ""
+         if  let driver = StorageManager.shared.getUserInfo()?.driver {
+             postCode = ""
+             let arr = driver.bankAccount?.split(separator: "*") ?? []
+             if arr.count > 1 {
+                 bankName = String(arr[0])
+             }
+             if arr.count > 2 {
+                 bankACNumber = String(arr[1])
+             }
+        }
+        
+         if let car = StorageManager.shared.getUserInfo()?.car {
+             let carPlate = car.carPlate ?? ""
+             let yearOfManufacture = car.year
+             let make = car.model ?? ""
+             
+         }
      }
     
     func updateProfile(){
