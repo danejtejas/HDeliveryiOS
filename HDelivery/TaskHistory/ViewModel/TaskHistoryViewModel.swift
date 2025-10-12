@@ -7,15 +7,16 @@
 
 import SwiftUI
 
+@MainActor
 class TaskHistoryViewModel: ObservableObject {
     
     @Published var trips: [TripDetailResponse] = []
     @Published var errorMessage: String?
     @Published var isLoading = false
-    
+    @Published var tripHistory: [TripHistory] = []
 
     
-    /// <#Description#>
+    
     func showMyRequests( ) async {
         isLoading = true
         errorMessage = nil
@@ -42,7 +43,7 @@ class TaskHistoryViewModel: ObservableObject {
             let token = try StorageManager.shared.getAuthToken() ?? ""
             let response = try await repository.getTripHistory(token: token, page: "1")
             if response.isSuccess, let data = response.data {
-                print(data)
+                tripHistory = data
             } else {
                 errorMessage = response.message
             }

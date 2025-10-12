@@ -60,12 +60,14 @@ struct PointExchangeRequest: APIRequest {
     let paymentMethod: String
     
     var body: Data? {
-        try? JSONEncoder().encode([
+        
+        let dic : [String:Any] = [
             "token": token,
             "amount": amount,
             "transactionId": transactionId,
             "paymentMethod": paymentMethod
-        ])
+        ]
+        return dic.toFormURLEncodedData()
     }
 }
 
@@ -79,10 +81,13 @@ struct PointRedeemRequest: APIRequest {
     let amount: String
     
     var body: Data? {
-        try? JSONEncoder().encode([
+        
+        let dic : [String:Any] = [
             "token": token,
             "amount": amount
-        ])
+        ]
+        
+        return dic.toFormURLEncodedData()
     }
 }
 

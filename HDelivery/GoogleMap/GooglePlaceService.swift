@@ -66,29 +66,29 @@ class GooglePlaceService: ObservableObject {
     }
     
     // MARK: - Get Place ID using Google Places SDK form current location
-     func getPlaceID(completion: @escaping (Result<(name: String?, coordinate: CLLocationCoordinate2D), Error>) -> Void) {
-        guard  let coordinate  = LocationManager.shared.currentLocation?.coordinate else {
-            print("not able to get current location")
-            return
-        }
-        let placesClient = GMSPlacesClient.shared()
-//         _ = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
-        let fields: GMSPlaceField = [.placeID, .name, .coordinate]
-        
-        
-        placesClient.findPlaceLikelihoodsFromCurrentLocation(withPlaceFields: fields) { likelihoods, error in
-            if let error = error {
-                print("❌ Failed to get place: \(error.localizedDescription)")
-                return
-            }
-            
-            if let place = likelihoods?.first?.place {
-                completion(.success((name: place.name, coordinate: place.coordinate)))
-            } else {
-                completion(.failure(NSError(domain: "GooglePlaceService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Place not found"])) )
-            }
-        }
-    }
+//     func getPlaceID(completion: @escaping (Result<(name: String?, coordinate: CLLocationCoordinate2D), Error>) -> Void) {
+//        guard  let coordinate  = LocationManager.shared.currentLocation?.coordinate else {
+//            print("not able to get current location")
+//            return
+//        }
+//        let placesClient = GMSPlacesClient.shared()
+////         _ = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+//        let fields: GMSPlaceField = [.placeID, .name, .coordinate]
+//        
+//        
+//        placesClient.findPlaceLikelihoodsFromCurrentLocation(withPlaceFields: fields) { likelihoods, error in
+//            if let error = error {
+//                print("❌ Failed to get place: \(error.localizedDescription)")
+//                return
+//            }
+//            
+//            if let place = likelihoods?.first?.place {
+//                completion(.success((name: place.name, coordinate: place.coordinate)))
+//            } else {
+//                completion(.failure(NSError(domain: "GooglePlaceService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Place not found"])) )
+//            }
+//        }
+//    }
 }
 
 

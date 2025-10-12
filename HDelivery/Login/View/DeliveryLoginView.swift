@@ -14,6 +14,8 @@ struct DeliveryLoginView: View {
     
     @StateObject private var viewModel = LoginViewModel()
     
+    @State private var isForgotPasswordTapped = false
+    
     
     var body: some View {
         NavigationView{
@@ -118,7 +120,7 @@ struct DeliveryLoginView: View {
                             
                             // Forgot password
                             Button(action: {
-                                // Handle forgot password
+                                self.isForgotPasswordTapped = true
                             }) {
                                 Text("Forgot password?")
                                     .font(.system(size: 14))
@@ -150,22 +152,6 @@ struct DeliveryLoginView: View {
                                         .font(.system(size: 16, weight: .bold))
                                         .foregroundColor(.blue)
                                 }
-                                
-                                //                                Image(systemName: "globe")
-                                //                                    .font(.system(size: 24))
-                                //                                    .foregroundColor(.red)
-                                //                                    .frame(width: 40, height: 40)
-                                //                                    .background(
-                                //                                        Circle()
-                                //                                            .fill(
-                                //                                                RadialGradient(
-                                //                                                    gradient: Gradient(colors: [.red, .yellow, .green, .blue]),
-                                //                                                    center: .center,
-                                //                                                    startRadius: 5,
-                                //                                                    endRadius: 20
-                                //                                                )
-                                //                                            )
-                                //                                    )
                             }
                         }
                         .padding(.top, 20)
@@ -203,6 +189,10 @@ struct DeliveryLoginView: View {
         .fullScreenCover(isPresented: $viewModel.isLoggedIn) {
                    ContentView()
                }
+        
+        .fullScreenCover(isPresented: $isForgotPasswordTapped) {
+            ForgotPasswordView()
+               }
         .overlay {
             if self.viewModel.isLoading {
                 ZStack {
@@ -212,6 +202,7 @@ struct DeliveryLoginView: View {
                         .opacity(viewModel.isLoading ? 1 : 0)
                 }
             }
+            
         }
     }
 }

@@ -11,27 +11,35 @@ import SwiftUI
 import GoogleMaps
 import CoreLocation
 
+
+
 struct GoogleMapNavigationView: View {
     @StateObject private var locationManager = GMSLocationManager()
     
     //    @Binding var tripData : TripData?
-    @Binding var tripData : TripHistory?
+//    @Binding var tripData : TripHistory?
     
-    @StateObject private var liveLocationViewModel =  LiveLocationViewModel()
+   
+    @ObservedObject var viewModel: LiveLocationViewModel   // 👈 changed
+
+    init(liveLocationViewModel: LiveLocationViewModel) {
+       
+        self.viewModel = liveLocationViewModel
+    }
     
     
     var body: some View {
         ZStack(alignment: .top) {
             GoogleMapLiveView(userLocation: $locationManager.userLocation,
-                              pickupLocation: CLLocationCoordinate2D(latitude: tripData?.startLat!.toCLLocationDegrees() ??  0, longitude: tripData?.startLong?.toCLLocationDegrees() ?? 0 ),
-                              destination:  CLLocationCoordinate2D(latitude: tripData?.endLat!.toCLLocationDegrees() ??  0, longitude: tripData?.endLong?.toCLLocationDegrees() ?? 0 ))
+                              pickupLocation: CLLocationCoordinate2D(latitude: viewModel.tripData?.startLat!.toCLLocationDegrees() ??  0, longitude: viewModel.tripData?.startLong?.toCLLocationDegrees() ?? 0 ),
+                              destination:  CLLocationCoordinate2D(latitude: viewModel.tripData?.endLat!.toCLLocationDegrees() ??  0, longitude: viewModel.tripData?.endLong?.toCLLocationDegrees() ?? 0 ))
                 .edgesIgnoringSafeArea(.all)
             
             // Top bar
             HStack {
                 Button(action: {
                     Task{
-                      await  liveLocationViewModel.cancelTrip(tripData?.id ?? "")
+                        await  viewModel.cancelTrip(viewModel.tripData?.id ?? "")
                     }
                     
                 }) {
@@ -52,7 +60,7 @@ struct GoogleMapNavigationView: View {
             VStack {
                 Spacer()
                 VStack(spacing: 10) {
-                    Text("To: \(tripData?.endLocation ?? "")")
+                    Text("To: \(viewModel.tripData?.endLocation ?? "")")
                         .foregroundColor(.white)
                         .font(.subheadline)
                         .padding()
@@ -62,7 +70,7 @@ struct GoogleMapNavigationView: View {
                     
                     HStack(spacing: 10) {
                         VStack(alignment: .leading, spacing: 6) {
-                            Text(tripData?.passenger?.fullName ?? "")
+                            Text(viewModel.tripData?.passenger?.fullName ?? "")
                                 .font(.headline)
                             HStack {
                                 Button(action: callNumber) {
@@ -101,16 +109,19 @@ struct GoogleMapNavigationView: View {
         .onAppear {
             locationManager.start()
         }
+        .overlay {
+            
+        }
     }
     
     private func callNumber() {
-        if let url = URL(string: "tel://\(tripData?.passenger?.phone ?? "")") {
+        if let url = URL(string: "tel://\(viewModel.tripData?.passenger?.phone ?? "")") {
             UIApplication.shared.open(url)
         }
     }
     
     private func sendSMS() {
-        if let url = URL(string: "sms:\(tripData?.passenger?.phone ?? "")") {
+        if let url = URL(string: "sms:\(viewModel.tripData?.passenger?.phone ?? "")") {
             UIApplication.shared.open(url)
         }
     }
@@ -119,15 +130,16 @@ struct GoogleMapNavigationView: View {
         print("Arrived tapped")
         Task{
             
-            let status =  TripStatus(rawValue: tripData?.status ?? "")
+            let status =  TripStatus(rawValue: viewModel.tripData?.status ?? "")
             switch status {
-                
+            case .approaching:
+                await viewModel.driverArrivedRequest(viewModel.tripData?.id ?? "")
             case .arrivedA:
-                await liveLocationViewModel.startGotoBTrip(tripData?.id ?? "") //
+                await viewModel.startGotoBTrip(viewModel.tripData?.id ?? "") //
             case .inProgress:
-                await liveLocationViewModel.endTripArrivedB(tripData?.id ?? "") // G
+                await viewModel.endTripArrivedB(viewModel.tripData?.id ?? "") // G
             case .startTask:
-                await liveLocationViewModel.startGotoBTrip(tripData?.id ?? "") // Go To start
+                await viewModel.startGotoBTrip(viewModel.tripData?.id ?? "") // Go To start
                 
             default :
                 break
@@ -136,9 +148,11 @@ struct GoogleMapNavigationView: View {
     }
     
     private func getButtonTitle() -> String {
-        let status =  TripStatus(rawValue: tripData?.status ?? "")
+        let status =  TripStatus(rawValue: viewModel.tripData?.status ?? "")
         switch status {
-        
+       
+        case .approaching: return "Arrived A"
+            
         case .inProgress: return "Arrived B"
             
         case .arrivedA:
@@ -149,9 +163,10 @@ struct GoogleMapNavigationView: View {
             return "Arrived B"
             
         default :
-            return "Arrived B"
+            break
         }
         
+        return ""
         
     }
 }

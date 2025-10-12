@@ -20,11 +20,11 @@ protocol MapServiceProviding {
 
 // MARK: - Location Manager (Single Responsibility)
 
+
 class LocationManager: NSObject, ObservableObject, LocationProviding {
     @Published var currentLocation: CLLocation?
     @Published var authorizationStatus: CLAuthorizationStatus
     
-    static let shared = LocationManager()
     
     private let locationManager = CLLocationManager()
     
@@ -40,11 +40,15 @@ class LocationManager: NSObject, ObservableObject, LocationProviding {
     }
     
     func startUpdatingLocation() {
-        locationManager.startUpdatingLocation()
+      
+        if authorizationStatus == .authorizedWhenInUse || authorizationStatus == .authorizedAlways {
+            locationManager.startUpdatingLocation()
+        }
     }
     
     func stopUpdatingLocation() {
         locationManager.stopUpdatingLocation()
+       
     }
 }
 

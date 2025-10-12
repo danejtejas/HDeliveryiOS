@@ -87,7 +87,6 @@
 		96AFF66B2E9682F40013B937 /* HelpScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF60D2E9682F40013B937 /* HelpScreen.swift */; };
 		96AFF66C2E9682F40013B937 /* MapViewControllerBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF60F2E9682F40013B937 /* MapViewControllerBridge.swift */; };
 		96AFF66D2E9682F40013B937 /* PaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF6102E9682F40013B937 /* PaymentView.swift */; };
-		96AFF66E2E9682F40013B937 /* PayoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF6112E9682F40013B937 /* PayoutView.swift */; };
 		96AFF6712E9682F40013B937 /* ReferralCodeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF6142E9682F40013B937 /* ReferralCodeScreen.swift */; };
 		96AFF6732E9682F40013B937 /* ShareScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF6162E9682F40013B937 /* ShareScreen.swift */; };
 		96AFF6752E9682F40013B937 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF6182E9682F40013B937 /* Task.swift */; };
@@ -182,7 +181,6 @@
 		96AFF60E2E9682F40013B937 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		96AFF60F2E9682F40013B937 /* MapViewControllerBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewControllerBridge.swift; sourceTree = "<group>"; };
 		96AFF6102E9682F40013B937 /* PaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentView.swift; sourceTree = "<group>"; };
-		96AFF6112E9682F40013B937 /* PayoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayoutView.swift; sourceTree = "<group>"; };
 		96AFF6142E9682F40013B937 /* ReferralCodeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralCodeScreen.swift; sourceTree = "<group>"; };
 		96AFF6162E9682F40013B937 /* ShareScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareScreen.swift; sourceTree = "<group>"; };
 		96AFF6182E9682F40013B937 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
@@ -196,6 +194,11 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		96AE26012E9A897F00EDD088 /* Payout */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Payout;
+			sourceTree = "<group>";
+		};
 		96AFF6852E968B4D0013B937 /* View */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = View;
@@ -254,6 +257,11 @@
 		96B5EE102E9920C5005796E1 /* UserGoogleMap */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = UserGoogleMap;
+			sourceTree = "<group>";
+		};
+		96D111E02E9BA20400FDFBB8 /* ForgotPassword */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ForgotPassword;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -583,13 +591,6 @@
 			path = MapView;
 			sourceTree = "<group>";
 		};
-		96AFF5D72E9682F40013B937 /* New Folder */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "New Folder";
-			sourceTree = "<group>";
-		};
 		96AFF5D92E9682F40013B937 /* OnboardView */ = {
 			isa = PBXGroup;
 			children = (
@@ -763,6 +764,7 @@
 		96AFF61C2E9682F40013B937 /* HDelivery */ = {
 			isa = PBXGroup;
 			children = (
+				96D111E02E9BA20400FDFBB8 /* ForgotPassword */,
 				96B5EE102E9920C5005796E1 /* UserGoogleMap */,
 				96B5EE052E98F019005796E1 /* DriverRate */,
 				96B436242E97ECF5003DC99E /* UserRate */,
@@ -781,7 +783,6 @@
 				96AFF5CA2E9682F40013B937 /* LoadProgressView */,
 				96AFF5D42E9682F40013B937 /* Login */,
 				96AFF5D62E9682F40013B937 /* MapView */,
-				96AFF5D72E9682F40013B937 /* New Folder */,
 				96AFF5D92E9682F40013B937 /* OnboardView */,
 				96AFF5DD2E9682F40013B937 /* Online */,
 				96AFF5E22E9682F40013B937 /* RequestSend */,
@@ -802,7 +803,7 @@
 				96AFF60E2E9682F40013B937 /* Info.plist */,
 				96AFF60F2E9682F40013B937 /* MapViewControllerBridge.swift */,
 				96AFF6102E9682F40013B937 /* PaymentView.swift */,
-				96AFF6112E9682F40013B937 /* PayoutView.swift */,
+				96AE26012E9A897F00EDD088 /* Payout */,
 				96AFF6982E96A4820013B937 /* Profile */,
 				96AFF6822E968B0F0013B937 /* PromotionView */,
 				96AFF6142E9682F40013B937 /* ReferralCodeScreen.swift */,
@@ -889,6 +890,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				96AE26012E9A897F00EDD088 /* Payout */,
 				96AFF6852E968B4D0013B937 /* View */,
 				96AFF6862E968B590013B937 /* ViewModel */,
 				96AFF68D2E969A060013B937 /* ShareMyCode */,
@@ -901,6 +903,7 @@
 				96B5EE062E98F02B005796E1 /* View */,
 				96B5EE092E98F06D005796E1 /* ViewModel */,
 				96B5EE102E9920C5005796E1 /* UserGoogleMap */,
+				96D111E02E9BA20400FDFBB8 /* ForgotPassword */,
 			);
 			name = HDelivery;
 			productName = HDelivery;
@@ -1104,7 +1107,6 @@
 				96AFF66B2E9682F40013B937 /* HelpScreen.swift in Sources */,
 				96AFF66C2E9682F40013B937 /* MapViewControllerBridge.swift in Sources */,
 				96AFF66D2E9682F40013B937 /* PaymentView.swift in Sources */,
-				96AFF66E2E9682F40013B937 /* PayoutView.swift in Sources */,
 				96AFF6712E9682F40013B937 /* ReferralCodeScreen.swift in Sources */,
 				96AFF6732E9682F40013B937 /* ShareScreen.swift in Sources */,
 				96AFF6752E9682F40013B937 /* Task.swift in Sources */,

@@ -335,11 +335,6 @@ struct ChangePasswordRequest: APIRequest {
     }
 }
 
-// MARK: - Forgot Password
-struct ForgotPasswordRequest: Encodable {
-    let email: String
-    
-}
 
 
 // MARK: - Driver Profile Data

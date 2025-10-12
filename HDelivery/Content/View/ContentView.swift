@@ -90,11 +90,12 @@ struct ContentView: View {
                     }
                 }
             }.fullScreenCover(isPresented: $viewModel.isNavToGoogleNavigaation) {
-                GoogleMapNavigationView(tripData: $viewModel.tripHistory)
+//                GoogleMapNavigationView(tripData: $viewModel.tripHistory)
+                GoogleMapNavigationView(liveLocationViewModel: LiveLocationViewModel(tripHistory: viewModel.tripHistory))
             }.fullScreenCover(isPresented:$viewModel.isNavToPayment) {
                 UserRateView(tripData: viewModel.tripHistory)
             }.fullScreenCover(isPresented: $viewModel.isNavToPaymentDriver) {
-                DriverRateView(tripData: viewModel.tripHistory)
+                DriverRateView(tripData: $viewModel.tripHistory)
             }.fullScreenCover(isPresented: $viewModel.isNavToUserGoogleMap) {
                 UserGoogleMap(tripData: viewModel.tripHistory)
             }

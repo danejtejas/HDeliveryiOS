@@ -11,7 +11,7 @@ import Foundation
 
 
 // MARK: - TripData
-struct TripHistory: Codable {
+struct TripHistory: Codable, Identifiable {
     let id: String
     let passengerId: String
     let passenger: PassengerHistory?
@@ -51,6 +51,24 @@ struct TripHistory: Codable {
         case startTimeWorking, endTimeWorking, paymentMethod, isWattingConfirm, receiverPhone = "receiver_phone"
     }
     
+    var distanceFormat : String {
+        return "\(distance ?? "0") km"
+    }
+    
+    var paymentMode : String {
+      if let paymentMethod = paymentMethod {
+            if paymentMethod == "2" {
+              return "By Cash"
+          } else {
+              return "Online"
+          }
+        }
+        return "NA"
+    }
+    
+    var fareInt : Int {
+        return estimateFare.flatMap(Int.init) ?? 0
+    }
     
     // MARK: - Custom Initializer
     init(
