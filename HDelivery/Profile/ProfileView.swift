@@ -84,6 +84,16 @@ struct ProfileView: View {
                         ProfileRow(title: "State", value: viewModel.state)
                         ProfileRow(title: "City", value: viewModel.cityName ?? "")
                         ProfileRow(title: "Post code", value: viewModel.postCode ?? "")
+                        
+                        ProfileRow(title: "Car Plate", value: viewModel.carPlate ?? "")
+                        ProfileRow(title: "Brand of Vihicle", value: viewModel.yearOfManufacture ?? "")
+                        
+                        ProfileRow(title: "Model", value: viewModel.make ?? "")
+                        
+                        ProfileRow(title: "Task Type", value: viewModel.taskType)
+                        ProfileRow(title: "Year", value: viewModel.yearOfManufacture ?? "")
+                        
+                        
                         ProfileRow(title: "Bank Name", value: viewModel.bankName)
                     
                         ProfileRow(title: "Bank Account No", value: viewModel.bankACNumber ?? "")

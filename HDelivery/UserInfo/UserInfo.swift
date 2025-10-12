@@ -337,7 +337,8 @@ struct ChangePasswordRequest: APIRequest {
 
 
 
-// MARK: - Driver Profile Data
+
+
 struct UserInfo: Codable {
     var id: String?
     var fullName: String?
@@ -361,7 +362,53 @@ struct UserInfo: Codable {
     var account: String?
     var driver: DriverInfoData?
     var car: CarInfo?
+    
+    enum CodingKeys: String, CodingKey {
+        case id, fullName, image, email, description, isActive, gender, phone, dob, address,
+             balance, isOnline, passengerRate, passengerRateCount, stateId, stateName,
+             cityId, cityName, typeAccount, account, driver, car
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        id = container.decodeSafeString(forKey: .id)
+        fullName = container.decodeSafeString(forKey: .fullName)
+        image = container.decodeSafeString(forKey: .image)
+        email = container.decodeSafeString(forKey: .email)
+        description = container.decodeSafeString(forKey: .description)
+        isActive = container.decodeSafeString(forKey: .isActive)
+        gender = container.decodeSafeString(forKey: .gender)
+        phone = container.decodeSafeString(forKey: .phone)
+        dob = container.decodeSafeString(forKey: .dob)
+        address = container.decodeSafeString(forKey: .address)
+        balance = container.decodeSafeString(forKey: .balance)
+        isOnline = container.decodeSafeString(forKey: .isOnline)
+        passengerRate = container.decodeSafeString(forKey: .passengerRate)
+        passengerRateCount = container.decodeSafeString(forKey: .passengerRateCount)
+        stateId = container.decodeSafeString(forKey: .stateId)
+        stateName = container.decodeSafeString(forKey: .stateName)
+        cityId = container.decodeSafeString(forKey: .cityId)
+        cityName = container.decodeSafeString(forKey: .cityName)
+        typeAccount = container.decodeSafeString(forKey: .typeAccount)
+        account = container.decodeSafeString(forKey: .account)
+
+        // 👇 Safely decode driver & car — handle both array and object cases
+        if let driverObject = try? container.decodeIfPresent(DriverInfoData.self, forKey: .driver) {
+            driver = driverObject
+        } else if let _ = try? container.decodeIfPresent([DriverInfoData].self, forKey: .driver) {
+            driver = nil // API returned empty array []
+        }
+
+        if let carObject = try? container.decodeIfPresent(CarInfo.self, forKey: .car) {
+            car = carObject
+        } else if let _ = try? container.decodeIfPresent([CarInfo].self, forKey: .car) {
+            car = nil
+        }
+    }
 }
+
+
 
 // MARK: - Driver Details
 struct DriverInfoData: Codable {
@@ -407,3 +454,18 @@ struct CarInfo: Codable {
     }
 }
 
+
+extension KeyedDecodingContainer {
+    func decodeSafeString(forKey key: Key) -> String? {
+        if let value = try? decodeIfPresent(String.self, forKey: key) {
+            return value
+        } else if let value = try? decodeIfPresent(Int.self, forKey: key) {
+            return String(value)
+        } else if let value = try? decodeIfPresent(Double.self, forKey: key) {
+            return String(value)
+        } else if let value = try? decodeIfPresent(Bool.self, forKey: key) {
+            return value ? "1" : "0"
+        }
+        return nil
+    }
+}
