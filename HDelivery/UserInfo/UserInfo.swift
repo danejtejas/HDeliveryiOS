@@ -28,37 +28,93 @@ struct ShowUserInfoRequest: APIRequest {
 
 
 // MARK: - Trip Detail
+import Foundation
+
 struct TripDetailResponse: Codable, Identifiable {
-   var id: String?
-   var passengerId: String?
-   var passenger: Passenger?
-   var driverId: String?
-   var driver: Driver?
-   var requestTime: String?
-   var link: String?
-   var startTime: String?
-   var startLat: String?
-   var startLong: String?
-   var startLocation: String?
-   var endLat: String?
-   var endLong: String?
-   var endLocation: String?
-   var passengerRate: String?
-   var estimateFare: String?
-   var itemPrice: String?
-   var itemList: [Item]?
-   var status : String?
-   var isWattingConfirm : String?
-    
+    var id: String?
+    var passengerId: String?
+    var passenger: Passenger?
+    var driverId: String?
+    var driver: Driver?
+    var requestTime: String?
+    var link: String?
+    var startTime: String?
+    var startLat: String?
+    var startLong: String?
+    var startLocation: String?
+    var endLat: String?
+    var endLong: String?
+    var endLocation: String?
+    var passengerRate: String?
+    var estimateFare: String?
+    var itemPrice: String?
+    var itemList: [DeliverItem]?
+    var status: String?
+    var isWaitingConfirm: String?
+
     enum CodingKeys: String, CodingKey {
-        case id, passengerId, passenger, driverId, driver, requestTime, link, startTime, startLat, startLong, startLocation, endLat, endLong, endLocation, passengerRate
+        case id, passengerId, passenger, driverId, driver, requestTime, link, startTime, startLat, startLong, startLocation, endLat, endLong, endLocation, passengerRate, status
         case estimateFare = "estimate_fare"
         case itemPrice = "item_price"
         case itemList = "item_list"
-        case status
-        case isWattingConfirm
+        case isWaitingConfirm = "isWattingConfirm"
+    }
+
+    // ✅ Custom Decoder Initializer
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        id = try? container.decode(String.self, forKey: .id)
+        passengerId = try? container.decode(String.self, forKey: .passengerId)
+        passenger = try? container.decode(Passenger.self, forKey: .passenger)
+        driverId = try? container.decode(String.self, forKey: .driverId)
+        driver = try? container.decode(Driver.self, forKey: .driver)
+        requestTime = try? container.decode(String.self, forKey: .requestTime)
+        link = try? container.decode(String.self, forKey: .link)
+        startTime = try? container.decode(String.self, forKey: .startTime)
+        startLat = try? container.decode(String.self, forKey: .startLat)
+        startLong = try? container.decode(String.self, forKey: .startLong)
+        startLocation = try? container.decode(String.self, forKey: .startLocation)
+        endLat = try? container.decode(String.self, forKey: .endLat)
+        endLong = try? container.decode(String.self, forKey: .endLong)
+        endLocation = try? container.decode(String.self, forKey: .endLocation)
+        passengerRate = try? container.decode(String.self, forKey: .passengerRate)
+        estimateFare = try? container.decode(String.self, forKey: .estimateFare)
+        itemPrice = try? container.decode(String.self, forKey: .itemPrice)
+        itemList = try? container.decode([DeliverItem].self, forKey: .itemList)
+        status = try? container.decode(String.self, forKey: .status)
+        isWaitingConfirm = try? container.decode(String.self, forKey: .isWaitingConfirm)
+        
+        if let items = try? container.decode([DeliverItem].self, forKey: .itemList) {
+            itemList = items
+        } else if let strings = try? container.decode([String].self, forKey: .itemList) {
+            // convert string names into dummy Item objects
+            itemList = strings.map { DeliverItem(id: UUID().uuidString, qty: "1", itemDesc: "", price: "", name: $0, requestId: nil, type: nil) }
+        } else {
+            itemList = []
+        }
+        
+        
     }
 }
+
+
+struct DeliverItem: Codable, Identifiable {
+    var id: String?
+    var qty: String?
+    var itemDesc: String?
+    var price: String?
+    var name: String?
+    var requestId: String?
+    var type: String?
+
+    enum CodingKeys: String, CodingKey {
+        case id, qty, price, name, type
+        case itemDesc = "item_desc"
+        case requestId = "request_id"
+    }
+}
+
 
 
 // MARK: - User (Passenger)

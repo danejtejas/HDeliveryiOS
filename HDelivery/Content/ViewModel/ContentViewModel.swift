@@ -65,7 +65,8 @@ class ContentViewModel: ObservableObject {
                 Task {
                     await showUserInfo()
                     //                  await showMyTripHistoryDriver()
-                    await checkDriverInTrip()
+//                    await checkDriverInTrip()
+                    await  checkUserInTrip()
                 }
             }
         } catch {

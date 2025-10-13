@@ -138,6 +138,9 @@ class LiveLocationViewModel: ObservableObject {
             errorMessage = response.message
             if  response.isSuccess{
                 print(response)
+                if let data = response.data {
+                    tripData = data
+                }
                 
              }
              else {

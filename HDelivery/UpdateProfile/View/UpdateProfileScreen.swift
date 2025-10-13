@@ -6,81 +6,114 @@
 //
 
 import SwiftUI
+import PhotosUI
+//import Toast_Swift
+//import  AlertToast
+import ToastSwiftUI
 
 
 struct UpdateProfileScreen: View {
-    @State private var fullName: String = "John doe"
-    @State private var phone: String = "Phone"
-    @State private var email: String = "Email"
-    @State private var address: String = "Address"
-    @State private var state: String = "Rivers"
-    @State private var city: String = "City"
-    @State private var postCode: String = "Post code"
-    @State private var bankName: String = "Bank Name"
-    @State private var bankAccountNo: String = "Bank Account No"
     
-    @State private var viewModel = UpdateProfileViewModel()
+    @State private var selectedPhoto: PhotosPickerItem? = nil
+    
+    @StateObject private var viewModel = UpdateProfileViewModel()
+    
+    @State private var avatarImage: Image? = nil
+    
+    @Environment(\.presentationMode) var presentationMode
+
+    @State private var showCropView = false
+    
+    @State private var tempImage: UIImage? = nil
+    
+    
+
     
     var body: some View {
         ZStack {
             // Blue background
-            Color.blue
-                .ignoresSafeArea()
+            AppSetting.ColorSetting.appBg.edgesIgnoringSafeArea(.all)
             
             ScrollView {
                 VStack(spacing: 0) {
                     // Header
-                    HStack {
-                        // Empty space for left alignment
-                        Spacer()
-                        
-                        Text("Update Profile")
-                            .font(.title2)
-                            .fontWeight(.medium)
-                            .foregroundColor(.white)
-                        
-                        Spacer()
-                        
-                        Button(action: {
-                           
-                            Task{
-                                await viewModel.updateProfile(fullName: fullName, phone: phone, address: address, cityId: "7", stateId: "7", description: "adf", account: bankName, typeDevice: "2")
-                            }
-                            
-                            
-                        }) {
-                            Image(systemName: "doc.text")
-                                .font(.title2)
-                                .foregroundColor(.white)
-                        }
-                    }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 20)
-                    .padding(.bottom, 30)
                     
                     // Profile Avatar Section
                     VStack(spacing: 15) {
                         Button(action: {
                             // Update avatar action
                         }) {
-                            Circle()
-                                .fill(Color.white.opacity(0.3))
-                                .frame(width: 120, height: 120)
-                                .overlay(
-                                    Circle()
-                                        .fill(Color.white)
-                                        .frame(width: 80, height: 80)
-                                        .overlay(
+                            
+                            // Avatar Section
+                            VStack(spacing: 12) {
+                                PhotosPicker(selection: $selectedPhoto, matching: .images) {
+                                    ZStack {
+                                        Circle()
+                                            .fill(Color.white.opacity(0.3))
+                                            .frame(width: 120, height: 120)
+                                        
+                                        Circle()
+                                            .fill(Color.white)
+                                            .frame(width: 100, height: 100)
+                                        
+                                        if let avatarImage = avatarImage {
+                                            avatarImage
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fill)
+                                                .frame(width: 100, height: 100)
+                                                .clipShape(Circle())
+                                        } else if  viewModel.profileImageUrl != "",
+                                                  let url = URL(string:  viewModel.profileImageUrl ) {
+                                            AsyncImage(url: url) { phase in
+                                                switch phase {
+                                                case .empty:
+                                                    ProgressView()
+                                                        .frame(width: 100, height: 100)
+                                                case .success(let image):
+                                                    image
+                                                        .resizable()
+                                                        .aspectRatio(contentMode: .fill)
+                                                        .frame(width: 100, height: 100)
+                                                        .clipShape(Circle())
+                                                case .failure:
+                                                    Image(systemName: "person.fill")
+                                                        .font(.system(size: 50))
+                                                        .foregroundColor(.gray)
+                                                @unknown default:
+                                                    EmptyView()
+                                                }
+                                            }
+                                        } else {
                                             Image(systemName: "person.fill")
-                                                .font(.system(size: 40))
-                                                .foregroundColor(.gray.opacity(0.7))
-                                        )
-                                )
+                                                .font(.system(size: 50))
+                                                .foregroundColor(.gray)
+                                        }
+
+                                    }
+                                }
+                                .onChange(of: selectedPhoto) { newPhoto in
+                                    Task {
+                                        if let data = try? await newPhoto?.loadTransferable(type: Data.self),
+                                           let uiImage = UIImage(data: data) {
+                                            await MainActor.run {
+                                                tempImage = uiImage
+                                            }
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                                self.showCropView = true
+                                            }
+                                           
+                                        }
+                                    }
+                                }
+                                
+                                Text("Tap to update avatar")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(.white)
+                            }
+                            
+                            
+                            
                         }
-                        
-                        Text("Tap to update avatar")
-                            .font(.system(size: 16))
-                            .foregroundColor(.white)
                     }
                     .padding(.bottom, 30)
                     
@@ -89,66 +122,118 @@ struct UpdateProfileScreen: View {
                         ProfileFormField(
                             icon: "person",
                             label: "Full Name",
-                            text: $fullName
+                            text: $viewModel.fullName
                         )
                         
                         ProfileFormField(
                             icon: "phone",
                             label: "Phone",
-                            text: $phone
+                            text: $viewModel.phone
                         )
                         
                         ProfileFormField(
                             icon: "envelope",
                             label: "Email",
-                            text: $email
+                            text: $viewModel.email
                         )
                         
                         ProfileFormField(
                             icon: "location",
                             label: "Address",
-                            text: $address
+                            text: $viewModel.address
                         )
                         
                         ProfileFormField(
                             icon: "building.2",
                             label: "State",
-                            text: $state
+                            text: $viewModel.state
                         )
                         
                         ProfileFormField(
                             icon: "location.circle",
                             label: "City",
-                            text: $city
+                            text: $viewModel.city
                         )
                         
                         ProfileFormField(
                             icon: "info.circle",
                             label: "Post code",
-                            text: $postCode
+                            text: $viewModel.postCode
                         )
                         
                         ProfileFormField(
                             icon: "building.columns",
                             label: "Bank Name",
-                            text: $bankName
+                            text: $viewModel.bankName
                         )
                         
                         ProfileFormField(
                             icon: "building.columns",
                             label: "Bank Account No",
-                            text: $bankAccountNo
+                            text: $viewModel.bankAccountNo
                         )
                     }
                     .padding(.horizontal, 20)
                     .padding(.bottom, 50)
+                }.padding(.top, 20)
+            }
+        }
+       
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden()
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss()
+                    
+                }) {
+                    Image(systemName: "arrow.left")
+                        .font(.title2)
+                        .foregroundColor(.white)
                 }
             }
-        }.overlay {
+            
+            ToolbarItem(placement: .principal) {
+                Text("Update Profile")
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.white)
+            }
+            
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {
+                    Task {
+                        await viewModel.updateProfile()
+                    }
+                    
+                }) {
+                    Image(systemName: "doc.text")
+                        .font(.title2)
+                        .foregroundColor(.white)
+                }
+            }
+            
+        }
+        .toolbarBackground(AppSetting.ColorSetting.navigationBarBg, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        
+        .overlay {
             if viewModel.isLoading {
                 LoadView()
             }
-        }
+        }.toast(isPresenting: $viewModel.isToastShow, message: viewModel.message ?? "")
+        .sheet(item: $tempImage) { image in
+                SquareCropView(image: image) { croppedImage in
+                    avatarImage = Image(uiImage: croppedImage)
+                     
+                    if let base64String = croppedImage.toBase64() {
+                        viewModel.imageBase64String = base64String
+                    }
+                     
+                    
+                }
+            }
+
     }
 }
 
@@ -208,3 +293,14 @@ struct UpdateProfileScreen_Previews: PreviewProvider {
         UpdateProfileScreen()
     }
 }
+
+
+
+extension UIImage : @retroactive Identifiable {
+    public var id: Int {
+        return 1
+    }
+}
+
+
+

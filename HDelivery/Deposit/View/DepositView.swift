@@ -1,5 +1,5 @@
 //
-//  PayoutView.swift
+//  DepositView.swift
 //  HDelivery
 //
 //  Created by user286520 on 9/28/25.
@@ -7,27 +7,22 @@
 
 import SwiftUI
 
-
-
-
-struct PayoutView: View {
+struct DepositView: View {
     @State private var depositAmount: String = ""
     @Environment(\.presentationMode) var presentationMode
     
     private let currentBalance: Double = 199.99
     
-    @StateObject var viewModel: PayoutViewModel = .init()
+    @StateObject var viewModel = DepositViewModel()
+    
     
     var body: some View {
         ZStack {
             // Background gradient
-           
-            AppSetting.ColorSetting.appBg.ignoresSafeArea()
+            Color.blue.ignoresSafeArea()
             
             VStack(alignment: .leading, spacing: 0) {
-                // Custom Navigation Bar
-               
-                
+        
                 
                 // Balance Section
                 VStack(alignment: .leading, spacing: 8) {
@@ -35,15 +30,13 @@ struct PayoutView: View {
                         Image(systemName: "building.columns")
                             .foregroundColor(.white)
                             .font(.system(size: 24))
-                            .font(.system(size: 24))
                         
                         Text("Your Balance")
                             .foregroundColor(.white)
                             .font(.system(size: 18, weight: .medium))
-                          
                     }
                     
-                    Text("₦\(String(format: "%.2f", viewModel.balance ?? "0"))")
+                    Text("₦\(String(format: "%.2f", viewModel.balance))")
                         .foregroundColor(.white)
                         .font(.system(size: 48, weight: .light))
                 }
@@ -62,10 +55,7 @@ struct PayoutView: View {
                         Text("Amount")
                             .foregroundColor(.white)
                             .font(.system(size: 16, weight: .medium))
-                           
                     }
-                    
-                   
                     
                     TextField("0", text: $depositAmount)
                         .foregroundColor(.white)
@@ -99,10 +89,9 @@ struct PayoutView: View {
                         
                         Spacer()
                         
-                        Text("Payout")
+                        Text("Pay")
                             .foregroundColor(.black)
                             .font(.system(size: 18, weight: .semibold))
-                            .frame(width: 100)
                     }
                     .padding(.horizontal, 20)
                     .padding(.vertical, 15)
@@ -116,6 +105,7 @@ struct PayoutView: View {
                 Spacer()
             }
         }
+        .navigationBarTitle("Deposit", displayMode: .inline)  // Set the title "Deposit"
         .navigationBarBackButtonHidden()
         .toolbar {
             // Back Button (left side of the navigation bar)
@@ -131,14 +121,14 @@ struct PayoutView: View {
             
             // Title Customization
             ToolbarItem(placement: .principal) {
-                Text("Payout")
+                Text("Deposit")
                     .foregroundColor(.white)  // Title color set to white
                     .font(.system(size: 22, weight: .medium))
             }
         }
+        .navigationBarHidden(false)  // Ensure the navigation bar is visible
         .toolbarBackground(AppSetting.ColorSetting.navigationBarBg, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
-        .navigationBarHidden(false)
     }
     
     private func handleDeposit() {
@@ -150,15 +140,8 @@ struct PayoutView: View {
         // Process deposit logic here
         print("Processing deposit of ₦\(amount)")
         
-        
-        Task {
-            await viewModel.redeemPoints(amount: depositAmount)
-            depositAmount = ""
-        }
-        
-        
         // Clear the input field
-       
+        depositAmount = ""
         
         // You can add success feedback here
     }
@@ -167,6 +150,6 @@ struct PayoutView: View {
 
 #Preview {
     NavigationStack {
-        PayoutView()
+        DepositView()
     }
 }

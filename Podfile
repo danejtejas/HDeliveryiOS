@@ -20,7 +20,12 @@ target 'HDelivery' do
   # Firebase Cloud Messaging (Push Notifications)
   pod 'Firebase/Messaging'
 
-  pod 'GoogleSignIn' 
+  pod 'GoogleSignIn'
+  
+  pod 'ToastSwiftUI'
+  
+  pod 'Toast-Swift', '~> 5.1'
+
   
 
 end
