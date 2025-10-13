@@ -33,7 +33,7 @@ struct TripHistoryRequest: APIRequest {
 
 // MARK: - Transaction History
 struct TransactionHistoryRequest: APIRequest {
-    typealias Response = APIResponse<[MockTransactionInfo]>
+    typealias Response = APIResponse<[Transaction]>
     var path: String { "api/transactionHistory" }
     var method: HTTPMethod { .post }
     

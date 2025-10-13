@@ -40,6 +40,9 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         }
         
         do {
+            
+            
+            
             try StorageManager.shared.storeFCMToken(fcmToken)
         }
         catch {
@@ -52,6 +55,9 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+      print("------------------------Notification Data---Start----------------------")
+       print(notification.request.content.userInfo)
+        print("------------------------Notification Data---END----------------------")
         completionHandler([.banner, .sound])
     }
     

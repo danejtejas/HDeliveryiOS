@@ -142,18 +142,18 @@ struct TripHistory: Codable, Identifiable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(String.self, forKey: .id)
-        passengerId = try container.decode(String.self, forKey: .passengerId)
-        passenger = try container.decode(PassengerHistory.self, forKey: .passenger)
-        link = try container.decode(String.self, forKey: .link)
+        
+        id = (try? container.decode(String.self, forKey: .id)) ?? ""
+        passengerId = (try? container.decode(String.self, forKey: .passengerId)) ?? ""
+        link = (try? container.decode(String.self, forKey: .link)) ?? ""
+        driverId = (try? container.decode(String.self, forKey: .driverId)) ?? ""
+        
         startTime = try? container.decode(String.self, forKey: .startTime)
         startLat = try? container.decode(String.self, forKey: .startLat)
         startLong = try? container.decode(String.self, forKey: .startLong)
         endLat = try? container.decode(String.self, forKey: .endLat)
         endLong = try? container.decode(String.self, forKey: .endLong)
         dateCreated = try? container.decode(String.self, forKey: .dateCreated)
-        driverId = try container.decode(String.self, forKey: .driverId)
-        driver = try container.decode(DriverHistory.self, forKey: .driver)
         startLocation = try? container.decode(String.self, forKey: .startLocation)
         endLocation = try? container.decode(String.self, forKey: .endLocation)
         status = try? container.decode(String.self, forKey: .status)
@@ -164,16 +164,7 @@ struct TripHistory: Codable, Identifiable {
         actualReceive = try? container.decode(String.self, forKey: .actualReceive)
         driverRate = try? container.decode(String.self, forKey: .driverRate)
         passengerRate = try? container.decode(String.self, forKey: .passengerRate)
-        
-        // 👇 handle totalTime safely
-        if let intValue = try? container.decode(Int.self, forKey: .totalTime) {
-            totalTime = "\(intValue)"
-        } else if let stringValue = try? container.decode(String.self, forKey: .totalTime){
-            totalTime = stringValue
-        } else {
-            totalTime = nil
-        }
-
+        totalTime = try? container.decode(String.self, forKey: .totalTime)
         pickUpAtA = try? container.decode(String.self, forKey: .pickUpAtA)
         workAtB = try? container.decode(String.self, forKey: .workAtB)
         itemList = try? container.decode([String].self, forKey: .itemList)
@@ -182,6 +173,24 @@ struct TripHistory: Codable, Identifiable {
         paymentMethod = try? container.decode(String.self, forKey: .paymentMethod)
         isWattingConfirm = try? container.decode(String.self, forKey: .isWattingConfirm)
         receiverPhone = try? container.decode(String.self, forKey: .receiverPhone)
+        
+        // Decode driver safely
+        if let driverObj = try? container.decodeIfPresent(DriverHistory.self, forKey: .driver) {
+            driver = driverObj
+        } else if let _ = try? container.decodeIfPresent([DriverHistory].self, forKey: .driver) {
+            driver = nil // API returned []
+        } else {
+            driver = nil
+        }
+        
+        // Decode passenger safely
+        if let passengerObj = try? container.decodeIfPresent(PassengerHistory.self, forKey: .passenger) {
+            passenger = passengerObj
+        } else if let _ = try? container.decodeIfPresent([PassengerHistory].self, forKey: .passenger) {
+            passenger = nil
+        } else {
+            passenger = nil
+        }
     }
     
     

@@ -11,7 +11,7 @@ import Foundation
 
 protocol HistoryRepository {
     func getTripHistory(token: String, page: String) async throws -> APIResponse<[TripHistory]>
-//    func getTransactionHistory(token: String, page: String) async throws -> APIResponse<MockTransactionInfo>
+    func getTransactionHistory(token: String, page: String) async throws -> APIResponse<[Transaction]>
 }
 
 final class APIHistoryRepository: HistoryRepository {
@@ -25,7 +25,7 @@ final class APIHistoryRepository: HistoryRepository {
     }
     
     
-//    func getTransactionHistory(token: String, page: String) async throws -> APIResponse<MockTransactionInfo> {
-////        try await network.execute(TransactionHistoryRequest(token: token, page: page))
-//    }
+    func getTransactionHistory(token: String, page: String) async throws -> APIResponse<[Transaction]> {
+        try await network.execute(TransactionHistoryRequest(token: token, page: page))
+    }
 }

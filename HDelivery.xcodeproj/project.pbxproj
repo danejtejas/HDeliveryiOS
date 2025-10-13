@@ -82,17 +82,13 @@
 		96AFF6652E9682F40013B937 /* UserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF6022E9682F40013B937 /* UserInfo.swift */; };
 		96AFF6662E9682F40013B937 /* UtilityAPI.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF6032E9682F40013B937 /* UtilityAPI.swift.swift */; };
 		96AFF6682E9682F40013B937 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF6082E9682F40013B937 /* Constants.swift */; };
-		96AFF6692E9682F40013B937 /* DepositView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF6092E9682F40013B937 /* DepositView.swift */; };
 		96AFF66A2E9682F40013B937 /* HDeliveryApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF60C2E9682F40013B937 /* HDeliveryApp.swift */; };
 		96AFF66B2E9682F40013B937 /* HelpScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF60D2E9682F40013B937 /* HelpScreen.swift */; };
 		96AFF66C2E9682F40013B937 /* MapViewControllerBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF60F2E9682F40013B937 /* MapViewControllerBridge.swift */; };
-		96AFF66D2E9682F40013B937 /* PaymentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF6102E9682F40013B937 /* PaymentView.swift */; };
 		96AFF6712E9682F40013B937 /* ReferralCodeScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF6142E9682F40013B937 /* ReferralCodeScreen.swift */; };
 		96AFF6732E9682F40013B937 /* ShareScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF6162E9682F40013B937 /* ShareScreen.swift */; };
 		96AFF6752E9682F40013B937 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF6182E9682F40013B937 /* Task.swift */; };
 		96AFF6762E9682F40013B937 /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF6192E9682F40013B937 /* TestView.swift */; };
-		96AFF6772E9682F40013B937 /* TransactionHistoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF61A2E9682F40013B937 /* TransactionHistoriesView.swift */; };
-		96AFF6782E9682F40013B937 /* TransactionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF61B2E9682F40013B937 /* TransactionModel.swift */; };
 		96AFF67B2E96830C0013B937 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF67A2E9683090013B937 /* WebView.swift */; };
 		96AFF6812E9684180013B937 /* TermConditionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF6802E9684180013B937 /* TermConditionView.swift */; };
 /* End PBXBuildFile section */
@@ -173,20 +169,16 @@
 		96AFF6052E9682F40013B937 /* API_DOCUMENTATION.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = API_DOCUMENTATION.md; sourceTree = "<group>"; };
 		96AFF6062E9682F40013B937 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		96AFF6082E9682F40013B937 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		96AFF6092E9682F40013B937 /* DepositView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositView.swift; sourceTree = "<group>"; };
 		96AFF60A2E9682F40013B937 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		96AFF60B2E9682F40013B937 /* HDelivery.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HDelivery.entitlements; sourceTree = "<group>"; };
 		96AFF60C2E9682F40013B937 /* HDeliveryApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HDeliveryApp.swift; sourceTree = "<group>"; };
 		96AFF60D2E9682F40013B937 /* HelpScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpScreen.swift; sourceTree = "<group>"; };
 		96AFF60E2E9682F40013B937 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		96AFF60F2E9682F40013B937 /* MapViewControllerBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewControllerBridge.swift; sourceTree = "<group>"; };
-		96AFF6102E9682F40013B937 /* PaymentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentView.swift; sourceTree = "<group>"; };
 		96AFF6142E9682F40013B937 /* ReferralCodeScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralCodeScreen.swift; sourceTree = "<group>"; };
 		96AFF6162E9682F40013B937 /* ShareScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareScreen.swift; sourceTree = "<group>"; };
 		96AFF6182E9682F40013B937 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
 		96AFF6192E9682F40013B937 /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
-		96AFF61A2E9682F40013B937 /* TransactionHistoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistoriesView.swift; sourceTree = "<group>"; };
-		96AFF61B2E9682F40013B937 /* TransactionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionModel.swift; sourceTree = "<group>"; };
 		96AFF67A2E9683090013B937 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		96AFF6802E9684180013B937 /* TermConditionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermConditionView.swift; sourceTree = "<group>"; };
 		CD91FE622B385766C4AA3EB4 /* Pods_HDelivery.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HDelivery.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -229,6 +221,16 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		96B284A32E9D3006000E0FBF /* CromImage */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = CromImage;
+			sourceTree = "<group>";
+		};
+		96B284A62E9D36CF000E0FBF /* Extension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Extension;
+			sourceTree = "<group>";
+		};
 		96B436252E97ED07003DC99E /* View */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = View;
@@ -262,6 +264,31 @@
 		96D111E02E9BA20400FDFBB8 /* ForgotPassword */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = ForgotPassword;
+			sourceTree = "<group>";
+		};
+		96D112A62E9BF69800FDFBB8 /* ConfirmPayment */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ConfirmPayment;
+			sourceTree = "<group>";
+		};
+		96D112AA2E9BFD9B00FDFBB8 /* PaymentView */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = PaymentView;
+			sourceTree = "<group>";
+		};
+		96D112B92E9C03B500FDFBB8 /* Deposit */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Deposit;
+			sourceTree = "<group>";
+		};
+		96D112CB2E9C1A0600FDFBB8 /* TransactionHistory */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = TransactionHistory;
+			sourceTree = "<group>";
+		};
+		96F41C6E2E9CC414001D07E2 /* Validation */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Validation;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -764,6 +791,10 @@
 		96AFF61C2E9682F40013B937 /* HDelivery */ = {
 			isa = PBXGroup;
 			children = (
+				96B284A62E9D36CF000E0FBF /* Extension */,
+				96B284A32E9D3006000E0FBF /* CromImage */,
+				96F41C6E2E9CC414001D07E2 /* Validation */,
+				96D112A62E9BF69800FDFBB8 /* ConfirmPayment */,
 				96D111E02E9BA20400FDFBB8 /* ForgotPassword */,
 				96B5EE102E9920C5005796E1 /* UserGoogleMap */,
 				96B5EE052E98F019005796E1 /* DriverRate */,
@@ -795,14 +826,14 @@
 				96AFF6062E9682F40013B937 /* Assets.xcassets */,
 				96B469FA2E96C9E100192C86 /* ChangePassword */,
 				96AFF6082E9682F40013B937 /* Constants.swift */,
-				96AFF6092E9682F40013B937 /* DepositView.swift */,
+				96D112B92E9C03B500FDFBB8 /* Deposit */,
 				96AFF60A2E9682F40013B937 /* GoogleService-Info.plist */,
 				96AFF60B2E9682F40013B937 /* HDelivery.entitlements */,
 				96AFF60C2E9682F40013B937 /* HDeliveryApp.swift */,
 				96AFF60D2E9682F40013B937 /* HelpScreen.swift */,
 				96AFF60E2E9682F40013B937 /* Info.plist */,
 				96AFF60F2E9682F40013B937 /* MapViewControllerBridge.swift */,
-				96AFF6102E9682F40013B937 /* PaymentView.swift */,
+				96D112AA2E9BFD9B00FDFBB8 /* PaymentView */,
 				96AE26012E9A897F00EDD088 /* Payout */,
 				96AFF6982E96A4820013B937 /* Profile */,
 				96AFF6822E968B0F0013B937 /* PromotionView */,
@@ -812,8 +843,7 @@
 				96AFF6942E96A0610013B937 /* SideMneu */,
 				96AFF6182E9682F40013B937 /* Task.swift */,
 				96AFF6192E9682F40013B937 /* TestView.swift */,
-				96AFF61A2E9682F40013B937 /* TransactionHistoriesView.swift */,
-				96AFF61B2E9682F40013B937 /* TransactionModel.swift */,
+				96D112CB2E9C1A0600FDFBB8 /* TransactionHistory */,
 			);
 			path = HDelivery;
 			sourceTree = "<group>";
@@ -897,6 +927,8 @@
 				96AFF6942E96A0610013B937 /* SideMneu */,
 				96AFF6982E96A4820013B937 /* Profile */,
 				96B264022E976E50000CCA4D /* Model */,
+				96B284A32E9D3006000E0FBF /* CromImage */,
+				96B284A62E9D36CF000E0FBF /* Extension */,
 				96B436252E97ED07003DC99E /* View */,
 				96B436292E97ED31003DC99E /* ViewModel */,
 				96B469FA2E96C9E100192C86 /* ChangePassword */,
@@ -904,6 +936,11 @@
 				96B5EE092E98F06D005796E1 /* ViewModel */,
 				96B5EE102E9920C5005796E1 /* UserGoogleMap */,
 				96D111E02E9BA20400FDFBB8 /* ForgotPassword */,
+				96D112A62E9BF69800FDFBB8 /* ConfirmPayment */,
+				96D112AA2E9BFD9B00FDFBB8 /* PaymentView */,
+				96D112B92E9C03B500FDFBB8 /* Deposit */,
+				96D112CB2E9C1A0600FDFBB8 /* TransactionHistory */,
+				96F41C6E2E9CC414001D07E2 /* Validation */,
 			);
 			name = HDelivery;
 			productName = HDelivery;
@@ -1102,17 +1139,13 @@
 				96AFF6652E9682F40013B937 /* UserInfo.swift in Sources */,
 				96AFF6662E9682F40013B937 /* UtilityAPI.swift.swift in Sources */,
 				96AFF6682E9682F40013B937 /* Constants.swift in Sources */,
-				96AFF6692E9682F40013B937 /* DepositView.swift in Sources */,
 				96AFF66A2E9682F40013B937 /* HDeliveryApp.swift in Sources */,
 				96AFF66B2E9682F40013B937 /* HelpScreen.swift in Sources */,
 				96AFF66C2E9682F40013B937 /* MapViewControllerBridge.swift in Sources */,
-				96AFF66D2E9682F40013B937 /* PaymentView.swift in Sources */,
 				96AFF6712E9682F40013B937 /* ReferralCodeScreen.swift in Sources */,
 				96AFF6732E9682F40013B937 /* ShareScreen.swift in Sources */,
 				96AFF6752E9682F40013B937 /* Task.swift in Sources */,
 				96AFF6762E9682F40013B937 /* TestView.swift in Sources */,
-				96AFF6772E9682F40013B937 /* TransactionHistoriesView.swift in Sources */,
-				96AFF6782E9682F40013B937 /* TransactionModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1245,7 +1278,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = HDelivery/HDelivery.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Levi Philip (GMLLXTW9TZ)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Levi Philip (GMLLXTW9TZ)";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
@@ -1268,7 +1302,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.hapihyper.delivery;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = Development_Profile;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = HDelivery_Development_Profile;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1282,7 +1316,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = HDelivery/HDelivery.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Levi Philip (W92QXMB7L6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
@@ -1305,7 +1340,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.hapihyper.delivery;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = Development_Profile;
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = HDeliver_Destribution_Profile;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

@@ -20,8 +20,11 @@ struct DriverRateView: View {
     @StateObject private var driverPaymentViewModel = DriverPaymentViewModel()
     
     @Binding var tripData: TripHistory?
+    @State var tripId: String?
     
     @Environment(\.presentationMode) var presentationMode
+    
+    @State var isPaymentTabped : Bool = false
     
     var body: some View {
         ScrollView {
@@ -36,6 +39,9 @@ struct DriverRateView: View {
         }
         .background(Color.blue.ignoresSafeArea())
         .navigationBarHidden(true)
+        .fullScreenCover(isPresented: $isPaymentTabped, content: {
+            ConfirmPaymentView(tripId: $tripId )
+        })
         .alert("Message", isPresented: $showAlert) {
             Button("OK", role: .cancel) {}
         } message: {
@@ -165,10 +171,9 @@ extension DriverRateView {
     
     private var payButton: some View {
         Button {
-            Task {
-                guard let tripId = tripData?.id else { return }
-                await driverPaymentViewModel.confirmDriverPayment(tripId: tripId)
-            }
+            guard let tripId = tripData?.id else { return }
+            self.tripId = tripId
+            self.isPaymentTabped = true
         } label: {
             Text("PAY NOW")
                 .font(.headline)
