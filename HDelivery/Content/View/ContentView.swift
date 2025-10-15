@@ -94,13 +94,52 @@ struct ContentView: View {
                 GoogleMapNavigationView(liveLocationViewModel: LiveLocationViewModel(tripHistory: viewModel.tripHistory))
             }.fullScreenCover(isPresented:$viewModel.isNavToPayment) {
                 UserRateView(tripData: viewModel.tripHistory)
-            }.fullScreenCover(isPresented: $viewModel.isNavToPaymentDriver) {
+            }.fullScreenCover(isPresented: $viewModel.isNavToDriverRate) {
                 DriverRateView(tripData: $viewModel.tripHistory)
             }.fullScreenCover(isPresented: $viewModel.isNavToUserGoogleMap) {
                 UserGoogleMap(tripData: viewModel.tripHistory)
+            }.fullScreenCover(isPresented: $viewModel.isNavUserRequest) {
+                RequestScreen(onSelectTab: { })
+            }
+//            fullScreenCover(isPresented: $viewModel.isNavToPaymentDriver) {
+//                ConfirmPaymentView(tripId: viewModel.tripHistory?.id)
+//            }
+        }
+        // MARK: - Notification Handlers
+        .onReceive(NotificationCenter.default.publisher(for: .driverConfirmedTrip)) { notificaton in
+            print("Driver confirmed ✅")
+            
+            guard let data =  notificaton.object as? TripHistory else {return}
+            
+            viewModel.tripHistory = data
+            withAnimation {
+                viewModel.isNavToUserGoogleMap = true
             }
         }
-        
+        .onReceive(NotificationCenter.default.publisher(for: .driverArrived)) { _ in
+            print("Driver arrived 🚗")
+            withAnimation {
+                viewModel.isNavToUserGoogleMap = true
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .tripStarted)) { _ in
+            print("Trip started 🛣️")
+            withAnimation {
+                viewModel.isNavToUserGoogleMap = true
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .tripEnded)) { _ in
+            print("Trip ended 🏁")
+            withAnimation {
+                viewModel.isNavToPayment = true
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .paymentPending)) { _ in
+            print("Payment pending 💳")
+            withAnimation {
+                viewModel.isNavToDriverRate = true
+            }
+        }
     }
 }
 

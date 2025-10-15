@@ -70,6 +70,7 @@ struct TripHistory: Codable, Identifiable {
         return estimateFare.flatMap(Int.init) ?? 0
     }
     
+    
     // MARK: - Custom Initializer
     init(
         id: String = "",

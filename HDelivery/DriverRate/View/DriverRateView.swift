@@ -17,7 +17,6 @@ struct DriverRateView: View {
     @State private var alertMessage = ""
     
     @StateObject private var driverRateViewModel = DriverRateViewModel()
-    @StateObject private var driverPaymentViewModel = DriverPaymentViewModel()
     
     @Binding var tripData: TripHistory?
     @State var tripId: String?
@@ -40,7 +39,7 @@ struct DriverRateView: View {
         .background(Color.blue.ignoresSafeArea())
         .navigationBarHidden(true)
         .fullScreenCover(isPresented: $isPaymentTabped, content: {
-            ConfirmPaymentView(tripId: $tripId )
+            ConfirmPaymentView(tripId: tripData?.id ?? "")
         })
         .alert("Message", isPresented: $showAlert) {
             Button("OK", role: .cancel) {}

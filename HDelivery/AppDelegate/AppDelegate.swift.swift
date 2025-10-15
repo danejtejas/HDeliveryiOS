@@ -54,10 +54,14 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
     
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent notification: UNNotification,
-                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void)  {
       print("------------------------Notification Data---Start----------------------")
        print(notification.request.content.userInfo)
         print("------------------------Notification Data---END----------------------")
+        Task{
+          await   NotificationManager.shared.receiveNotification(userInfo: notification.request.content.userInfo)
+            
+        }
         completionHandler([.banner, .sound])
     }
     
