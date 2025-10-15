@@ -15,7 +15,8 @@ struct ConfirmPaymentView: View {
     
     @StateObject private var paymentVM = DriverPaymentViewModel()
     
-    @Binding var tripId: String?
+//    @Binding var tripData: TripHistory?
+     var tripId : String?
     
     var body: some View {
         ZStack {
@@ -93,14 +94,18 @@ struct ConfirmPaymentView: View {
     private func handleYesAction() {
         Task {
             isLoading = true
-            await paymentVM.confirmDriverPayment(tripId: "385")
+            guard let tripId = tripId else {
+                isLoading = false
+                return
+            }
+            await paymentVM.confirmDriverPayment(tripId: tripId)
             isLoading = false
             presentationMode.wrappedValue.dismiss()
         }
     }
 }
 
-#Preview {
-    ConfirmPaymentView(tripId: .constant("385"))
-}
+//#Preview {
+//    ConfirmPaymentView(tripId: .constant("385"))
+//}
 

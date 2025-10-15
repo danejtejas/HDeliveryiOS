@@ -20,6 +20,14 @@ struct HDeliveryApp: App {
         GMSPlacesClient.provideAPIKey(AppSetting.GoogleKeySetting.mapKey)
         try? StorageManager.shared.storeAuthToken("c08ae527ff9c471d9ebd95dad8e4f564") // driver
         try? StorageManager.shared.setUserId(userId: "204")
+////        
+//        try? StorageManager.shared.storeAuthToken("176a3c27d36f65ec2fa2c15960b61fed") // driver
+//        try? StorageManager.shared.setUserId(userId: "207")
+//        
+//        try? StorageManager.shared.storeAuthToken("78e1f47c146b4225dafa807a8955c41c") // user
+//        try? StorageManager.shared.setUserId(userId: "211")
+        
+        
     }
     
     

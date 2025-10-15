@@ -191,6 +191,11 @@
 			path = Payout;
 			sourceTree = "<group>";
 		};
+		96AFC5062E9F70BC00BEB5E5 /* Notification */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Notification;
+			sourceTree = "<group>";
+		};
 		96AFF6852E968B4D0013B937 /* View */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = View;
@@ -791,6 +796,7 @@
 		96AFF61C2E9682F40013B937 /* HDelivery */ = {
 			isa = PBXGroup;
 			children = (
+				96AFC5062E9F70BC00BEB5E5 /* Notification */,
 				96B284A62E9D36CF000E0FBF /* Extension */,
 				96B284A32E9D3006000E0FBF /* CromImage */,
 				96F41C6E2E9CC414001D07E2 /* Validation */,
@@ -921,6 +927,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				96AE26012E9A897F00EDD088 /* Payout */,
+				96AFC5062E9F70BC00BEB5E5 /* Notification */,
 				96AFF6852E968B4D0013B937 /* View */,
 				96AFF6862E968B590013B937 /* ViewModel */,
 				96AFF68D2E969A060013B937 /* ShareMyCode */,

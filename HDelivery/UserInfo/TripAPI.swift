@@ -292,7 +292,7 @@ struct ChangeStatusRequest: APIRequest {
 
 // MARK: - Show Trip Detail
 struct ShowTripDetailRequest: APIRequest {
-    typealias Response = APIResponse<TripDetail>
+    typealias Response = APIResponse<TripHistory>
     var path: String { "api/showTripDetail" }
     var method: HTTPMethod { .post }
     
