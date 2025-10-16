@@ -37,15 +37,15 @@ struct TestView: View {
                 })
             }
             
-            // MARK: Side Menu
-            if showMenu {
-                
-                
-                SideMenuView()
-                    .frame(width: 300) // Drawer width
-                    
-                    
-            }
+//            // MARK: Side Menu
+//            if showMenu {
+//                
+//                
+//                SideMenuView()
+//                    .frame(width: 300) // Drawer width
+//                    
+//                    
+//            }
         }
     }
 }

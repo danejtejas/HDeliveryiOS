@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 struct DepositView: View {
     @State private var depositAmount: String = ""
     @Environment(\.presentationMode) var presentationMode
@@ -17,33 +16,10 @@ struct DepositView: View {
     var body: some View {
         ZStack {
             // Background gradient
-           
             Color.blue.ignoresSafeArea()
             
             VStack(alignment: .leading, spacing: 0) {
-                // Custom Navigation Bar
-                HStack {
-                    Button(action: {
-                        presentationMode.wrappedValue.dismiss()
-                    }) {
-                        Image(systemName: "arrow.left")
-                            .foregroundColor(.white)
-                            .font(.system(size: 20, weight: .medium))
-                    }
-                    
-                    Spacer()
-                    
-                    Text("Deposit")
-                        .foregroundColor(.white)
-                        .font(.system(size: 22, weight: .medium))
-                    
-                    Spacer()
-                }
-                .padding(.horizontal, 20)
-                .padding(.top, 10)
-                
-                Spacer()
-                    .frame(height: 40)
+        
                 
                 // Balance Section
                 VStack(alignment: .leading, spacing: 8) {
@@ -55,7 +31,6 @@ struct DepositView: View {
                         Text("Your Balance")
                             .foregroundColor(.white)
                             .font(.system(size: 18, weight: .medium))
-                          
                     }
                     
                     Text("₦\(String(format: "%.2f", currentBalance))")
@@ -77,7 +52,6 @@ struct DepositView: View {
                         Text("Amount")
                             .foregroundColor(.white)
                             .font(.system(size: 16, weight: .medium))
-                           
                     }
                     
                     TextField("0", text: $depositAmount)
@@ -128,7 +102,30 @@ struct DepositView: View {
                 Spacer()
             }
         }
-        .navigationBarHidden(true)
+        .navigationBarTitle("Deposit", displayMode: .inline)  // Set the title "Deposit"
+        .navigationBarBackButtonHidden()
+        .toolbar {
+            // Back Button (left side of the navigation bar)
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    presentationMode.wrappedValue.dismiss()  // Dismiss the view
+                }) {
+                    Image(systemName: "arrow.left")
+                        .foregroundColor(.white)  // White back button color
+                        .font(.system(size: 20, weight: .medium))
+                }
+            }
+            
+            // Title Customization
+            ToolbarItem(placement: .principal) {
+                Text("Deposit")
+                    .foregroundColor(.white)  // Title color set to white
+                    .font(.system(size: 22, weight: .medium))
+            }
+        }
+        .navigationBarHidden(false)  // Ensure the navigation bar is visible
+        .toolbarBackground(AppSetting.ColorSetting.navigationBarBg, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
     }
     
     private func handleDeposit() {
@@ -149,5 +146,7 @@ struct DepositView: View {
 
 
 #Preview {
-    DepositView()
+    NavigationStack {
+        DepositView()
+    }
 }

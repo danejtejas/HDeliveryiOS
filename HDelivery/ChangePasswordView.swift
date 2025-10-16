@@ -13,98 +13,88 @@ struct ChangePasswordView: View {
     @State private var confirmPassword = ""
     @State var isSideMenuOpen = false
     
+    var tabSelectMenu : () -> Void
+    
     var body: some View {
+        
         ZStack {
-           
-            Color.blue
+            // Background Color
+            AppSetting.ColorSetting.navigationBarBg
                 .ignoresSafeArea()
             
             VStack(alignment: .leading, spacing: 30) {
                 
-                // MARK: - Top Bar
-                ZStack {
-                    Text("Change Password")
-                        .font(.title2)
-                        .foregroundColor(.white)
-                        .bold()
-                    
-                    HStack {
-                        Button(action: {
-                            withAnimation(.easeInOut(duration: 0.3)) {
-                                isSideMenuOpen.toggle()
-                            }
-                        }) {
-                            Image(systemName: "line.3.horizontal")
-                                .foregroundColor(.white)
-                                .font(.title2)
-                        }
-                        .padding(.leading, 16)
-                        
-                        Spacer()
-                    }
-                }
-//                .frame(height: 60)
-                .padding(.top, 40) // for safe area
+                // MARK: - Top Bar (Automatically handled by NavigationBar)
+                // The navigation bar title will be automatically placed when using NavigationStack.
                 
-                // MARK: - Form Fields
-                VStack(alignment: .leading, spacing: 20) {
-                    
-                    CustomSecureField(title: "Current Password",
-                                      placeholder: "Current Password",
-                                      text: $currentPassword)
-                    
-                    CustomSecureField(title: "New Password",
-                                      placeholder: "New Password",
-                                      text: $newPassword)
-                    
-                    CustomSecureField(title: "Confirm Password",
-                                      placeholder: "Confirm Password",
-                                      text: $confirmPassword)
-                    
+                // MARK: - Scrollable Form Fields
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 20) {
+                        
+                        CustomSecureField(title: "Current Password",
+                                          placeholder: "Current Password",
+                                          text: $currentPassword)
+                        
+                        CustomSecureField(title: "New Password",
+                                          placeholder: "New Password",
+                                          text: $newPassword)
+                        
+                        CustomSecureField(title: "Confirm Password",
+                                          placeholder: "Confirm Password",
+                                          text: $confirmPassword)
+                        
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 20) // Optional padding for top
                 }
-                .padding(.horizontal, 16)
                 
                 // MARK: - Submit Button
                 Button(action: {
-                    // handle submit
+                    // handle submit logic
                 }) {
                     Text("SUBMIT")
                         .font(.headline)
                         .foregroundColor(.white)
                         .padding()
                         .frame(maxWidth: .infinity)
-                        .background(Color.red)
+                        .background(Color.green)
                         .cornerRadius(5)
                 }
                 .padding(.horizontal, 50)
                 .padding(.top, 40)
                 
-                Spacer()
+                Spacer()  // This will push everything above towards the top of the screen
+            }
+            .padding(.bottom, 20) // Optional to provide extra space at the bottom
+        }
+        //            .navigationTitle("Change Password") // Navigation Bar Title
+        .navigationBarTitleDisplayMode(.inline) // Title style (inline or large)
+        .toolbar {
+            
+            ToolbarItem(placement: .principal) {
+                Text("Change Password")
+                    .foregroundColor(.white) // Set the title color to white
+                    .font(.title3)
+                    .bold()
             }
             
-            // MARK: - Side Menu Overlay
-            if isSideMenuOpen {
-                // Background overlay to close menu when tapped
-                Color.black.opacity(0.3)
-                    .ignoresSafeArea()
-                    .onTapGesture {
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            isSideMenuOpen = false
-                        }
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        tabSelectMenu()
                     }
-                
-                // Side Menu
-                HStack {
-                    SideMenuView()
-                        .frame(width: 280)
-                        .transition(.move(edge: .leading))
-                    
-                    Spacer()
+                }) {
+                    Image(systemName: "line.horizontal.3")
+                        .foregroundColor(.white)
+                        .font(.title2)
                 }
             }
-        }
+        }.toolbarBackground(AppSetting.ColorSetting.navigationBarBg, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+        
     }
 }
+
 
 // MARK: - Custom SecureField Row
 struct CustomSecureField: View {
@@ -130,6 +120,8 @@ struct CustomSecureField: View {
 }
 
 #Preview {
-    ChangePasswordView()
+    NavigationStack{
+        ChangePasswordView( tabSelectMenu: {})
+    }
 }
 

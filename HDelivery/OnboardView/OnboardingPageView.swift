@@ -12,100 +12,106 @@ struct OnboardingPageView: View {
     private let totalPages = 5
     
     var body: some View {
-        VStack(spacing: 0) {
-            // Page Content
-            TabView(selection: $currentPage) {
-                // Page 1 - Make Transactions
-                OnboardingPage(
-                    imageName: "exclamationmark.triangle.fill",
-                    imageColor: .orange,
-                    backgroundColor: Color.yellow.opacity(0.2),
-                    title: "MAKE TRANSACTIONS\nWITHIN APP",
-                    subtitle: "Please DO NOT make any transactions\nor\narrangements outside this app!",
-                    showPhoneIllustration: true
-                )
-                .tag(0)
+        
+        
+        NavigationStack {
+            VStack(spacing: 0) {
+                // Page Content
+                TabView(selection: $currentPage) {
+                    // Page 1 - Make Transactions
+                    OnboardingPage(
+                        imageName: "exclamationmark.triangle.fill",
+                        imageColor: .orange,
+                        backgroundColor: Color.yellow.opacity(0.2),
+                        title: "MAKE TRANSACTIONS\nWITHIN APP",
+                        subtitle: "Please DO NOT make any transactions\nor\narrangements outside this app!",
+                        showPhoneIllustration: true
+                    )
+                    .tag(0)
+                    
+                    // Page 2 - Move My Parcel
+                    OnboardingPage(
+                        imageName: "shippingbox.fill",
+                        imageColor: .brown,
+                        backgroundColor: Color.clear,
+                        title: "MOVE MY PARCEL",
+                        subtitle: "Select the \"Move My Parcel\" category\nfor items that weigh 3.5 kg or less.",
+                        showClothingItems: true
+                    )
+                    .tag(1)
+                    
+                    // Page 3 - Medical
+                    OnboardingPage(
+                        imageName: "cross.case.fill",
+                        imageColor: .red,
+                        backgroundColor: Color.clear,
+                        title: "MEDICAL",
+                        subtitle: "Select the \"Medical\" category for the\nfast delivery of medically related\nitems that weigh 3.5 kg or less.",
+                        showMedicalCase: true
+                    )
+                    .tag(2)
+                    
+                    // Page 4 - Refunds
+                    OnboardingPage(
+                        imageName: "arrow.triangle.2.circlepath",
+                        imageColor: .green,
+                        backgroundColor: Color.clear,
+                        title: "REFUNDS",
+                        subtitle: "All Users are entitled to a 100% refund\nfor failed delivery services. Your\nhappiness is our priority!",
+                        showRefundIllustration: true
+                    )
+                    .tag(3)
+                    
+                    // Page 5 - Welcome
+                    OnboardingPage(
+                        imageName: "h.square.fill",
+                        imageColor: .blue,
+                        backgroundColor: Color.clear,
+                        title: "HAPIHYPER DELIVERY",
+                        subtitle: "Welcome to the future of delivery\nservices.",
+                        showHLogo: true
+                    )
+                    .tag(4)
+                }
+                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+                .animation(.easeInOut, value: currentPage)
                 
-                // Page 2 - Move My Parcel
-                OnboardingPage(
-                    imageName: "shippingbox.fill",
-                    imageColor: .brown,
-                    backgroundColor: Color.clear,
-                    title: "MOVE MY PARCEL",
-                    subtitle: "Select the \"Move My Parcel\" category\nfor items that weigh 3.5 kg or less.",
-                    showClothingItems: true
-                )
-                .tag(1)
+                // Page Indicators
+                HStack(spacing: 8) {
+                    ForEach(0..<totalPages, id: \.self) { index in
+                        Circle()
+                            .fill(currentPage == index ? Color.blue : Color.gray.opacity(0.5))
+                            .frame(width: 10, height: 10)
+                            .scaleEffect(currentPage == index ? 1.2 : 1.0)
+                            .animation(.easeInOut(duration: 0.3), value: currentPage)
+                    }
+                }
+                .padding(.vertical, 30)
                 
-                // Page 3 - Medical
-                OnboardingPage(
-                    imageName: "cross.case.fill",
-                    imageColor: .red,
-                    backgroundColor: Color.clear,
-                    title: "MEDICAL",
-                    subtitle: "Select the \"Medical\" category for the\nfast delivery of medically related\nitems that weigh 3.5 kg or less.",
-                    showMedicalCase: true
-                )
-                .tag(2)
-                
-                // Page 4 - Refunds
-                OnboardingPage(
-                    imageName: "arrow.triangle.2.circlepath",
-                    imageColor: .green,
-                    backgroundColor: Color.clear,
-                    title: "REFUNDS",
-                    subtitle: "All Users are entitled to a 100% refund\nfor failed delivery services. Your\nhappiness is our priority!",
-                    showRefundIllustration: true
-                )
-                .tag(3)
-                
-                // Page 5 - Welcome
-                OnboardingPage(
-                    imageName: "h.square.fill",
-                    imageColor: .blue,
-                    backgroundColor: Color.clear,
-                    title: "HAPIHYPER DELIVERY",
-                    subtitle: "Welcome to the future of delivery\nservices.",
-                    showHLogo: true
-                )
-                .tag(4)
-            }
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-            .animation(.easeInOut, value: currentPage)
-            
-            // Page Indicators
-            HStack(spacing: 8) {
-                ForEach(0..<totalPages, id: \.self) { index in
-                    Circle()
-                        .fill(currentPage == index ? Color.blue : Color.gray.opacity(0.5))
-                        .frame(width: 10, height: 10)
-                        .scaleEffect(currentPage == index ? 1.2 : 1.0)
-                        .animation(.easeInOut(duration: 0.3), value: currentPage)
+                // Continue Button (only on last page)
+                if currentPage == totalPages - 1 {
+                    
+                    NavigationLink {
+                        ContentView()
+                    } label: {
+                        Text("Continue")
+                            .font(.system(size: 18, weight: .semibold))
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 56)
+                            .background(Color.green)
+                            .cornerRadius(8)
+                    }
+                    
+                    
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 30)
+                    .transition(.opacity.combined(with: .move(edge: .bottom)))
+                    .animation(.easeInOut(duration: 0.5), value: currentPage)
                 }
             }
-            .padding(.vertical, 30)
-            
-            // Continue Button (only on last page)
-            if currentPage == totalPages - 1 {
-                Button(action: {
-                    // Handle continue action
-                    print("Continue to main app")
-                }) {
-                    Text("Continue")
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 56)
-                        .background(Color.green)
-                        .cornerRadius(8)
-                }
-                .padding(.horizontal, 20)
-                .padding(.bottom, 30)
-                .transition(.opacity.combined(with: .move(edge: .bottom)))
-                .animation(.easeInOut(duration: 0.5), value: currentPage)
-            }
-        }
-        .background(Color(UIColor.systemBackground))
+            .background(Color(UIColor.systemBackground))
+        }.navigationBarBackButtonHidden(true)
     }
 }
 
@@ -385,8 +391,9 @@ struct HLogoIllustration: View {
     }
 }
 
-struct OnboardingPageView_Previews: PreviewProvider {
-    static var previews: some View {
-        OnboardingPageView()
-    }
+
+
+#Preview{
+    OnboardingPageView()
+
 }

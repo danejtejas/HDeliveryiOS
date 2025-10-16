@@ -8,49 +8,20 @@
 import SwiftUI
 
 
-
-
-
 struct PaymentView: View {
     @State private var balance: String = "₦199.99"
-    @State var isSideMenuOpen = false
+    
+    var onSildeMenuTap: () -> Void
     
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                // Background
-                VStack(spacing: 0) {
-                    // Top blue section
-                    Color.blue
-                        .frame(height: geometry.size.height * 0.65)
-                    
-                    // Bottom light gray section
-                    Color(.systemGray6)
-                        .frame(height: geometry.size.height * 0.35)
-                }
-                .ignoresSafeArea()
+            
                 
-                VStack(spacing: 0) {
+                VStack {
                     // Top section with profile
                     VStack(spacing: 0) {
-                        // Navigation bar
-                        HStack {
-                            Button(action: {
-                                withAnimation(.easeInOut(duration: 0.3)) {
-                                    isSideMenuOpen.toggle()
-                                }
-                            }) {
-                                Image(systemName: "line.horizontal.3")
-                                    .font(.title2)
-                                    .foregroundColor(.white)
-                            }
-                            Spacer()
-                        }
-                        .padding(.horizontal, 20)
-                        .padding(.top, 60)
-                        
-                        Spacer()
-                        
+                       
                         // Profile section
                         VStack(spacing: 20) {
                             // Profile image
@@ -84,97 +55,106 @@ struct PaymentView: View {
                                 }
                             }
                         }
-                        
-                        Spacer()
+                        .padding(.top, 90) // Spacing from the top
                     }
-                    .frame(height: 500)
+                    .background(AppSetting.ColorSetting.appBg)
+                    .frame(maxHeight: 500) // Fixed height for top section
+                   
                     
-                    // Bottom section with wallet and buttons
-                    VStack(spacing: 0) {
-                        // Balance section
-                        VStack {
-                            Text(balance)
-                                .font(.system(size: 36, weight: .bold))
-                                .foregroundColor(.black)
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 25)
-                        .background(Color.white)
-                        
-                        // Action buttons section
-                         ScrollView {
+                    
+                    // Scrollable content: Balance and Wallet Action Buttons
+                    ScrollView {
+                        VStack(spacing: 0) {
+                            // Balance Section
+                            VStack {
+                                Text(balance)
+                                    .font(.system(size: 36, weight: .bold))
+                                    .foregroundColor(.black)
+                                    .padding(.vertical, 25)
+                                    .frame(maxWidth: .infinity)
+                                    .background(Color.white)
+                            }
+                            
+                            // Action Buttons Section
                             VStack(spacing: 12) {
-                                WalletActionButton(title: "DEPOSIT") {
-                                    // Deposit action
-                                    print("Deposit tapped")
+                                NavigationLink(destination: DepositView()){ Text("Deposite")
+                                        .font(.system(size: 18, weight: .medium))
+                                        .foregroundColor(.white)
+                                        .frame(maxWidth: .infinity)
+                                        .frame(height: 55)
+                                        .background(Color.blue)
+                                        .cornerRadius(8)
                                 }
-                                
-                                WalletActionButton(title: "PAYOUT") {
-                                    // Payout action
-                                    print("Payout tapped")
+                                NavigationLink(destination: PayoutView()){ Text("PAYOUT")
+                                        .font(.system(size: 18, weight: .medium))
+                                        .foregroundColor(.white)
+                                        .frame(maxWidth: .infinity)
+                                        .frame(height: 55)
+                                        .background(Color.blue)
+                                        .cornerRadius(8)
                                 }
-                                
-                                WalletActionButton(title: "TRANSFER") {
-                                    // Transfer action
-                                    print("Transfer tapped")
+                                NavigationLink(destination: DepositView()){ Text("TRANSFER")
+                                        .font(.system(size: 18, weight: .medium))
+                                        .foregroundColor(.white)
+                                        .frame(maxWidth: .infinity)
+                                        .frame(height: 55)
+                                        .background(Color.blue)
+                                        .cornerRadius(8)
                                 }
-                                
-                                WalletActionButton(title: "HISTORIES") {
-                                    // Histories action
-                                    print("Histories tapped")
+                                NavigationLink(destination: TransactionHistoriesView()){ Text("HISTORIES")
+                                        .font(.system(size: 18, weight: .medium))
+                                        .foregroundColor(.white)
+                                        .frame(maxWidth: .infinity)
+                                        .frame(height: 55)
+                                        .background(Color.blue)
+                                        .cornerRadius(8)
                                 }
+
                             }
                             .padding(.horizontal, 30)
                             .padding(.top, 25)
                             .padding(.bottom, 40)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                         }
-                    }
-                }
-                
-                // MARK: - Side Menu Overlay
-                if isSideMenuOpen {
-                    // Background overlay to close menu when tapped
-                    Color.black.opacity(0.3)
-                        .ignoresSafeArea()
-                        .onTapGesture {
-                            withAnimation(.easeInOut(duration: 0.3)) {
-                                isSideMenuOpen = false
-                            }
-                        }
-                    
-                    // Side Menu
-                    HStack {
-                    SideMenuView()
-                            .frame(width: 280)
-                            .transition(.move(edge: .leading))
-                        
-                        Spacer()
                     }
                 }
             }
         }
+        .navigationBarTitle("Payment", displayMode: .inline)  // Set the navigation title
+        .toolbar {
+            // Menu button (left side of the navigation bar)
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        onSildeMenuTap()
+                    }
+                }) {
+                    Image(systemName: "line.horizontal.3")
+                        .font(.title2)
+                        .foregroundColor(.white)
+                }
+            }
+            
+            // Set navigation bar title color to white
+            ToolbarItem(placement: .principal) {
+                Text("Payment")
+                    .font(.title3)
+                    .foregroundColor(.white)  // Title color set to white
+            }
+        }
+        .toolbarBackground(AppSetting.ColorSetting.navigationBarBg, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+        .background(
+            Color.blue
+                .edgesIgnoringSafeArea(.top)
+                .frame(height: 0)
+        ) // Optional: For visual consistency (header background)
         .ignoresSafeArea()
     }
 }
 
-struct WalletActionButton: View {
-    let title: String
-    let action: () -> Void
-    
-    var body: some View {
-        Button(action: action) {
-            Text(title)
-                .font(.system(size: 18, weight: .medium))
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity)
-                .frame(height: 55)
-                .background(Color.blue)
-                .cornerRadius(8)
-        }
-    }
-}
 
 #Preview {
-    PaymentView()
+    NavigationStack {
+        PaymentView(onSildeMenuTap: {})
+    }
 }
