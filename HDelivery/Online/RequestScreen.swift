@@ -13,7 +13,9 @@ struct RequestScreen: View {
     
     var onSelectTab : () -> Void
     @StateObject private var onllineViewModel = OnlineViewModel()
-    
+     
+    @State private var isNavToUserGoogleMap: Bool = false
+    @State private var tripHistory : TripHistory?
     
     var body: some View {
         ZStack {

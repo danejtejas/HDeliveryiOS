@@ -128,7 +128,34 @@ extension NotificationManager {
     func handleDriverArrived(_ data: [AnyHashable: Any]) {
         print("📍 Driver has arrived at the pickup location.")
         // Example:
-         NotificationCenter.default.post(name: .driverArrived, object: nil)
+        guard let tripId = data["tripId"] as? Int else {
+            print("⚠️ Missing tripId in notification data")
+            return
+        }
+        
+        Task {
+            // Fetch trip details asynchronously
+            do {
+                let tripHistoryData = try await getTripData(tripId: "\(tripId)")
+                
+                // ✅ Always post notifications on main thread
+                await MainActor.run {
+                    NotificationCenter.default.post(
+                        name: .driverArrived,
+                        object: tripHistoryData
+                    )
+                    print("📩 Notification posted on main thread")
+                }
+                
+            }
+            catch {
+                print("⚠️ Error fetching trip data: \(error)")
+            }
+            
+        }
+        
+        
+      
     }
 }
 
@@ -137,7 +164,33 @@ extension NotificationManager {
     func handleStartTrip(_ data: [AnyHashable: Any]) {
         print("🚕 Trip started.")
         // Example:
-         NotificationCenter.default.post(name: .tripStarted, object: nil)
+         
+        guard let tripId = data["tripId"] as? Int else {
+            print("⚠️ Missing tripId in notification data")
+            return
+        }
+        
+        Task {
+            // Fetch trip details asynchronously
+            do {
+                let tripHistoryData = try await getTripData(tripId: "\(tripId)")
+                
+                // ✅ Always post notifications on main thread
+                await MainActor.run {
+                    NotificationCenter.default.post(
+                        name: .tripStarted,
+                        object: tripHistoryData
+                    )
+                    print("📩 Notification posted on main thread")
+                }
+                
+            }
+            catch {
+                print("⚠️ Error fetching trip data: \(error)")
+            }
+            
+        }
+        
     }
 }
 
@@ -146,7 +199,36 @@ extension NotificationManager {
     func handleEndTrip(_ data: [AnyHashable: Any]) {
         print("🏁 Trip ended.")
         // Example:
-         NotificationCenter.default.post(name: .tripEnded, object: nil)
+        
+        
+        guard let tripId = data["tripId"] as? Int else {
+            print("⚠️ Missing tripId in notification data")
+            return
+        }
+        
+        Task{
+            // Fetch trip details asynchronously
+            do {
+                let tripHistoryData = try await getTripData(tripId: "\(tripId)")
+                
+                // ✅ Always post notifications on main thread
+                await MainActor.run {
+                    NotificationCenter.default.post(
+                        name: .tripEnded,
+                        object: tripHistoryData
+                    )
+                    print("📩 Notification posted on main thread")
+                }
+                
+            }
+            catch {
+                print("⚠️ Error fetching trip data: \(error)")
+            }
+            
+        }
+        
+        
+       
     }
 }
 
@@ -155,7 +237,35 @@ extension NotificationManager {
     func handlePassengerPaymentPending(_ data: [AnyHashable: Any]) {
         print("💳 Passenger payment pending.")
         // Example:
-         NotificationCenter.default.post(name: .paymentPending, object: nil)
+        
+        
+
+        guard let tripId = data["tripId"] as? Int else {
+            print("⚠️ Missing tripId in notification data")
+            return
+        }
+        
+        Task{
+            // Fetch trip details asynchronously
+            do {
+                let tripHistoryData = try await getTripData(tripId: "\(tripId)")
+                
+                // ✅ Always post notifications on main thread
+                await MainActor.run {
+                    NotificationCenter.default.post(
+                        name: .paymentPending,
+                        object: tripHistoryData
+                    )
+                    print("📩 Notification posted on main thread")
+                }
+                
+            }
+            catch {
+                print("⚠️ Error fetching trip data: \(error)")
+            }
+            
+        }
+        
     }
 }
 

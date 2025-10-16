@@ -7,11 +7,14 @@
 
 import SwiftUI
 
+
+
 struct ContentView: View {
     @State private var isSideMenuOpen = false
     @State private var selectedTab: MenuOption = .home
     
     @StateObject private var viewModel = ContentViewModel()
+  
     
     var body: some View {
         
@@ -101,42 +104,66 @@ struct ContentView: View {
             }.fullScreenCover(isPresented: $viewModel.isNavUserRequest) {
                 RequestScreen(onSelectTab: { })
             }
-//            fullScreenCover(isPresented: $viewModel.isNavToPaymentDriver) {
-//                ConfirmPaymentView(tripId: viewModel.tripHistory?.id)
-//            }
+
         }
-        // MARK: - Notification Handlers
+//         MARK: - Notification Handlers
         .onReceive(NotificationCenter.default.publisher(for: .driverConfirmedTrip)) { notificaton in
             print("Driver confirmed ✅")
             
-            guard let data =  notificaton.object as? TripHistory else {return}
-            
-            viewModel.tripHistory = data
-            withAnimation {
+            DispatchQueue.main.async {
+                guard let data =  notificaton.object as? TripHistory else {return}
+                
+                viewModel.tripHistory = data
+               
                 viewModel.isNavToUserGoogleMap = true
+                
             }
+           
         }
-        .onReceive(NotificationCenter.default.publisher(for: .driverArrived)) { _ in
+        .onReceive(NotificationCenter.default.publisher(for: .driverArrived)) { notificaton in
             print("Driver arrived 🚗")
-            withAnimation {
+            
+            DispatchQueue.main.async {
+                guard let data =  notificaton.object as? TripHistory else {return}
+                
+                viewModel.tripHistory = data
+               
                 viewModel.isNavToUserGoogleMap = true
+                
             }
         }
-        .onReceive(NotificationCenter.default.publisher(for: .tripStarted)) { _ in
+        .onReceive(NotificationCenter.default.publisher(for: .tripStarted)) { notificaton in
             print("Trip started 🛣️")
-            withAnimation {
+           
+            DispatchQueue.main.async {
+                guard let data =  notificaton.object as? TripHistory else {return}
+                
+                viewModel.tripHistory = data
+                
                 viewModel.isNavToUserGoogleMap = true
             }
+                
+            
         }
-        .onReceive(NotificationCenter.default.publisher(for: .tripEnded)) { _ in
+        .onReceive(NotificationCenter.default.publisher(for: .tripEnded)) { notificaton in
             print("Trip ended 🏁")
-            withAnimation {
+            
+            DispatchQueue.main.async {
+                guard let data =  notificaton.object as? TripHistory else {return}
+                
+                viewModel.tripHistory = data
+                
                 viewModel.isNavToPayment = true
             }
         }
-        .onReceive(NotificationCenter.default.publisher(for: .paymentPending)) { _ in
+        .onReceive(NotificationCenter.default.publisher(for: .paymentPending)) { notificaton in
             print("Payment pending 💳")
-            withAnimation {
+            
+            DispatchQueue.main.async {
+                guard let data =  notificaton.object as? TripHistory else {return}
+                
+                viewModel.tripHistory = data
+                
                 viewModel.isNavToDriverRate = true
             }
         }

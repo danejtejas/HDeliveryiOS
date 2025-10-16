@@ -83,7 +83,7 @@ struct TaskCardView: View {
                 
                 Spacer()
                 
-                Text(String(format: "%.2f", task.estimateFare ?? "0"))
+                Text(String(task.estimateFare ?? "0"))
                     .font(.system(size: 20, weight: .bold))
                     .foregroundColor(.white)
                     .padding(.horizontal, 15)
