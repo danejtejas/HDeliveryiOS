@@ -14,9 +14,9 @@ struct UserGoogleMap: View {
     @StateObject private var locationManager = GMSLocationManager()
     
     //    @Binding var tripData : TripData?
-  var tripData : TripHistory?
+  @State var tripData : TripHistory?
     
-    @StateObject private var liveLocationViewModel =  LiveLocationViewModel()
+@StateObject private var liveLocationViewModel =  LiveLocationViewModel()
     
     
     var body: some View {
@@ -61,7 +61,7 @@ struct UserGoogleMap: View {
                     
                     HStack(spacing: 10) {
                         VStack(alignment: .leading, spacing: 6) {
-                            Text(tripData?.passenger?.fullName ?? "")
+                            Text(tripData?.driver?.name ?? "")
                                 .font(.headline)
                             HStack {
                                 Button(action: callNumber) {
@@ -79,14 +79,12 @@ struct UserGoogleMap: View {
                             }
                         }
                         Spacer()
-                        Button(action: arrivedAction) {
-                            Text(  getButtonTitle() )
-                            .bold()
-                            .foregroundColor(.white)
-                            .frame(width: 90, height: 90)
-                            .background(Color.green)
-                            .cornerRadius(12)
-                        }
+                        Text(  getButtonTitle() )
+                        .bold()
+                        .foregroundColor(.white)
+                        .frame(width: 90, height: 90)
+                        .background(Color.green)
+                        .cornerRadius(12)
                     }
                     .padding()
                     .background(Color.white)
@@ -101,17 +99,53 @@ struct UserGoogleMap: View {
         .onAppear {
             locationManager.start()
         }
+        .onReceive(NotificationCenter.default.publisher(for: .driverArrived)) { notification in
+            print("Driver arrived 🚗")
+            guard let data =  notification.object as? TripHistory else {return}
+            withAnimation {
+                self.tripData = data
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .tripStarted)) { notification in
+            print("Driver tripStarted 🚗")
+            DispatchQueue.main.async{
+                guard let data =  notification.object as? TripHistory else {return}
+              
+                    self.tripData = data
+            }
+            
+        }.onReceive(NotificationCenter.default.publisher(for: .tripEnded)) { notificaton in
+            print("Trip ended 🏁")
+            
+            DispatchQueue.main.async {
+                guard let data =  notificaton.object as? TripHistory else {return}
+                
+                self.tripData = data
+                
+              
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .paymentPending)) { notificaton in
+            print("Payment pending 💳")
+            
+            DispatchQueue.main.async {
+                guard let data =  notificaton.object as? TripHistory else {return}
+                
+                self.tripData = data
+            }
+        }
+        
         
     }
     
     private func callNumber() {
-        if let url = URL(string: "tel://\(tripData?.passenger?.phone ?? "")") {
+        if let url = URL(string: "tel://\(tripData?.driver?.phone ?? "")") {
             UIApplication.shared.open(url)
         }
     }
     
     private func sendSMS() {
-        if let url = URL(string: "sms:\(tripData?.passenger?.phone ?? "")") {
+        if let url = URL(string: "sms:\(tripData?.driver?.phone ?? "")") {
             UIApplication.shared.open(url)
         }
     }
@@ -140,19 +174,21 @@ struct UserGoogleMap: View {
         let status =  TripStatus(rawValue: tripData?.status ?? "")
         switch status {
         
-        case .inProgress: return "Arrived B"
+        case .approaching: return "Arriving A"
+            
+        case .inProgress: return "Arriving B"
             
         case .arrivedA:
-            return "Go To B"
+            return "Arriving B"
         case .arrivedB: return "Fineded"
-            
+           
         case .startTask:
-            return "Arrived B"
+            return "Start Trip To B"
             
-        default :
-            return "Arrived B"
+        default : break;
+            
         }
         
-        
+       return ""
     }
 }

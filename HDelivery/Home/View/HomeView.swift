@@ -250,7 +250,8 @@ struct HomeView : View {
                 
                 ToolbarItem(placement: .topBarTrailing  ) {
                     Button(action: {
-                        withAnimation {  }
+                        viewModel.isSuccess.toggle()
+                        
                     }) {
                         Image(systemName: "arrow.clockwise")
                             .font(.title3)
@@ -262,9 +263,12 @@ struct HomeView : View {
             .navigationBarBackButtonHidden()
             .toolbarBackground(AppSetting.ColorSetting.navigationBarBg, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
-            .sheet(isPresented: $viewModel.isSuccess) {
+            .fullScreenCover(isPresented: $viewModel.isSuccess) {
                 RequestSendView()
             }
+//            .sheet(isPresented: $viewModel.isSuccess) {
+//                RequestSendView()
+//            }
             .overlay {
                 if showSearch {
                     GeometryReader { geo in

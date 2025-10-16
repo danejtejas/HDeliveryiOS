@@ -16,6 +16,7 @@ class DriverPaymentViewModel: ObservableObject {
     @Published var isSuccess = false
     
     private let repository: PaymentRepository
+    @Published var showToashMessage: Bool = false
     
     init(repository: PaymentRepository = AppDependencies.shared.makePaymentRepository()) {
         self.repository = repository
@@ -37,5 +38,6 @@ class DriverPaymentViewModel: ObservableObject {
             message = "❌ \(error.localizedDescription)"
             isSuccess = false
         }
+         showToashMessage = true
     }
 }

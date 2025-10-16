@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-import SwiftUI
+import ToastSwiftUI
 
 struct ConfirmPaymentView: View {
     @Environment(\.presentationMode) var presentationMode
@@ -82,6 +82,7 @@ struct ConfirmPaymentView: View {
                 Spacer()
             }
         }
+        .toast(isPresenting: $paymentVM.showToashMessage, message: paymentVM.message ?? "")
         .navigationBarHidden(true)
     }
     

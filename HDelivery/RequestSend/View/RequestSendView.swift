@@ -11,6 +11,8 @@ struct RequestSendView: View {
     @State private var isTaskCancelled = false
     @StateObject private var viewModel = RequestSendViewModel()
     @Environment(\.dismiss) private var dismiss
+    @State var tripData : TripHistory?
+    @State var isNavToUserGoogleMap : Bool = false
     
     var body: some View {
         VStack {
@@ -66,7 +68,7 @@ struct RequestSendView: View {
                     await viewModel.cancelTripRequest()
                 }
                 
-               
+                
             }) {
                 Text("CANCEL TASK")
                     .font(.headline)
@@ -93,6 +95,10 @@ struct RequestSendView: View {
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 20)
                 .padding(.bottom, 20)
+            
+        }
+        .fullScreenCover(isPresented: $isNavToUserGoogleMap) {
+            UserGoogleMap(tripData: tripData)
         }
         .background(Color.blue.edgesIgnoringSafeArea(.all))
         .navigationBarHidden(true)
@@ -111,6 +117,16 @@ struct RequestSendView: View {
         .onChange(of: viewModel.isSuccess) { newValue in
             if newValue == true {
                 dismiss()
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .driverConfirmedTrip)) { notification in
+            print("Driver confirmed ✅")
+            
+            guard let data =  notification.object as? TripHistory else {return}
+            
+            tripData = data
+            withAnimation {
+                isNavToUserGoogleMap = true
             }
         }
 

@@ -287,9 +287,20 @@ struct DriverHistory: Codable {
     let carPlate: String?
     let carImages: CarImages?
     var status : String?
+    var driverName : String?
 
     enum CodingKeys: String, CodingKey {
-        case id, fullName, identity, image, email, description, gender, phone, dob, address, balance, isOnline, rate, rateCount, carPlate, carImages
+        case id, fullName, identity, image, email, description, gender, phone, dob, address, balance, isOnline, rate, rateCount, carPlate, carImages, driverName
+    }
+    
+    var name : String {
+       if fullName != nil{
+            return fullName ?? ""
+        }
+        if driverName != nil{
+            return driverName ?? ""
+        }
+        return ""
     }
     
     
