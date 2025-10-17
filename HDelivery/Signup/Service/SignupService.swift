@@ -20,9 +20,10 @@ class SignupService {
         self.repository = SignupRepository(networkClient: APIService(baseURL: AppSetting.URLS.baseURL))
     }
     
-    func signupRequest(singupModel : SignupModel) -> AnyPublisher<Int, any Error>  {
+    func signupRequest(singupModel : SignupModel) -> AnyPublisher<<APIResponse<String>,  Error>  {
         let createSingupRequest = CreateSignupRequestAPIRequest(singupModel: singupModel)
         return self.repository.signup(createSingupRequest: createSingupRequest)
+        repository.signup(createSingupRequest: CreateSignupRequestAPIRequest(singupModel: singupModel))
     }
     
 //    func singup(singupModel : SignupModel) -> APIResponse<String>{

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import PhotosUI
+import ToastSwiftUI
 
 struct SignUpView: View {
     @State private var fullName = ""
@@ -20,190 +21,212 @@ struct SignUpView: View {
     @State private var selectedPhoto: PhotosPickerItem? = nil
     @State private var avatarImage: Image? = nil
     
+    @State private var tempImage: UIImage? = nil
+    @State private var showCropView = false
+    
+    
     
     @Environment(\.dismiss) private var dismiss
     
     @StateObject var viewmodel: SignupViewModel = .init()
     
     var body: some View {
-       
-            ScrollView(showsIndicators: false) {
-                VStack(spacing: 20) {
-                    // Avatar Section
-                    VStack(spacing: 12) {
-                        PhotosPicker(selection: $selectedPhoto, matching: .images) {
-                            ZStack {
-                                Circle()
-                                    .fill(Color.white.opacity(0.3))
-                                    .frame(width: 120, height: 120)
-                                
-                                Circle()
-                                    .fill(Color.white)
+        
+        ScrollView(showsIndicators: false) {
+            VStack(spacing: 20) {
+                // Avatar Section
+                VStack(spacing: 12) {
+                    PhotosPicker(selection: $selectedPhoto, matching: .images) {
+                        ZStack {
+                            Circle()
+                                .fill(Color.white.opacity(0.3))
+                                .frame(width: 120, height: 120)
+                            
+                            Circle()
+                                .fill(Color.white)
+                                .frame(width: 100, height: 100)
+                            
+                            if let avatarImage = avatarImage {
+                                avatarImage
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
                                     .frame(width: 100, height: 100)
+                                    .clipShape(Circle())
+                            } else {
+                                Image(systemName: "person.fill")
                                 
-                                if let avatarImage = avatarImage {
-                                    avatarImage
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fill)
-                                        .frame(width: 100, height: 100)
-                                        .clipShape(Circle())
-                                } else {
-                                    Image(systemName: "person.fill")
-                                    
-                                        .font(.system(size: 50))
-                                        .foregroundColor(.gray)
-                                }
+                                    .font(.system(size: 50))
+                                    .foregroundColor(.gray)
                             }
                         }
-                        .onChange(of: selectedPhoto) { newPhoto in
-                            Task {
-                                if let data = try? await newPhoto?.loadTransferable(type: Data.self),
-                                   let uiImage = UIImage(data: data) {
-                                    avatarImage = Image(uiImage: uiImage)
-                                }
-                            }
-                        }
-                        
-                        Text("Tap to update avatar")
-                            .font(.system(size: 16))
-                            .foregroundColor(.white)
                     }
-                    .padding(.top, 20)
+                    .onChange(of: selectedPhoto) { newPhoto in
+                        Task {
+                            if let data = try? await newPhoto?.loadTransferable(type: Data.self),
+                               let uiImage = UIImage(data: data) {
+                                await MainActor.run {
+                                    tempImage = uiImage
+                                }
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                    self.showCropView = true
+                                }
+                                
+                            }
+                        }
+                    }
                     
-                    // Form Fields
-                    VStack(spacing: 20) {
-                        // Full Name
-                        FormFieldView(
-                            icon: "person.fill",
-                            label: "Full Name",
-                            placeholder: "John doe",
-                            text: $fullName
-                        )
-                        
-                        // Phone
-                        FormFieldView(
-                            icon: "phone.fill",
-                            label: "Phone",
-                            placeholder: "Phone",
-                            text: $phone
-                        )
-                        
-                        // Email
-                        FormFieldView(
-                            icon: "envelope.fill",
-                            label: "Email",
-                            placeholder: "Email",
-                            text: $email
-                        )
-                        
-                        // Password
-                        FormFieldView(
-                            icon: "person.fill",
-                            label: "Password",
-                            placeholder: "Password",
-                            text: $password,
-                            isSecure: true
-                        )
-                        
-                        // Address
-                        FormFieldView(
-                            icon: "location.fill",
-                            label: "Address",
-                            placeholder: "Address",
-                            text: $address
-                        )
-                        
-                        // State
-                        FormFieldView(
-                            icon: "building.2.fill",
-                            label: "State",
-                            placeholder: "Rivers",
-                            text: $state
-                        )
-                        
-                        // City
-                        FormFieldView(
-                            icon: "location.circle.fill",
-                            label: "City",
-                            placeholder: "City",
-                            text: $city
-                        )
-                        
-                        // Post Code
-                        FormFieldView(
-                            icon: "info.circle.fill",
-                            label: "Post code",
-                            placeholder: "Post code",
-                            text: $postCode
-                        )
-                    }
-                    .padding(.horizontal, 20)
-                    .padding(.bottom, 100) // Extra space for bottom navigation
+                    Text("Tap to update avatar")
+                        .font(.system(size: 16))
+                        .foregroundColor(.white)
                 }
-            }
-            .background(
-                LinearGradient(
-                    gradient: Gradient(colors: [
-                        Color(red: 0.2, green: 0.4, blue: 0.8),
-                        Color(red: 0.15, green: 0.35, blue: 0.75)
-                    ]),
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-            )
-            .navigationTitle("Sign Up")
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden()
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                         dismiss()
-                    }) {
-                        Image(systemName: "chevron.left")
-                            .foregroundColor(.white)
-                            .font(.title2)
-                    }
-                }
+                .padding(.top, 20)
                 
-                ToolbarItem(placement: .principal) {
-                    Text("Sign Up")
+                // Form Fields
+                VStack(spacing: 20) {
+                    // Full Name
+                    FormFieldView(
+                        icon: "person.fill",
+                        label: "Full Name",
+                        placeholder: "John doe",
+                        text: $fullName
+                    )
+                    
+                    // Phone
+                    FormFieldView(
+                        icon: "phone.fill",
+                        label: "Phone",
+                        placeholder: "Phone",
+                        text: $phone
+                    )
+                    
+                    // Email
+                    FormFieldView(
+                        icon: "envelope.fill",
+                        label: "Email",
+                        placeholder: "Email",
+                        text: $email
+                    )
+                    
+                    // Password
+                    FormFieldView(
+                        icon: "person.fill",
+                        label: "Password",
+                        placeholder: "Password",
+                        text: $password,
+                        isSecure: true
+                    )
+                    
+                    // Address
+                    FormFieldView(
+                        icon: "location.fill",
+                        label: "Address",
+                        placeholder: "Address",
+                        text: $address
+                    )
+                    
+                    // State
+                    FormFieldView(
+                        icon: "building.2.fill",
+                        label: "State",
+                        placeholder: "Rivers",
+                        text: $state
+                    )
+                    
+                    // City
+                    FormFieldView(
+                        icon: "location.circle.fill",
+                        label: "City",
+                        placeholder: "City",
+                        text: $city
+                    )
+                    
+                    // Post Code
+                    FormFieldView(
+                        icon: "info.circle.fill",
+                        label: "Post code",
+                        placeholder: "Post code",
+                        text: $postCode
+                    )
+                }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 100) // Extra space for bottom navigation
+            }
+        }
+        .background(
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    Color(red: 0.2, green: 0.4, blue: 0.8),
+                    Color(red: 0.15, green: 0.35, blue: 0.75)
+                ]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        )
+        .navigationTitle("Sign Up")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden()
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    dismiss()
+                }) {
+                    Image(systemName: "chevron.left")
                         .foregroundColor(.white)
                         .font(.title2)
-                   
+                }
+            }
+            
+            ToolbarItem(placement: .principal) {
+                Text("Sign Up")
+                    .foregroundColor(.white)
+                    .font(.title2)
+                
+            }
+            
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {
+                    // Handle save/submit
+                    
+                    viewmodel.signup(fullName: fullName, phone: phone, email: email, password: password, address: address, state: state, city: city, postCode: postCode)
+                    
+                }) {
+                    Image(systemName: "doc.fill")
+                        .foregroundColor(.white)
+                        .font(.title2)
+                }
+            }
+        }
+        .toolbarBackground(
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    Color(red: 0.2, green: 0.4, blue: 0.8),
+                    Color(red: 0.15, green: 0.35, blue: 0.75)
+                ]),
+                startPoint: .top,
+                endPoint: .bottom
+            ),
+            for: .navigationBar
+        )
+        .toolbarBackground(AppSetting.ColorSetting.navigationBarBg, for: .navigationBar)
+        .overlay {
+            if viewmodel.isLoading {
+                LoadView()
+            }
+        }
+        .toast(isPresenting: $viewmodel.isToastShow, message: viewmodel.message ?? "")
+        .sheet(item: $tempImage) { image in
+            SquareCropView(image: image) { croppedImage in
+                avatarImage = Image(uiImage: croppedImage)
+                
+                if let base64String = croppedImage.toBase64() {
+                    viewmodel.imageBase64String = base64String
                 }
                 
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        // Handle save/submit
-                        
-                        viewmodel.signup(fullName: fullName, phone: phone, email: email, password: password, address: address, state: state, city: city, postCode: postCode)
-                        
-                    }) {
-                        Image(systemName: "doc.fill")
-                            .foregroundColor(.white)
-                            .font(.title2)
-                    }
-                }
+                
             }
-            .toolbarBackground(
-                LinearGradient(
-                    gradient: Gradient(colors: [
-                        Color(red: 0.2, green: 0.4, blue: 0.8),
-                        Color(red: 0.15, green: 0.35, blue: 0.75)
-                    ]),
-                    startPoint: .top,
-                    endPoint: .bottom
-                ),
-                for: .navigationBar
-            )
-            .toolbarBackground(AppSetting.ColorSetting.navigationBarBg, for: .navigationBar)
-            .overlay {
-                if viewmodel.isLoading {
-                    LoadView()
-                }
-            }
+        }
         
-       
+        
     }
 }
 
@@ -305,7 +328,7 @@ struct ImagePickerPlaceholder: View {
 //        when shouldShow: Bool,
 //        alignment: Alignment = .leading,
 //        @ViewBuilder placeholder: () -> Content) -> some View {
-//        
+//
 //        ZStack(alignment: alignment) {
 //            placeholder().opacity(shouldShow ? 1 : 0)
 //            self

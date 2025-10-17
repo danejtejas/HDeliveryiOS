@@ -11,21 +11,22 @@ import Combine
 
 
 
-
-protocol SignupRepositoryProtocol {
-    func signup(createSingupRequest: CreateSignupRequestAPIRequest) -> AnyPublisher<Int, Error>
-    
-}
+//
+//protocol SignupRepositoryProtocol {
+//    func signup(createSingupRequest: CreateSignupRequestAPIRequest) -> AnyPublisher<APIResponse<String>, Error>
+//    
+//}
 
 
 
 struct CreateSignupRequestAPIRequest: APIRequest {
-    typealias Response = Int
+    typealias Response = APIResponse<String>
     
     var path: String = "signupAndroid"
     
     var method: HTTPMethod = .post
     var singupModel : SignupModel
+    
     
     
     
@@ -58,35 +59,29 @@ struct CreateSignupRequestAPIRequest: APIRequest {
 
 
 
-struct SignupRepository: SignupRepositoryProtocol {
+protocol SignupRepository {
     
-    private var networkClient :  NetworkClient
-       
-    init (networkClient :  NetworkClient) {
-        self.networkClient = networkClient
+    func signup(request:CreateSignupRequestAPIRequest) async throws -> APIResponse<String>
+        
+
+
+}
+
+
+class APISignup: SignupRepository {
+    
+    let networkService: NetworkClient
+    
+    init(networkService: NetworkClient) {
+        
+        self.networkService = networkService
     }
     
-    
-    func signup(createSingupRequest: CreateSignupRequestAPIRequest) -> AnyPublisher<Int, any Error> {
-    
-        return  self.networkClient.executePublisher(createSingupRequest)
-            .handleEvents(receiveOutput: { response in
-                print("Items API Response: \(response)")
-            })
-            .map { response in
-                return response
-            }
-            .catch { error -> AnyPublisher<Int, Error> in
-                print("Items API Error: \(error)")
-                return Fail(error: error).eraseToAnyPublisher()
-            }
-            .eraseToAnyPublisher()
+    func signup(request: CreateSignupRequestAPIRequest) async throws -> APIResponse<String> {
         
+        return   try await networkService.execute(request)
         
     }
     
-//    func testSingup(createSingupRequest: CreateSignupRequestAPIRequest) async throws -> APIResponse<Int> {
-//      return  try self.networkClient.execute(createSingupRequest)
-//    }
     
 }
