@@ -129,6 +129,12 @@ struct RequestScreen: View {
         }
         .fullScreenCover(isPresented:$onllineViewModel.isRequestConformed) {
             GoogleMapNavigationView(liveLocationViewModel: LiveLocationViewModel(tripHistory: onllineViewModel.tripHistory))
+        }.onReceive(NotificationCenter.default.publisher(for: .createRequest)) { _ in
+            
+            Task{
+               await  self.onllineViewModel.showMyRequest()
+            }
+            
         }
     }
 }
