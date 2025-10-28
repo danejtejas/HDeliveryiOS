@@ -17,6 +17,7 @@ class UserRateViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var message: String?
     @Published var isSuccess = false
+    @Published var isShowAlert: Bool = false
     
     private let repository: RatingRepository
     
@@ -36,9 +37,11 @@ class UserRateViewModel: ObservableObject {
             
             message = response.message
             isSuccess = response.isSuccess
+            isShowAlert = true
         } catch {
             message = "❌ \(error.localizedDescription)"
             isSuccess = false
+            isShowAlert = true
         }
     }
 }

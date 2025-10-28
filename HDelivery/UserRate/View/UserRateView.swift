@@ -6,9 +6,16 @@
 //
 
 import SwiftUI
+import ToastSwiftUI
 
 
-
+enum paymentModeType: Int {
+    case none  = 0
+    case wallet = 1
+    case cash  = 2
+    case stripe = 3
+    
+}
 
 struct UserRateView: View {
     @State private var rating: Int = 0
@@ -19,14 +26,18 @@ struct UserRateView: View {
     @StateObject private var userRateViewModel = UserRateViewModel()
     
     @StateObject private var userPaymentViewModel  = UserPaymentViewModel()
-
     
+    @State private var showPaymentSheet = false
+
+  
     @Binding var tripData: TripHistory?
     @State var tripId: String?
     
     @Environment(\.presentationMode) var presentationMode
     
     @State var isPaymentTabped : Bool = false
+    @State var isRatingDone : Bool = false
+    
     
     var body: some View {
         ScrollView {
@@ -46,6 +57,37 @@ struct UserRateView: View {
             SignatureScreen(tripData: tripData)
         })
         
+        // MARK: - Bottom Sheet
+        .confirmationDialog(
+            "Choose Payment Method",
+            isPresented: $showPaymentSheet,
+            titleVisibility: .visible
+        ) {
+            Button("Wallet 💳") {
+                paymentProcess(type: .wallet)
+            }
+            
+            Button("Cash 💵") {
+                paymentProcess(type: .cash)
+            }
+            
+            Button("Cancel", role: .cancel) {
+                isPaymentTabped = false
+            }
+        } message: {
+            Text("Select your preferred payment option for this trip.")
+        }
+        
+        
+        
+        .toast(isPresenting: $showAlert, message: alertMessage)
+        .toast(isPresenting: $userRateViewModel.isShowAlert, message: userRateViewModel.message ?? "")
+        .toast(isPresenting: $userPaymentViewModel.isShowAlert, message: userPaymentViewModel.message ?? "")
+        .overlay {
+            if userRateViewModel.isLoading || userPaymentViewModel.isLoading {
+                LoadView()
+            }
+        }
         
     }
 }
@@ -171,12 +213,21 @@ extension UserRateView {
     
     private var payButton: some View {
         Button {
-            guard let tripId = tripData?.id else { return }
-            self.tripId = tripId
-            Task{
-                guard let tripId = tripData?.id else { return  }
-                await userPaymentViewModel.paymentRequest(tripId: tripId)
+            
+            if !isRatingDone {
+                self.alertMessage = "Please share your rating first"
+                self.showAlert = true
+                return
             }
+            
+            showPaymentSheet.toggle()
+            
+//            guard let tripId = tripData?.id else { return }
+//            self.tripId = tripId
+//            Task{
+//                guard let tripId = tripData?.id else { return  }
+//                await userPaymentViewModel.paymentRequest(tripId: tripId)
+//            }
         } label: {
             Text("Payment")
                 .font(.headline)
@@ -193,7 +244,30 @@ extension UserRateView {
 // MARK: - Logic
 extension UserRateView {
     private func submitRating() async {
+        
+        if rating == 0 {
+            self.alertMessage = "Please select a rating"
+            self.showAlert = true
+            return
+        }
+       
         guard let tripId = tripData?.id else { return }
         await userRateViewModel.rateDriver(tripId: tripId, rating: "\(rating)")
+        isRatingDone = true
     }
 }
+
+
+extension UserRateView {
+    func paymentProcess(type : paymentModeType)  {
+        
+        guard let tripId = tripData?.id else { return }
+        self.tripId = tripId
+        Task{
+            guard let tripId = tripData?.id else { return  }
+            await userPaymentViewModel.paymentRequest(tripId: tripId, paymentMethod: type)
+        }
+        
+    }
+}
+
