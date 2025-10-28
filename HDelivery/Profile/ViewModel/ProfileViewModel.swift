@@ -29,7 +29,8 @@ class ProfileViewModel: ObservableObject {
     @Published var carPlate : String?
     @Published var yearOfManufacture : String?
     @Published  var  make  : String?
-     
+    
+   @Published var rating : Double? = 0
     
     @Published var taskType : String = "Task Type"
     
@@ -45,6 +46,9 @@ class ProfileViewModel: ObservableObject {
          email = StorageManager.shared.getUserInfo()?.email ?? ""
          phone = StorageManager.shared.getUserInfo()?.phone ?? ""
          cityName = StorageManager.shared.getUserInfo()?.cityName ?? ""
+         
+         rating = Double(StorageManager.shared.getUserInfo()?.passengerRate ?? "0")
+         
          if  let driver = StorageManager.shared.getUserInfo()?.driver {
              postCode = ""
              let arr = driver.bankAccount?.split(separator: "*") ?? []

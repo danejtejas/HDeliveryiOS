@@ -11,21 +11,25 @@ import UIKit
 
 
 enum NotificationActionType: String {
+    case createRequest
     case driverConfirm
     case driverArrived
     case startTrip
     case endTrip
     case passengerPaymentPending
+    case cancelTrip
 }
 
 
 
 extension Notification.Name {
+    static let createRequest = Notification.Name("createRequest")
     static let driverConfirmedTrip = Notification.Name("driverConfirmedTrip")
     static let driverArrived = Notification.Name("driverArrived")
     static let tripStarted = Notification.Name("tripStarted")
     static let tripEnded = Notification.Name("tripEnded")
     static let paymentPending = Notification.Name("paymentPending")
+    static let cancelTrip = Notification.Name("cancelTrip")
 }
 
 
@@ -52,30 +56,32 @@ class NotificationManager: NSObject {
         if let action = userInfo["action"] as? String {
             print("🔗 Action type: \(action)") // "driverConfirm"
         }
-
+        
         if let tripId = userInfo["tripId"] as? Int {
             print("🚗 Trip ID: \(tripId)") // 389
         }
-
+        
         if let tripStatus = userInfo["trip_status"] as? Int {
             print("📦 Trip Status: \(tripStatus)") // 1
         }
-
+        
         if let body = userInfo["body"] as? String {
             print("📝 Body: \(body)")
         }
-
+        
         
         
         // Route to specific handler
-         handleNotification(for: actionType, data: userInfo)
+        handleNotification(for: actionType, data: userInfo)
     }
     
     // MARK: - Router
     private func handleNotification(for type: NotificationActionType, data: [AnyHashable: Any])  {
         switch type {
+        case .createRequest: break
+            
         case .driverConfirm:
-             handleDriverConfirm(data)
+            handleDriverConfirm(data)
         case .driverArrived:
             handleDriverArrived(data)
         case .startTrip:
@@ -84,12 +90,27 @@ class NotificationManager: NSObject {
             handleEndTrip(data)
         case .passengerPaymentPending:
             handlePassengerPaymentPending(data)
+        case .cancelTrip:
+            handleCancelTripBuyDriver(data)
         }
     }
 }
 
 
 extension NotificationManager {
+    
+    
+    func handleCreateRequest(_ data: [AnyHashable: Any]) {
+        print("✅ Driver confirmed trip.")
+        
+        NotificationCenter.default.post(
+            name: .createRequest,
+            object: nil
+        )
+        
+    }
+    
+    
     func handleDriverConfirm(_ data: [AnyHashable: Any]) {
         print("✅ Driver confirmed trip.")
         
@@ -155,7 +176,7 @@ extension NotificationManager {
         }
         
         
-      
+        
     }
 }
 
@@ -164,7 +185,7 @@ extension NotificationManager {
     func handleStartTrip(_ data: [AnyHashable: Any]) {
         print("🚕 Trip started.")
         // Example:
-         
+        
         guard let tripId = data["tripId"] as? Int else {
             print("⚠️ Missing tripId in notification data")
             return
@@ -228,7 +249,7 @@ extension NotificationManager {
         }
         
         
-       
+        
     }
 }
 
@@ -239,7 +260,7 @@ extension NotificationManager {
         // Example:
         
         
-
+        
         guard let tripId = data["tripId"] as? Int else {
             print("⚠️ Missing tripId in notification data")
             return
@@ -268,6 +289,18 @@ extension NotificationManager {
         
     }
 }
+
+
+extension NotificationManager {
+    func handleCancelTripBuyDriver(_ data: [AnyHashable: Any]) {
+        print("💳 cancelTrip by driver ")
+        NotificationCenter.default.post(
+            name: .cancelTrip,
+            object: nil
+        )
+    }
+}
+
 
 
 extension NotificationManager {

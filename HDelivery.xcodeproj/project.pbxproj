@@ -55,7 +55,6 @@
 		96AFF64A2E9682F40013B937 /* DeliveryLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF5D02E9682F40013B937 /* DeliveryLoginView.swift */; };
 		96AFF64B2E9682F40013B937 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF5D22E9682F40013B937 /* LoginViewModel.swift */; };
 		96AFF64C2E9682F40013B937 /* MapViewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF5D52E9682F40013B937 /* MapViewWrapper.swift */; };
-		96AFF64D2E9682F40013B937 /* OnboardingPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF5D82E9682F40013B937 /* OnboardingPageView.swift */; };
 		96AFF64E2E9682F40013B937 /* model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF5DA2E9682F40013B937 /* model.swift */; };
 		96AFF64F2E9682F40013B937 /* OnlineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF5DB2E9682F40013B937 /* OnlineViewModel.swift */; };
 		96AFF6502E9682F40013B937 /* RequestScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF5DC2E9682F40013B937 /* RequestScreen.swift */; };
@@ -91,6 +90,9 @@
 		96AFF6762E9682F40013B937 /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF6192E9682F40013B937 /* TestView.swift */; };
 		96AFF67B2E96830C0013B937 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF67A2E9683090013B937 /* WebView.swift */; };
 		96AFF6812E9684180013B937 /* TermConditionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF6802E9684180013B937 /* TermConditionView.swift */; };
+		96D782B12EA4B83F0011328B /* PaystackCore in Frameworks */ = {isa = PBXBuildFile; productRef = 96D782B02EA4B83F0011328B /* PaystackCore */; };
+		96D782B32EA4B83F0011328B /* PaystackPusherWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 96D782B22EA4B83F0011328B /* PaystackPusherWrapper */; };
+		96D782B52EA4B83F0011328B /* PaystackUI in Frameworks */ = {isa = PBXBuildFile; productRef = 96D782B42EA4B83F0011328B /* PaystackUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -140,7 +142,6 @@
 		96AFF5D02E9682F40013B937 /* DeliveryLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveryLoginView.swift; sourceTree = "<group>"; };
 		96AFF5D22E9682F40013B937 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		96AFF5D52E9682F40013B937 /* MapViewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewWrapper.swift; sourceTree = "<group>"; };
-		96AFF5D82E9682F40013B937 /* OnboardingPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageView.swift; sourceTree = "<group>"; };
 		96AFF5DA2E9682F40013B937 /* model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = model.swift; sourceTree = "<group>"; };
 		96AFF5DB2E9682F40013B937 /* OnlineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnlineViewModel.swift; sourceTree = "<group>"; };
 		96AFF5DC2E9682F40013B937 /* RequestScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestScreen.swift; sourceTree = "<group>"; };
@@ -266,6 +267,26 @@
 			path = UserGoogleMap;
 			sourceTree = "<group>";
 		};
+		96C7EF692EA0E8ED00927C69 /* ViewModel */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		96C7EF6D2EA0EAD300927C69 /* View */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = View;
+			sourceTree = "<group>";
+		};
+		96CD414B2EAB8504006730B4 /* Model */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Model;
+			sourceTree = "<group>";
+		};
+		96CD41502EAB8E41006730B4 /* View */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = View;
+			sourceTree = "<group>";
+		};
 		96D111E02E9BA20400FDFBB8 /* ForgotPassword */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = ForgotPassword;
@@ -291,6 +312,11 @@
 			path = TransactionHistory;
 			sourceTree = "<group>";
 		};
+		96E174CB2EAA01DF00A6503A /* ModelView */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ModelView;
+			sourceTree = "<group>";
+		};
 		96F41C6E2E9CC414001D07E2 /* Validation */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Validation;
@@ -303,7 +329,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				96D782B52EA4B83F0011328B /* PaystackUI in Frameworks */,
 				319E2446AB83B46FD4CA1828 /* Pods_HDelivery.framework in Frameworks */,
+				96D782B32EA4B83F0011328B /* PaystackPusherWrapper in Frameworks */,
+				96D782B12EA4B83F0011328B /* PaystackCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -626,7 +655,9 @@
 		96AFF5D92E9682F40013B937 /* OnboardView */ = {
 			isa = PBXGroup;
 			children = (
-				96AFF5D82E9682F40013B937 /* OnboardingPageView.swift */,
+				96CD414B2EAB8504006730B4 /* Model */,
+				96E174CB2EAA01DF00A6503A /* ModelView */,
+				96CD41502EAB8E41006730B4 /* View */,
 			);
 			path = OnboardView;
 			sourceTree = "<group>";
@@ -796,6 +827,7 @@
 		96AFF61C2E9682F40013B937 /* HDelivery */ = {
 			isa = PBXGroup;
 			children = (
+				96C7EF662EA0E5DF00927C69 /* Signature */,
 				96AFC5062E9F70BC00BEB5E5 /* Notification */,
 				96B284A62E9D36CF000E0FBF /* Extension */,
 				96B284A32E9D3006000E0FBF /* CromImage */,
@@ -890,6 +922,15 @@
 			path = DriverRate;
 			sourceTree = "<group>";
 		};
+		96C7EF662EA0E5DF00927C69 /* Signature */ = {
+			isa = PBXGroup;
+			children = (
+				96C7EF692EA0E8ED00927C69 /* ViewModel */,
+				96C7EF6D2EA0EAD300927C69 /* View */,
+			);
+			path = Signature;
+			sourceTree = "<group>";
+		};
 		EBF86C3CA46C6B3F49E88AFF /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -942,11 +983,16 @@
 				96B5EE062E98F02B005796E1 /* View */,
 				96B5EE092E98F06D005796E1 /* ViewModel */,
 				96B5EE102E9920C5005796E1 /* UserGoogleMap */,
+				96C7EF692EA0E8ED00927C69 /* ViewModel */,
+				96C7EF6D2EA0EAD300927C69 /* View */,
+				96CD414B2EAB8504006730B4 /* Model */,
+				96CD41502EAB8E41006730B4 /* View */,
 				96D111E02E9BA20400FDFBB8 /* ForgotPassword */,
 				96D112A62E9BF69800FDFBB8 /* ConfirmPayment */,
 				96D112AA2E9BFD9B00FDFBB8 /* PaymentView */,
 				96D112B92E9C03B500FDFBB8 /* Deposit */,
 				96D112CB2E9C1A0600FDFBB8 /* TransactionHistory */,
+				96E174CB2EAA01DF00A6503A /* ModelView */,
 				96F41C6E2E9CC414001D07E2 /* Validation */,
 			);
 			name = HDelivery;
@@ -978,6 +1024,9 @@
 			);
 			mainGroup = 7C244F6C2E8809E300BF2D48;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				96D782AF2EA4B83F0011328B /* XCRemoteSwiftPackageReference "paystack-sdk-ios" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7C244F762E8809E300BF2D48 /* Products */;
 			projectDirPath = "";
@@ -1119,7 +1168,6 @@
 				96AFF64A2E9682F40013B937 /* DeliveryLoginView.swift in Sources */,
 				96AFF64B2E9682F40013B937 /* LoginViewModel.swift in Sources */,
 				96AFF64C2E9682F40013B937 /* MapViewWrapper.swift in Sources */,
-				96AFF64D2E9682F40013B937 /* OnboardingPageView.swift in Sources */,
 				96AFF64E2E9682F40013B937 /* model.swift in Sources */,
 				96AFF64F2E9682F40013B937 /* OnlineViewModel.swift in Sources */,
 				96AFF6502E9682F40013B937 /* RequestScreen.swift in Sources */,
@@ -1376,6 +1424,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		96D782AF2EA4B83F0011328B /* XCRemoteSwiftPackageReference "paystack-sdk-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/PaystackHQ/paystack-sdk-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		96D782B02EA4B83F0011328B /* PaystackCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 96D782AF2EA4B83F0011328B /* XCRemoteSwiftPackageReference "paystack-sdk-ios" */;
+			productName = PaystackCore;
+		};
+		96D782B22EA4B83F0011328B /* PaystackPusherWrapper */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 96D782AF2EA4B83F0011328B /* XCRemoteSwiftPackageReference "paystack-sdk-ios" */;
+			productName = PaystackPusherWrapper;
+		};
+		96D782B42EA4B83F0011328B /* PaystackUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 96D782AF2EA4B83F0011328B /* XCRemoteSwiftPackageReference "paystack-sdk-ios" */;
+			productName = PaystackUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7C244F6D2E8809E300BF2D48 /* Project object */;
 }

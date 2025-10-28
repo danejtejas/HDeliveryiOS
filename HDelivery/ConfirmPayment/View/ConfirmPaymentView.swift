@@ -38,7 +38,7 @@ struct ConfirmPaymentView: View {
                     .foregroundColor(.white)
                     .padding(.horizontal, 30)
                 
-                Spacer()
+               
                 
                 // MARK: - Buttons
                 HStack(spacing: 20) {
@@ -105,8 +105,3 @@ struct ConfirmPaymentView: View {
         }
     }
 }
-
-//#Preview {
-//    ConfirmPaymentView(tripId: .constant("385"))
-//}
-

@@ -9,7 +9,7 @@ import SwiftUI
 
 
 
-import SwiftUI
+import ToastSwiftUI
 
 
 
@@ -47,19 +47,46 @@ struct ForgotPasswordView: View {
                         .padding(.top, 30)
                     
                     
-                    
+                     HStack{
+                        Spacer()
+                        Text("Don't have an account?")
+                            .foregroundColor(.gray)
+                        NavigationLink(destination: SignUpView()) {
+                            Text("Sign Up")
+                                .foregroundColor(.green)
+                        }
+                    }.padding(.horizontal, 20)
                     // Apply Button
-                    Button(action: {
-                        applyPromoCode()
-                    }) {
-                        Text("Send Link")
-                            .font(.system(size: 20, weight: .semibold))
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
-                            .background(Color.green)
-                            .cornerRadius(4)
+                    
+                    HStack{
+                        
+                        Button(action: {
+                            dismiss()
+                        }) {
+                            Text("Back to Login")
+                                .font(.system(size: 20, weight: .semibold))
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 16)
+                                .background(AppSetting.ColorSetting.appBg)
+                                .cornerRadius(4)
+                        }
+                        
+                        
+                        Button(action: {
+                            applyPromoCode()
+                        }) {
+                            Text("Send Link")
+                                .font(.system(size: 20, weight: .semibold))
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 16)
+                                .background(Color.green)
+                                .cornerRadius(4)
+                        }
                     }
+                    
+                    
                     .padding(.horizontal, 20)
                     
                     Spacer()
@@ -91,7 +118,7 @@ struct ForgotPasswordView: View {
                 if viewModel.isLoading {
                     LoadView()
                 }
-            }
+            }.toast(isPresenting: $viewModel.isShowAlert, message: viewModel.message ?? "")
             
       
     }

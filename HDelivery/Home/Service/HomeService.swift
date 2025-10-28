@@ -72,17 +72,3 @@ struct CreateTripRequestAPIRequest: APIRequest {
     
 }
 
-
-
-
-struct HomeService  {
-    
-    let resository:  HomeRepository
-    
-    
-    
-    
-}
-
-
-

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Photos
 
 struct AppConstants {
 
@@ -165,5 +166,52 @@ struct AppSetting {
     struct URLS {
         static let baseURL = "https://hapihyper.com/admin/api/"
     }
+    
+    struct PayStack{
+        static let key = "pk_live_12f812935d21db3f3229edc115f7cc990bd407cc"
+    }
 }
 
+// MARK: - Image Picker Helper with Filename
+struct DocumentImagePicker: UIViewControllerRepresentable {
+    @Binding var image: UIImage?
+    @Binding var fileName: String
+    @Environment(\.dismiss) private var dismiss
+
+    func makeUIViewController(context: Context) -> UIImagePickerController {
+        let picker = UIImagePickerController()
+        picker.delegate = context.coordinator
+        picker.sourceType = .photoLibrary
+        return picker
+    }
+
+    func updateUIViewController(_ uiViewController: UIImagePickerController, context: Context) {}
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+
+    class Coordinator: NSObject, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+        let parent: DocumentImagePicker
+
+        init(_ parent: DocumentImagePicker) {
+            self.parent = parent
+        }
+
+        func imagePickerController(_ picker: UIImagePickerController,
+                                   didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+
+            if let image = info[.originalImage] as? UIImage {
+                parent.image = image
+            }
+
+            // ✅ Extract filename from image URL
+            if let imageURL = info[.imageURL] as? URL {
+                parent.fileName = imageURL.lastPathComponent
+                print("📸 Selected image file name: \(parent.fileName)")
+            }
+
+            parent.dismiss()
+        }
+    }
+}

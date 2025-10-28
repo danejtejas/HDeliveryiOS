@@ -24,14 +24,14 @@ class UserRateViewModel: ObservableObject {
         self.repository = repository
     }
     
-    func ratePassenger(tripId: String) async {
+    func rateDriver(tripId: String, rating : String) async {
         isLoading = true
         defer { isLoading = false }
         
         do {
             let token = try StorageManager.shared.getAuthToken() ?? ""
             
-            let response = try await repository.rateDriver(token: token, tripId: tripId, rate: "9")
+            let response = try await repository.rateDriver(token: token, tripId: tripId, rate: rating)
             print("response: \(response)")
             
             message = response.message

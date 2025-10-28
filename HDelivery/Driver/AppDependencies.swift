@@ -39,4 +39,8 @@ final class AppDependencies {
     func makeRequestRepository() -> RequestRepository { APIRequestRepository(network: apiService) }
     
     func makeAuthRepository() -> AuthRepository { APIAuthRepository(network: apiService) }
+    
+    func makeSignupRepository() -> APISignup { APISignup(networkService: apiService)  }
+    
+    
 }

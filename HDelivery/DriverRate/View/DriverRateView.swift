@@ -9,6 +9,7 @@ import SwiftUI
 
 
 import SwiftUI
+import PencilKit
 
 struct DriverRateView: View {
     @State private var rating: Int = 0
@@ -39,7 +40,8 @@ struct DriverRateView: View {
         .background(Color.blue.ignoresSafeArea())
         .navigationBarHidden(true)
         .fullScreenCover(isPresented: $isPaymentTabped, content: {
-            ConfirmPaymentView(tripId: tripData?.id ?? "")
+//            ConfirmPaymentView(tripId: tripData?.id ?? "")
+            SignatureScreen(tripData: tripData)
         })
         .alert("Message", isPresented: $showAlert) {
             Button("OK", role: .cancel) {}
@@ -174,7 +176,7 @@ extension DriverRateView {
             self.tripId = tripId
             self.isPaymentTabped = true
         } label: {
-            Text("PAY NOW")
+            Text("Signature")
                 .font(.headline)
                 .frame(maxWidth: .infinity)
                 .padding()

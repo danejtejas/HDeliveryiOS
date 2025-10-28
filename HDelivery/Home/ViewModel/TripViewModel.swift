@@ -21,6 +21,8 @@ final class TripViewModel: ObservableObject {
     @Published var isSuccess = false
     @Published var itemDescription : String?
     
+   
+    
     var selectedItem : [Item] = []
     
     init(repository: TripRepository = AppDependencies.shared.makeTripRepository()) {

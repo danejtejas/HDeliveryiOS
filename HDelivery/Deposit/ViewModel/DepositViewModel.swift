@@ -6,6 +6,9 @@
 //
 
 import SwiftUI
+import PaystackCore
+
+import PaystackUI
 
 @MainActor
 class DepositViewModel: ObservableObject {
@@ -24,6 +27,8 @@ class DepositViewModel: ObservableObject {
         self.repository = repository
         balance = StorageManager.shared.getUserInfo()?.balance ?? "0"
     }
+    
+    
     
     func exchangePoints(token: String, amount: String, exchangeType: String?, transactionId : String) async {
         isLoading = true

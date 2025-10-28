@@ -186,14 +186,14 @@ extension ContentViewModel {
                                 countMyRequest()
             } else {
                 switch status {
-                case "3", "4":
+                case "3", "4":break
                     
-                    if let rate = passengerRate, !rate.isEmpty {
-                        countMyRequest()
-                    }
-                    else {
-                        isNavToDriverRate = true
-                    }
+//                    if let rate = passengerRate, !rate.isEmpty {
+//                        countMyRequest()
+//                    }
+//                    else {
+//                        isNavToDriverRate = true
+//                    }
                     
                 default:
                     countMyRequest()

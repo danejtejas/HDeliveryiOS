@@ -10,28 +10,70 @@ import SwiftUI
 
 
 struct TransactionHistoriesView: View {
-   
     @Environment(\.presentationMode) var presentationMode
     @StateObject private var viewModel = TransactionHistoryViewModel()
-      
-    
     
     var body: some View {
-       
-        List($viewModel.transactions , id: \.id) { transaction in
-            TransactionRowView(transaction: transaction)
-                .listRowSeparator(.hidden)
-                .listRowInsets(EdgeInsets())
+        ZStack {
+            Color(red: 0.25, green: 0.35, blue: 0.65).opacity(0.05)
+                .ignoresSafeArea()
+            
+            if viewModel.isLoading {
+                // ✅ Loading view
+                LoadView()
+            }
+            else if viewModel.transactions.isEmpty {
+                // ✅ Empty state view
+                VStack(spacing: 16) {
+                    Image(systemName: "creditcard")
+                        .font(.system(size: 60))
+                        .foregroundColor(.gray.opacity(0.6))
+                    
+                    Text("No Transaction History")
+                        .font(.title3)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.gray)
+                    
+                    Text("Your transaction history will appear here once available.")
+                        .font(.subheadline)
+                        .foregroundColor(.gray.opacity(0.8))
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 40)
+                    
+                    Button(action: {
+                        Task {
+                            await viewModel.loadTransactions()
+                        }
+                    }) {
+                        Text("Try Again")
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 30)
+                            .padding(.vertical, 12)
+                            .background(Color.blue)
+                            .cornerRadius(8)
+                    }
+                    .padding(.top, 10)
+                }
+                .padding(.top, 120)
+            }
+            else {
+                // ✅ Transactions list
+                List($viewModel.transactions, id: \.id) { transaction in
+                    TransactionRowView(transaction: transaction)
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets())
+                }
+                .listStyle(.plain)
+                .padding()
+            }
         }
-
-        .background(Color(red: 0.25, green: 0.35, blue: 0.65).opacity(0.05))
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden()
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
                     presentationMode.wrappedValue.dismiss()
-                    
                 }) {
                     Image(systemName: "arrow.left")
                         .font(.title2)
@@ -40,7 +82,7 @@ struct TransactionHistoriesView: View {
             }
             
             ToolbarItem(placement: .principal) {
-                Text("Task Histories")
+                Text("Transaction History")
                     .font(.title2)
                     .fontWeight(.semibold)
                     .foregroundColor(.white)
@@ -48,20 +90,12 @@ struct TransactionHistoriesView: View {
         }
         .toolbarBackground(AppSetting.ColorSetting.navigationBarBg, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
-        .overlay{
-            if viewModel.isLoading {
-                LoadView()
-            }
+        .task {
+            await viewModel.loadTransactions()
         }
-        .onAppear {
-            Task {
-                await viewModel.loadTransactions()
-                
-            }
-        }
-        
     }
 }
+
 
 
 // MARK: - Task Card View

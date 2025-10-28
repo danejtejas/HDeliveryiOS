@@ -149,6 +149,7 @@ struct HomeView : View {
                     NavigationLink {
                         ItemSelectionView { selectedItem in
                             self.viewModel.selectedItem = selectedItem
+                            self.setItemDescription()
                         }
                     } label: {
                         
@@ -334,6 +335,12 @@ struct HomeView : View {
         
     }
     
+    
+    
+    func setItemDescription()  {
+         let data = self.viewModel.selectedItem.map{ "\($0.name) X  \($0.quantity)"}
+        self.itemDescription = data.joined(separator: ",")
+    }
     
     
     

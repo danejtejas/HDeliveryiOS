@@ -418,11 +418,12 @@ struct UserInfo: Codable {
     var account: String?
     var driver: DriverInfoData?
     var car: CarInfo?
+    var postcode : String?
     
     enum CodingKeys: String, CodingKey {
         case id, fullName, image, email, description, isActive, gender, phone, dob, address,
              balance, isOnline, passengerRate, passengerRateCount, stateId, stateName,
-             cityId, cityName, typeAccount, account, driver, car
+             cityId, cityName, typeAccount, account, driver, car,postcode
     }
     
     init(from decoder: Decoder) throws {
@@ -449,6 +450,8 @@ struct UserInfo: Codable {
         typeAccount = container.decodeSafeString(forKey: .typeAccount)
         account = container.decodeSafeString(forKey: .account)
 
+        postcode = container.decodeSafeString(forKey: .postcode)
+        
         // 👇 Safely decode driver & car — handle both array and object cases
         if let driverObject = try? container.decodeIfPresent(DriverInfoData.self, forKey: .driver) {
             driver = driverObject

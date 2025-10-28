@@ -33,12 +33,24 @@ struct ProfileView: View {
                         Spacer().frame(height: 20)
                         
                         // Profile Image
-                        Image(systemName: "pepeal") //
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 100, height: 100)
-                            .clipShape(Circle())
-                            .overlay(Circle().stroke(Color.white, lineWidth: 3))
+                        if viewModel.prfileImageUrl != nil {
+                            AsyncImage(url:viewModel.prfileImageUrl)
+//                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 100, height: 100)
+                                .clipShape(Circle())
+                                .overlay(Circle().stroke(Color.white, lineWidth: 3))
+                            
+                        }
+                        else {
+                            Image(systemName: "pepeal") //
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 100, height: 100)
+                                .clipShape(Circle())
+                                .overlay(Circle().stroke(Color.white, lineWidth: 3))
+                        }
+                       
                         
                         // Name
                         Text(viewModel.fullName ?? "")
@@ -47,8 +59,8 @@ struct ProfileView: View {
                         
                         // Rating stars
                         HStack(spacing: 6) {
-                            ForEach(0..<5) { _ in
-                                Image(systemName: "star.fill")
+                            ForEach(0..<5) { index in
+                                Image(systemName: index < Int((viewModel.rating ?? 0)) ? "star.fill" : "star")
                                     .foregroundColor(.white)
                             }
                         }

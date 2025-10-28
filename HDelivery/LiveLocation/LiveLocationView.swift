@@ -10,6 +10,7 @@
 import SwiftUI
 import GoogleMaps
 import CoreLocation
+import ToastSwiftUI
 
 
 
@@ -19,8 +20,10 @@ struct GoogleMapNavigationView: View {
     //    @Binding var tripData : TripData?
 //    @Binding var tripData : TripHistory?
     
-   
+    
+    @Environment(\.dismiss) private var dismiss
     @ObservedObject var viewModel: LiveLocationViewModel   // 👈 changed
+    
 
     init(liveLocationViewModel: LiveLocationViewModel) {
        
@@ -40,6 +43,7 @@ struct GoogleMapNavigationView: View {
                 Button(action: {
                     Task{
                         await  viewModel.cancelTrip(viewModel.tripData?.id ?? "")
+                        dismiss()
                     }
                     
                 }) {
@@ -110,8 +114,21 @@ struct GoogleMapNavigationView: View {
             locationManager.start()
         }
         .overlay {
-            
+            if viewModel.isLoading {
+                LoadView()
+            }
         }
+        .onChange(of: viewModel.isCancelled) { newValue in
+            if newValue == true {
+                dismiss()
+            }
+        }
+        .toast(isPresenting: $viewModel.isShowToast, message: viewModel.errorMessage ?? "")
+        .fullScreenCover(isPresented: $viewModel.isTripEnd) {
+            DriverRateView(tripData: $viewModel.tripData)
+        }
+        
+        
     }
     
     private func callNumber() {

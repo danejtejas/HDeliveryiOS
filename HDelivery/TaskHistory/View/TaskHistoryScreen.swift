@@ -12,30 +12,46 @@ import SwiftUI
 
 
 
-
-// MARK: - Task History Screen
 struct TaskHistoryScreen: View {
-
-    var onSelectTab : () -> Void
-    
+    var onSelectTab: () -> Void
     @StateObject var viewModel: TaskHistoryViewModel = TaskHistoryViewModel()
     
     var body: some View {
-        
-        List($viewModel.tripHistory, id: \.id) { trip in
+        ZStack {
+            Color(red: 0.25, green: 0.35, blue: 0.65).opacity(0.05)
+                .ignoresSafeArea()
             
-            TaskCardView(task: trip)
-            
-            
+            if viewModel.isLoading {
+                LoadView()
+            } else if viewModel.tripHistory.isEmpty {
+                // ✅ Empty state view
+                VStack(spacing: 16) {
+                    Image(systemName: "tray.fill")
+                        .font(.system(size: 60))
+                        .foregroundColor(.gray.opacity(0.6))
+                    Text("No Task History Found")
+                        .font(.title3)
+                        .fontWeight(.medium)
+                        .foregroundColor(.gray)
+                    Text("Your previous delivery or trip history will appear here once available.")
+                        .font(.subheadline)
+                        .foregroundColor(.gray.opacity(0.8))
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 40)
+                }
+                .padding(.top, 120)
+            } else {
+                // ✅ Data available
+                List($viewModel.tripHistory, id: \.id) { trip in
+                    TaskCardView(task: trip)
+                }
+                .listStyle(.plain)
+            }
         }
-        .background(Color(red: 0.25, green: 0.35, blue: 0.65).opacity(0.05))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: {
-                    onSelectTab()
-                    
-                }) {
+                Button(action: { onSelectTab() }) {
                     Image(systemName: "line.3.horizontal")
                         .font(.title2)
                         .foregroundColor(.white)
@@ -43,7 +59,7 @@ struct TaskHistoryScreen: View {
             }
             
             ToolbarItem(placement: .principal) {
-                Text("Tasks Histories")
+                Text("Task History")
                     .font(.title2)
                     .fontWeight(.semibold)
                     .foregroundColor(.white)
@@ -51,20 +67,15 @@ struct TaskHistoryScreen: View {
         }
         .toolbarBackground(AppSetting.ColorSetting.navigationBarBg, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
-        .overlay{
-            if viewModel.isLoading {
-                LoadView()
-            }
-        }
         .onAppear {
             Task {
                 await viewModel.showMyTrip()
                 await viewModel.showMyRequests()
             }
         }
-        
     }
 }
+
 
 // MARK: - Task Card View
 struct TaskCardView: View {

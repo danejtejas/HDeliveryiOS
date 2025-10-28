@@ -16,7 +16,7 @@ class SignupViewModel: ObservableObject {
     
     @Published var isLoading: Bool = false
     
-    var signUpService: SignupService!
+   
     
     @Published var imageBase64String : String = ""
     

@@ -24,6 +24,8 @@ struct SignUpView: View {
     @State private var tempImage: UIImage? = nil
     @State private var showCropView = false
     
+    @State private var account = ""
+    
     
     
     @Environment(\.dismiss) private var dismiss
@@ -147,6 +149,13 @@ struct SignUpView: View {
                         placeholder: "Post code",
                         text: $postCode
                     )
+                    
+                    FormFieldView(
+                        icon: "info.circle.fill",
+                        label: "Account",
+                        placeholder: "Account",
+                        text: $account
+                    )
                 }
                 .padding(.horizontal, 20)
                 .padding(.bottom, 100) // Extra space for bottom navigation
@@ -186,8 +195,10 @@ struct SignUpView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
                     // Handle save/submit
+                    Task {
+                       await viewmodel.signup(fullName: fullName, phone: phone, email: email, password: password, address: address, state: state, city: city, postCode: postCode, account : account)
+                    }
                     
-                    viewmodel.signup(fullName: fullName, phone: phone, email: email, password: password, address: address, state: state, city: city, postCode: postCode)
                     
                 }) {
                     Image(systemName: "doc.fill")
@@ -213,7 +224,7 @@ struct SignUpView: View {
                 LoadView()
             }
         }
-        .toast(isPresenting: $viewmodel.isToastShow, message: viewmodel.message ?? "")
+        .toast(isPresenting: $viewmodel.isToastShow, message: viewmodel.message)
         .sheet(item: $tempImage) { image in
             SquareCropView(image: image) { croppedImage in
                 avatarImage = Image(uiImage: croppedImage)

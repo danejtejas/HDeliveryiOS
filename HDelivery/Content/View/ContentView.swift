@@ -96,13 +96,15 @@ struct ContentView: View {
 //                GoogleMapNavigationView(tripData: $viewModel.tripHistory)
                 GoogleMapNavigationView(liveLocationViewModel: LiveLocationViewModel(tripHistory: viewModel.tripHistory))
             }.fullScreenCover(isPresented:$viewModel.isNavToPayment) {
-                UserRateView(tripData: viewModel.tripHistory)
+                UserRateView(tripData: $viewModel.tripHistory)
             }.fullScreenCover(isPresented: $viewModel.isNavToDriverRate) {
                 DriverRateView(tripData: $viewModel.tripHistory)
             }.fullScreenCover(isPresented: $viewModel.isNavToUserGoogleMap) {
                 UserGoogleMap(tripData: viewModel.tripHistory)
             }.fullScreenCover(isPresented: $viewModel.isNavUserRequest) {
                 RequestScreen(onSelectTab: { })
+            }.fullScreenCover(isPresented: $viewModel.isNavToPaymentDriver) {
+                ConfirmPaymentView(tripId: viewModel.tripHistory?.id ?? "")
             }
 
         }

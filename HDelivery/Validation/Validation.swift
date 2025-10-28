@@ -54,6 +54,25 @@ struct Validator {
         let regex = #"^[0-9]{4,6}$"#
         return NSPredicate(format: "SELF MATCHES %@", regex).evaluate(with: code)
     }
+    
+    static func isValidCarPlate(_ plate: String) -> Bool {
+        let regex = #"^[A-Za-z0-9]{4,10}$"#
+        return NSPredicate(format: "SELF MATCHES %@", regex).evaluate(with: plate)
+    }
+    
+    static func isValidIdentity(_ id: String) -> Bool {
+        let regex = #"^[0-9]{4,6}$"#
+        return NSPredicate(format: "SELF MATCHES %@", regex).evaluate(with: id)
+    }
+    
+    static func isValidYear(_ year: String) -> Bool {
+        let regex = #"^(19|20)\d{2}$"#
+        return NSPredicate(format: "SELF MATCHES %@", regex).evaluate(with: year)
+    }
+    
+    
+    
+    
 }
 
 
@@ -114,6 +133,81 @@ struct PasswordRule: ValidationRule {
         return nil
     }
 }
+struct PostCodedRule: ValidationRule {
+    func validate(_ value: String?) -> ValidationError? {
+        guard let value = value,  Validator.validatePostCode(value)else {
+            return .custom(message: "Please enter a valid postcode.")
+        }
+        return nil
+    }
+}
+
+
+struct YearRule: ValidationRule {
+    func validate(_ value: String?) -> ValidationError? {
+        guard let value = value,  Validator.isValidYear(value)else {
+            return .custom(message: "Please enter a valid year.")
+        }
+        return nil
+    }
+}
+
+struct CarePlateRule: ValidationRule {
+    func validate(_ value: String?) -> ValidationError? {
+        guard let value = value,  Validator.isValidCarPlate(value)else {
+            return .custom(message: "Please enter a valid care plate no.")
+        }
+        return nil
+    }
+}
+
+struct IdentityRule: ValidationRule {
+    func validate(_ value: String?) -> ValidationError? {
+        guard let value = value,  Validator.isValidIdentity(value)else {
+            return .custom(message: "Please enter a valid Identity.")
+        }
+        return nil
+    }
+}
+
+
+
+//
+//struct RegexRule: ValidationRule {
+//    let pattern: String
+//    let message: String
+//    func validate(_ value: String) -> String? {
+//        let predicate = NSPredicate(format: "SELF MATCHES %@", pattern)
+//        return predicate.evaluate(with: value) ? nil : message
+//    }
+//}
+//
+//struct MinLengthRule: ValidationRule {
+//    func validate(_ value: String?) -> ValidationError? {
+//        <#code#>
+//    }
+//    
+//    let fieldName: String
+//    let minLength: Int
+//    func validate(_ value: String?) -> String? {
+//        if value?.count < minLength {
+//            return "\(fieldName) must be at least \(minLength) characters."
+//        }
+//        return nil
+//    }
+//}
+//
+//struct MaxLengthRule: ValidationRule {
+//    let fieldName: String
+//    let maxLength: Int
+//    func validate(_ value: String) -> String? {
+//        if value.count > maxLength {
+//            return "\(fieldName) must not exceed \(maxLength) characters."
+//        }
+//        return nil
+//    }
+//}
+
 
 
 
@@ -128,6 +222,8 @@ final class ValidationManager {
             for rule in data.rules {
                 if let error = rule.validate(data.value) {
                     throw error
+                    break
+                    
                 }
             }
         }

@@ -20,32 +20,46 @@ class LoginViewModel: ObservableObject {
     @Published var password: String = ""
     @Published var isLoading: Bool = false
     @Published var isLoggedIn: Bool = false
-    @Published var error: String?
+    @Published var error: String = ""
     @Published var loginModel : LoginModel?
+    @Published var isShowToast: Bool = false
 
     private var cancellables = Set<AnyCancellable>()
-
-    var isValid: Bool {
-        return true
-    }
-
+     var loginRequest : LoginRequest?
+    
     func login(email : String, password : String) {
-        guard isValid else { return }
+        defer {
+            isLoading = false
+        }
         
-        isLoading = true
-        error = nil
+       
+        error = ""
+        isShowToast = false
         
         let  getFCMToken = try? StorageManager.shared.getFCMToken() ?? ""
         
         
-        var emailId =  email   //"rutvikdemo2@gmail.com"
+        let emailId =  email   //"rutvikdemo2@gmail.com"
         let gcm_id = getFCMToken
         let ime  = "123456"
         let pass =  password //"Rutvik123@"
         let lat  =   "0.0"
         let long =  "0.0"
+    
         
         let loginRequest =  LoginRequest(email: emailId, gcm_id: gcm_id!, ime: ime, password: pass, lat: lat, long: long)
+        self.loginRequest = loginRequest
+        
+        do{
+            
+            try validation()
+            isLoading = true
+        }
+        catch {
+            self.error = error.localizedDescription
+            self.isShowToast = true
+            return
+        }
         
         LoginService.shared.login(loginRequest: loginRequest)
             .receive(on: DispatchQueue.main)
@@ -54,6 +68,7 @@ class LoginViewModel: ObservableObject {
                 switch completion {
                 case .failure(let err):
                     self?.error = err.localizedDescription
+                    self?.isShowToast = true
                 case .finished:
                     break
                 }
@@ -73,14 +88,31 @@ class LoginViewModel: ObservableObject {
                         
                     } catch {
                         print("error \(error.localizedDescription)")
+                        self?.error = error.localizedDescription
+                        self?.isShowToast = true
                     }
                     
                     
                 } else {
                     self?.error = response.message
+                    self?.isShowToast = true
                 }
             }
             .store(in: &cancellables)
+    }
+    
+    
+    
+    func validation() throws {
+        
+       try ValidationManager.shared.validate(fields:
+                                            ["Email" : (value: loginRequest?.email,
+                                                        rules: [RequiredRule(fieldName: "Email"),
+                                                                EmailRule()]) ,
+                                             "Password" : (value: loginRequest?.password,
+                                                           rules: [ RequiredRule(fieldName: "Password"),
+                                                                  PasswordRule()])])
+        
     }
         
 }

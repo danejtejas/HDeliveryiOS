@@ -39,18 +39,48 @@ extension APIRequest {
 }
 
 
-// Standard API Response Wrapper
+/// MARK: - Standard API Response Wrapper
 struct APIResponse<T: Decodable>: Decodable {
     let status: String
     let data: T?
     let message: String?
     let count: Int?
+    
     var isSuccess: Bool {
-        status == "success".uppercased()
+        status.uppercased() == "SUCCESS"
+    }
+
+    // MARK: - Coding Keys
+    private enum CodingKeys: String, CodingKey {
+        case status, data, message, count
     }
     
-}
+    // MARK: - Custom Decoder
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        // Decode `status` safely as String
+        self.status = (try? container.decode(String.self, forKey: .status)) ?? "ERROR"
+        
+        // Decode message, fallback to nil
+        self.message = try? container.decode(String.self, forKey: .message)
+        
+        // Decode count, handle as Int or String that can be converted to Int
+        if let intCount = try? container.decode(Int.self, forKey: .count) {
+            self.count = intCount
+        } else if let stringCount = try? container.decode(String.self, forKey: .count),
+                  let intValue = Int(stringCount) {
+            self.count = intValue
+        } else {
+            self.count = nil
+        }
+        
+        // Decode data generically — fallback to nil if missing or mismatched
+        self.data = try? container.decodeIfPresent(T.self, forKey: .data)
+    }
 
+    
+}
 
 
 

@@ -75,10 +75,56 @@ struct UpdateDriverProfileRequest: APIRequest {
     var path: String { "api/updateDriverDataAndroid" }
     var method: HTTPMethod { .post }
     
-    let params: [String: String]
+    let token: String
+    let carPlate: String
+    let identity: String
+    let brand: String
+    let model: String
+    let year: String
+    let status: String
+    let account: String
+    let referredBy: String?
+    let linkType: String
+    let image: String
+    let image2: String
+    let document: String
+    let documentName: String
+    let documentId: String
+    let documentIdName: String
+    
+    var parameters: [String: Any] {
+        
+        let dict: [String: String] = [
+            "token": token,
+            "carPlate": carPlate,
+            "identity": identity,
+            "brand": brand,
+            "model": model,
+            "year": year,
+            "status": status,
+            "account": account,
+            "link_type": linkType,
+            "image": image,
+            "image2": image2,
+            "document": document,
+            "document_name": documentName,
+            "document_id": documentId,
+            "document_id_name": documentIdName
+        ]
+        
+        return dict
+        
+    }
     
     var body: Data? {
-        try? JSONSerialization.data(withJSONObject: params)
+        var parts: [String] = []
+        for key in parameters.keys.sorted() {
+            let value = "\(parameters[key] ?? "")"
+            let encoded = value.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+            parts.append("\(key)=\(encoded)")
+        }
+        let formString = parts.joined(separator: "&")
+        return formString.data(using: .utf8)
     }
 }
 

@@ -43,6 +43,13 @@ class ForgotPasswordViewModel: ObservableObject {
         defer { isLoading = false }
         
         do {
+            
+            try ValidationManager.shared.validate(fields: ["Email" : (value: email,
+                                                                      rules: [RequiredRule(fieldName: "Email"),
+                                                                              EmailRule(),
+                                                                             ])])
+            
+            
             let response = try await repository.forgotPassword(email: email)
             message = response.message
             isShowAlert = true
@@ -50,7 +57,7 @@ class ForgotPasswordViewModel: ObservableObject {
             print(message)
         } catch {
            
-            message = "❌ \(error.localizedDescription)"
+            message = "\(error.localizedDescription)"
             isSuccess = false
             isShowAlert = true
             print("error == \(error.localizedDescription)")

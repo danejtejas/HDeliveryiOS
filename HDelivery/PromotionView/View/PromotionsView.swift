@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import ToastSwiftUI
 
 
 struct PromotionsView: View {
@@ -86,7 +87,8 @@ struct PromotionsView: View {
                 if viewModel.isLoading {
                     LoadView()
                 }
-            }
+            }.toast(isPresenting: $viewModel.isShowAlert, message: viewModel.error ?? "")
+            
       
     }
     

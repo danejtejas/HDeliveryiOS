@@ -8,169 +8,192 @@
 import SwiftUI
 
 
+
+
 struct UserRateView: View {
     @State private var rating: Int = 0
     @State private var isLoading: Bool = false
     @State private var showAlert = false
     @State private var alertMessage = ""
     
-    // These would normally come from your backend
-    let driverId = "204"
-    let token = "your_auth_token_here"
-
-    @StateObject private var driverRateViewModel = UserRateViewModel()
+    @StateObject private var userRateViewModel = UserRateViewModel()
+    
     @StateObject private var userPaymentViewModel  = UserPaymentViewModel()
+
     
-    var tripData : TripHistory?
+    @Binding var tripData: TripHistory?
+    @State var tripId: String?
     
+    @Environment(\.presentationMode) var presentationMode
+    
+    @State var isPaymentTabped : Bool = false
     
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                // Header
-                VStack(spacing: 8) {
-                    Text("● ● ● ● ○  FINISHED ○")
-                        .font(.title3.bold())
-                        .foregroundColor(.yellow)
-                    Text("Your task has finished")
-                        .font(.subheadline)
-                        .foregroundColor(.white.opacity(0.8))
-                }
-                .padding(.top, 30)
-                
-                // User Info
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Rutvik demo 1")
-                                .font(.headline)
-                                .foregroundColor(.white)
-                            Text("1111xxx xxx")
-                                .font(.caption)
-                                .foregroundColor(.white.opacity(0.7))
-                        }
-                        Spacer()
-                        HStack(spacing: 4) {
-                            ForEach(0..<5) { _ in
-                                Image(systemName: "star.fill")
-                                    .foregroundColor(.yellow)
-                            }
-                        }
-                    }
-                }
-                .padding()
-                .background(Color.black.opacity(0.2))
-                .cornerRadius(10)
-                
-                // Trip Info
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("Type: move my parcel").foregroundColor(.white)
-                    Text("From A: Madhav Mall, Thakkarbapa Nagar Road, Ahmedabad").foregroundColor(.white)
-                    Text("To B: Rajhans Cinemas, Nikol, Ahmedabad").foregroundColor(.white)
-                    Text("Car Plate: demo 1").foregroundColor(.white)
-                    Text("Identity: demo id").foregroundColor(.white)
-                    
-                    // Rating Section
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Rate").foregroundColor(.white)
-                        HStack {
-                            ForEach(1...5, id: \.self) { index in
-                                Image(systemName: index <= rating ? "star.fill" : "star")
-                                    .foregroundColor(.yellow)
-                                    .onTapGesture {
-                                        rating = index
-                                    }
-                            }
-                        }
-                        
-                        Button(action: {
-                            Task {
-                                await submitRating()
-                            }
-                        }) {
-                            if isLoading {
-                                ProgressView()
-                                    .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(Color.green)
-                                    .cornerRadius(8)
-                            } else {
-                                Text("RATE")
-                                    .font(.headline)
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(Color.green)
-                                    .cornerRadius(8)
-                                    .foregroundColor(.white)
-                            }
-                        }
-                    }
-                }
-                .padding()
-                .background(Color.black.opacity(0.2))
-                .cornerRadius(10)
-                
-                // Trip Summary
-                VStack(alignment: .leading, spacing: 6) {
-                    HStack {
-                        Text("Trip:").foregroundColor(.white)
-                        Spacer()
-                        Text("0.0 KM (1 minutes)").foregroundColor(.white)
-                    }
-                    HStack {
-                        Text("Task:").foregroundColor(.white)
-                        Spacer()
-                        Text("0 minute").foregroundColor(.white)
-                    }
-                    HStack {
-                        Text("Fare:").foregroundColor(.white)
-                        Spacer()
-                        Text("₦2100.00").foregroundColor(.white)
-                    }
-                }
-                .padding()
-                .background(Color.black.opacity(0.2))
-                .cornerRadius(10)
-                
-                // Pay Button
-                Button(action: {
-                    
-                    Task{
-                        guard let tripId = tripData?.id else { return  }
-                        await userPaymentViewModel.paymentRequest(tripId: tripId)
-                    }
-                    
-                }) {
-                    Text("PAY NOW")
-                        .font(.headline)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.red)
-                        .cornerRadius(8)
-                        .foregroundColor(.white)
-                }
-                .padding(.bottom, 30)
+                headerSection
+                passengerInfoSection
+                tripInfoSection
+                tripSummarySection
+                payButton
             }
             .padding()
         }
         .background(Color.blue.ignoresSafeArea())
         .navigationBarHidden(true)
-        .alert("Message", isPresented: $showAlert) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text(alertMessage)
-        }
-    }
-    
-    // MARK: - Submit Rating Function
-    private func submitRating() async {
-        guard let tripId = tripData?.id else { return  }
-        await driverRateViewModel.ratePassenger(tripId: tripId)
+        .fullScreenCover(isPresented: $isPaymentTabped, content: {
+//            ConfirmPaymentView(tripId: tripData?.id ?? "")
+            SignatureScreen(tripData: tripData)
+        })
+        
+        
     }
 }
 
+// MARK: - Subviews
+extension UserRateView {
+    
+    private var headerSection: some View {
+        VStack(spacing: 8) {
+            Text("● ● ● ● ○  FINISHED ○")
+                .font(.title3.bold())
+                .foregroundColor(.yellow)
+            Text("Your task has finished")
+                .font(.subheadline)
+                .foregroundColor(.white.opacity(0.8))
+        }
+        .padding(.top, 30)
+    }
+    
+    private var passengerInfoSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(tripData?.passenger?.fullName ?? "")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                    Text(tripData?.passenger?.phone ?? "")
+                        .font(.caption)
+                        .foregroundColor(.white.opacity(0.7))
+                }
+                Spacer()
+                starRow
+            }
+        }
+        .padding()
+        .background(Color.black.opacity(0.2))
+        .cornerRadius(10)
+    }
+    
+    private var starRow: some View {
+        HStack(spacing: 4) {
+            ForEach(0..<5, id: \.self) { index in
+                let passengerRating = Int(tripData?.passengerRate ?? "0")
+                Image(systemName: index < (passengerRating ?? 0) ? "star.fill" : "star")
+                    .foregroundColor(.yellow)
+            }
+        }
+    }
 
-//#Preview {
-//    UserRateView()
-//}
+    
+    private var tripInfoSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text("Type: ").foregroundColor(.white)
+            Text("From A: \(tripData?.startLocation ?? "")").foregroundColor(.white)
+            Text("To B: \(tripData?.endLocation ?? "")").foregroundColor(.white)
+            Text("Car Plate: \(tripData?.driver?.carPlate ?? "")").foregroundColor(.white)
+            Text("Identity: \(tripData?.endLocation ?? "")").foregroundColor(.white)
+            
+            ratingSection
+        }
+        .padding()
+        .background(Color.black.opacity(0.2))
+        .cornerRadius(10)
+    }
+    
+    private var ratingSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Rate").foregroundColor(.white)
+            HStack {
+                ForEach(1...5, id: \.self) { index in
+                    Image(systemName: index <= rating ? "star.fill" : "star")
+                        .foregroundColor(.yellow)
+                        .onTapGesture { rating = index }
+                }
+            }
+            
+            Button {
+                Task { await submitRating() }
+            } label: {
+                if isLoading {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.green)
+                        .cornerRadius(8)
+                } else {
+                    Text("RATE")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(Color.green)
+                        .cornerRadius(8)
+                        .foregroundColor(.white)
+                }
+            }
+        }
+    }
+    
+    private var tripSummarySection: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack {
+                Text("Trip:").foregroundColor(.white)
+                Spacer()
+                Text(tripData?.distanceFormat ?? "0") .foregroundColor(.white)
+              
+            }
+            HStack {
+                Text("Task:").foregroundColor(.white)
+                Spacer()
+                Text("0 minute").foregroundColor(.white)
+            }
+            HStack {
+                Text("Fare:").foregroundColor(.white)
+                Spacer()
+                Text(tripData?.estimateFare ?? "0").foregroundColor(.white)
+            }
+        }
+        .padding()
+        .background(Color.black.opacity(0.2))
+        .cornerRadius(10)
+    }
+    
+    private var payButton: some View {
+        Button {
+            guard let tripId = tripData?.id else { return }
+            self.tripId = tripId
+            Task{
+                guard let tripId = tripData?.id else { return  }
+                await userPaymentViewModel.paymentRequest(tripId: tripId)
+            }
+        } label: {
+            Text("Payment")
+                .font(.headline)
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(Color.red)
+                .cornerRadius(8)
+                .foregroundColor(.white)
+        }
+        .padding(.bottom, 30)
+    }
+}
+
+// MARK: - Logic
+extension UserRateView {
+    private func submitRating() async {
+        guard let tripId = tripData?.id else { return }
+        await userRateViewModel.rateDriver(tripId: tripId, rating: "\(rating)")
+    }
+}

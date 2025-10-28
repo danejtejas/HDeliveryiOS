@@ -25,7 +25,8 @@ struct ReceiverSignatureRequest: APIRequest {
     let receiverSignature: String  // Base64 encoded signature
     
     var body: Data? {
-        try? JSONEncoder().encode([
+        
+        let dic : [String : Any] = [
             "token": token,
             "tripId": tripId,
             "username": username,
@@ -33,6 +34,12 @@ struct ReceiverSignatureRequest: APIRequest {
             "user_id": userId,
             "image": image,
             "receiver_signature": receiverSignature
-        ])
+        ]
+        
+        let p =  dic.toFormURLEncodedData()
+        
+        print(p as Any)
+        
+        return p
     }
 }

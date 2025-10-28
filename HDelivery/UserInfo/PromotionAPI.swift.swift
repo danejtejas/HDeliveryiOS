@@ -41,7 +41,7 @@ struct ApplyPromoCodeRequest: APIRequest {
 
 // MARK: - Get App Introduction
 struct GetIntroductionRequest: APIRequest {
-    typealias Response = APIResponse<String>
+    typealias Response = APIResponse<[OnboardingItem]?>
     var path: String { "api/instruction" }
     var method: HTTPMethod { .get }
     

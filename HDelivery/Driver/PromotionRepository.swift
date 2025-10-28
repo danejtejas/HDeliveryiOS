@@ -12,7 +12,7 @@ import Foundation
 protocol PromotionRepository {
     func showMyCode(userId: String) async throws -> APIResponse<String>
     func applyPromo(userId: String, promoCode: String) async throws -> APIResponse<String>
-    func getIntroduction() async throws -> APIResponse<String>
+    func getIntroduction() async throws -> APIResponse<[OnboardingItem]?>
 }
 
 final class APIPromotionRepository: PromotionRepository {
@@ -27,7 +27,7 @@ final class APIPromotionRepository: PromotionRepository {
         try await network.execute(ApplyPromoCodeRequest(userId: userId, promoCode: promoCode))
     }
     
-    func getIntroduction() async throws -> APIResponse<String> {
+    func getIntroduction() async throws -> APIResponse<[OnboardingItem]?> {
         try await network.execute(GetIntroductionRequest())
     }
 }

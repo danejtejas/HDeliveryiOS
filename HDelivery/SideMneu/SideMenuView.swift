@@ -79,8 +79,8 @@ struct SideMenuView: View {
                     .font(.headline)
                 
                 HStack(spacing: 4) {
-                    ForEach(0..<5) { _ in
-                        Image(systemName: "star.fill")
+                    ForEach(0..<5) { index in
+                        Image(systemName: index < viewModel.rate ? "star.fill" : "star")
                             .foregroundColor(.white)
                             .font(.caption)
                     }
