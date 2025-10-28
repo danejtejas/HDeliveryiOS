@@ -9,14 +9,23 @@
 import SwiftUI
 import GoogleMaps
 import CoreLocation
+import ToastSwiftUI
+
 
 struct UserGoogleMap: View {
     @StateObject private var locationManager = GMSLocationManager()
     
     //    @Binding var tripData : TripData?
-  @State var tripData : TripHistory?
+  @Binding var tripData : TripHistory?
     
-@StateObject private var liveLocationViewModel =  LiveLocationViewModel()
+ @State var showToast: Bool = false
+ @State var showToastMessage: String = ""
+ 
+ @Environment(\.presentationMode) var presentationMode
+    
+ @StateObject private var liveLocationViewModel =  LiveLocationViewModel()
+    
+  @State var isShowRatingPopup: Bool = false
     
     
     var body: some View {
@@ -31,6 +40,7 @@ struct UserGoogleMap: View {
                 Button(action: {
                     Task{
                       await  liveLocationViewModel.cancelTrip(tripData?.id ?? "")
+                        presentationMode.wrappedValue.dismiss()
                     }
                     
                 }) {
@@ -59,6 +69,15 @@ struct UserGoogleMap: View {
                         .background(Color.blue)
                         .cornerRadius(8)
                     
+                    Text("Distance: \(tripData?.distance ?? "")")
+                        .foregroundColor(.white)
+                        .font(.subheadline)
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.blue)
+                        .cornerRadius(8)
+                    
+                    
                     HStack(spacing: 10) {
                         VStack(alignment: .leading, spacing: 6) {
                             Text(tripData?.driver?.name ?? "")
@@ -77,14 +96,32 @@ struct UserGoogleMap: View {
                                         .clipShape(Circle())
                                 }
                             }
+                            
+                            // Rating stars
+                            HStack(spacing: 6) {
+                                Image(systemName: "star.fill")
+                                    .foregroundColor(.blue)
+                                Text(tripData?.driver?.rate ?? "0")
+                            }
+                            
                         }
                         Spacer()
-                        Text(  getButtonTitle() )
-                        .bold()
-                        .foregroundColor(.white)
-                        .frame(width: 90, height: 90)
-                        .background(Color.green)
-                        .cornerRadius(12)
+                        
+                        VStack(alignment: .trailing){
+                            Text(getStatus())
+                                .foregroundColor(.white)
+                                .frame(width: 150, height: 30)
+                                .background(Color.green)
+                                .cornerRadius(12)
+                                .font(.system(size: 12))
+                            
+                            AsyncImage(url: URL(string: tripData?.driver?.profileImage ?? ""))
+                                .frame(width: 50, height: 50)
+                                
+                        }
+                        
+                        
+                        
                     }
                     .padding()
                     .background(Color.white)
@@ -99,6 +136,11 @@ struct UserGoogleMap: View {
         .onAppear {
             locationManager.start()
         }
+        .fullScreenCover(isPresented: $isShowRatingPopup) {
+            UserRateView(tripData: $tripData)
+        }
+        .toast(isPresenting: $showToast, message: showToastMessage)
+        
         .onReceive(NotificationCenter.default.publisher(for: .driverArrived)) { notification in
             print("Driver arrived 🚗")
             guard let data =  notification.object as? TripHistory else {return}
@@ -132,6 +174,14 @@ struct UserGoogleMap: View {
                 guard let data =  notificaton.object as? TripHistory else {return}
                 
                 self.tripData = data
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .cancelTrip)) { notificaton in
+            print("Trip Calleded ended ")
+            DispatchQueue.main.async {
+                self.showToast = true
+                self.showToastMessage = "Trip has been calleded by the driver"
+                presentationMode.wrappedValue.dismiss()
             }
         }
         
@@ -170,16 +220,16 @@ struct UserGoogleMap: View {
         }
     }
     
-    private func getButtonTitle() -> String {
+    private func getStatus() -> String {
         let status =  TripStatus(rawValue: tripData?.status ?? "")
         switch status {
         
-        case .approaching: return "Arriving A"
+        case .approaching: return "Tasker Arriving A"
             
-        case .inProgress: return "Arriving B"
+        case .inProgress: return "Tasker Arriving B"
             
         case .arrivedA:
-            return "Arriving B"
+            return "Tasker Arriving B"
         case .arrivedB: return "Fineded"
            
         case .startTask:

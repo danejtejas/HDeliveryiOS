@@ -268,7 +268,8 @@ struct PassengerHistory: Codable {
     
 }
 
-// MARK: - Driver
+
+
 struct DriverHistory: Codable {
     let id: String
     let fullName: String?
@@ -285,20 +286,64 @@ struct DriverHistory: Codable {
     let rate: String?
     let rateCount: String?
     let carPlate: String?
-    let carImages: CarImages?
-    var status : String?
-    var driverName : String?
+    let carImage: CarImages?
+    var status: String?
+    var driverName: String?
+    var imageDriver : String?
 
     enum CodingKeys: String, CodingKey {
-        case id, fullName, identity, image, email, description, gender, phone, dob, address, balance, isOnline, rate, rateCount, carPlate, carImages, driverName
+        case id, fullName, identity, email, description, gender, phone, dob, address, balance, isOnline, rate, rateCount, carPlate, driverName, status
+        case imageDriver, carImage, image
+    }
+
+    // MARK: - Custom Initializer (Fix for different key names)
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        id = (try? container.decode(String.self, forKey: .id)) ?? ""
+        fullName = try? container.decode(String.self, forKey: .fullName)
+        identity = try? container.decode(String.self, forKey: .identity)
+        email = try? container.decode(String.self, forKey: .email)
+        description = try? container.decode(String.self, forKey: .description)
+        gender = try? container.decode(String.self, forKey: .gender)
+        phone = try? container.decode(String.self, forKey: .phone)
+        dob = try? container.decode(String.self, forKey: .dob)
+        address = try? container.decode(String.self, forKey: .address)
+        balance = try? container.decode(String.self, forKey: .balance)
+        isOnline = try? container.decode(String.self, forKey: .isOnline)
+        rate = try? container.decode(String.self, forKey: .rate)
+        rateCount = try? container.decode(String.self, forKey: .rateCount)
+        carPlate = try? container.decode(String.self, forKey: .carPlate)
+        driverName = try? container.decode(String.self, forKey: .driverName)
+        status = try? container.decode(String.self, forKey: .status)
+        
+        // ✅ Handle alternate key names
+        image = (try? container.decode(String.self, forKey: .image))
+        
+        imageDriver = (try? container.decode(String?.self, forKey: .imageDriver))
+        
+        carImage = (try? container.decode(CarImages.self, forKey: .carImage))
+
     }
     
-    var name : String {
-       if fullName != nil{
-            return fullName ?? ""
+    // MARK: - Custom Computed Name
+    var name: String {
+        if let fullName = fullName, !fullName.isEmpty {
+            return fullName
         }
-        if driverName != nil{
-            return driverName ?? ""
+        if let driverName = driverName, !driverName.isEmpty {
+            return driverName
+        }
+        return ""
+    }
+    
+    
+    var profileImage: String {
+        if let image = image, !image.isEmpty {
+            return image
+        }
+        if let driverName = imageDriver, !driverName.isEmpty {
+            return driverName
         }
         return ""
     }
@@ -339,9 +384,91 @@ struct DriverHistory: Codable {
         self.rate = rate
         self.rateCount = rateCount
         self.carPlate = carPlate
-        self.carImages = carImages
+        self.carImage = carImages
         self.status = status
     }
+    
+    
 }
+
+
+
+
+
+// MARK: - Driver
+//struct DriverHistory: Codable {
+//    let id: String
+//    let fullName: String?
+//    let identity: String?
+//    let image: String?
+//    let email: String?
+//    let description: String?
+//    let gender: String?
+//    let phone: String?
+//    let dob: String?
+//    let address: String?
+//    let balance: String?
+//    let isOnline: String?
+//    let rate: String?
+//    let rateCount: String?
+//    let carPlate: String?
+//    let carImages: CarImages?
+//    var status : String?
+//    var driverName : String?
+//
+//    enum CodingKeys: String, CodingKey {
+//        case id, fullName, identity, image, email, description, gender, phone, dob, address, balance, isOnline, rate, rateCount, carPlate, carImages, driverName
+//    }
+//
+//    var name : String {
+//       if fullName != nil{
+//            return fullName ?? ""
+//        }
+//        if driverName != nil{
+//            return driverName ?? ""
+//        }
+//        return ""
+//    }
+//
+//
+//    // MARK: - Custom Initializer
+//    init(
+//        id: String = "",
+//        fullName: String? = nil,
+//        identity: String? = nil,
+//        image: String? = nil,
+//        email: String? = nil,
+//        description: String? = nil,
+//        gender: String? = nil,
+//        phone: String? = nil,
+//        dob: String? = nil,
+//        address: String? = nil,
+//        balance: String? = nil,
+//        isOnline: String? = nil,
+//        rate: String? = nil,
+//        rateCount: String? = nil,
+//        carPlate: String? = nil,
+//        carImages: CarImages? = nil,
+//        status: String? = nil
+//    ) {
+//        self.id = id
+//        self.fullName = fullName
+//        self.identity = identity
+//        self.image = image
+//        self.email = email
+//        self.description = description
+//        self.gender = gender
+//        self.phone = phone
+//        self.dob = dob
+//        self.address = address
+//        self.balance = balance
+//        self.isOnline = isOnline
+//        self.rate = rate
+//        self.rateCount = rateCount
+//        self.carPlate = carPlate
+//        self.carImages = carImages
+//        self.status = status
+//    }
+//}
 
 

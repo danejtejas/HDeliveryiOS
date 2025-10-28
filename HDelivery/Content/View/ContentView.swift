@@ -100,7 +100,7 @@ struct ContentView: View {
             }.fullScreenCover(isPresented: $viewModel.isNavToDriverRate) {
                 DriverRateView(tripData: $viewModel.tripHistory)
             }.fullScreenCover(isPresented: $viewModel.isNavToUserGoogleMap) {
-                UserGoogleMap(tripData: viewModel.tripHistory)
+                UserGoogleMap(tripData: $viewModel.tripHistory)
             }.fullScreenCover(isPresented: $viewModel.isNavUserRequest) {
                 RequestScreen(onSelectTab: { })
             }.fullScreenCover(isPresented: $viewModel.isNavToPaymentDriver) {

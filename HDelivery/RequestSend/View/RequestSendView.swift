@@ -98,7 +98,7 @@ struct RequestSendView: View {
             
         }
         .fullScreenCover(isPresented: $isNavToUserGoogleMap) {
-            UserGoogleMap(tripData: tripData)
+            UserGoogleMap(tripData: $tripData)
         }
         .background(Color.blue.edgesIgnoringSafeArea(.all))
         .navigationBarHidden(true)
