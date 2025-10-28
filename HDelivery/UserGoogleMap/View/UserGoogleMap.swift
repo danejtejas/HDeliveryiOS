@@ -16,16 +16,18 @@ struct UserGoogleMap: View {
     @StateObject private var locationManager = GMSLocationManager()
     
     //    @Binding var tripData : TripData?
-  @Binding var tripData : TripHistory?
+    @Binding var tripData : TripHistory?
     
- @State var showToast: Bool = false
- @State var showToastMessage: String = ""
- 
- @Environment(\.presentationMode) var presentationMode
+    @State var showToast: Bool = false
+    @State var showToastMessage: String = ""
     
- @StateObject private var liveLocationViewModel =  LiveLocationViewModel()
+    @Environment(\.presentationMode) var presentationMode
     
-  @State var isShowRatingPopup: Bool = false
+    @StateObject private var liveLocationViewModel =  LiveLocationViewModel()
+    
+    @State var isShowRatingPopup: Bool = false
+    
+    
     
     
     var body: some View {
@@ -33,13 +35,13 @@ struct UserGoogleMap: View {
             GoogleMapLiveView(userLocation: $locationManager.userLocation,
                               pickupLocation: CLLocationCoordinate2D(latitude: tripData?.startLat!.toCLLocationDegrees() ??  0, longitude: tripData?.startLong?.toCLLocationDegrees() ?? 0 ),
                               destination:  CLLocationCoordinate2D(latitude: tripData?.endLat!.toCLLocationDegrees() ??  0, longitude: tripData?.endLong?.toCLLocationDegrees() ?? 0 ))
-                .edgesIgnoringSafeArea(.all)
+            .edgesIgnoringSafeArea(.all)
             
             // Top bar
             HStack {
                 Button(action: {
                     Task{
-                      await  liveLocationViewModel.cancelTrip(tripData?.id ?? "")
+                        await  liveLocationViewModel.cancelTrip(tripData?.id ?? "")
                         presentationMode.wrappedValue.dismiss()
                     }
                     
@@ -117,7 +119,7 @@ struct UserGoogleMap: View {
                             
                             AsyncImage(url: URL(string: tripData?.driver?.profileImage ?? ""))
                                 .frame(width: 50, height: 50)
-                                
+                            
                         }
                         
                         
@@ -152,8 +154,8 @@ struct UserGoogleMap: View {
             print("Driver tripStarted 🚗")
             DispatchQueue.main.async{
                 guard let data =  notification.object as? TripHistory else {return}
-              
-                    self.tripData = data
+                
+                self.tripData = data
             }
             
         }.onReceive(NotificationCenter.default.publisher(for: .tripEnded)) { notificaton in
@@ -164,7 +166,7 @@ struct UserGoogleMap: View {
                 
                 self.tripData = data
                 
-              
+                
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: .paymentPending)) { notificaton in
@@ -174,6 +176,7 @@ struct UserGoogleMap: View {
                 guard let data =  notificaton.object as? TripHistory else {return}
                 
                 self.tripData = data
+                self.isShowRatingPopup = true
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: .cancelTrip)) { notificaton in
@@ -223,7 +226,7 @@ struct UserGoogleMap: View {
     private func getStatus() -> String {
         let status =  TripStatus(rawValue: tripData?.status ?? "")
         switch status {
-        
+            
         case .approaching: return "Tasker Arriving A"
             
         case .inProgress: return "Tasker Arriving B"
@@ -231,7 +234,7 @@ struct UserGoogleMap: View {
         case .arrivedA:
             return "Tasker Arriving B"
         case .arrivedB: return "Fineded"
-           
+            
         case .startTask:
             return "Start Trip To B"
             
@@ -239,6 +242,6 @@ struct UserGoogleMap: View {
             
         }
         
-       return ""
+        return ""
     }
 }
