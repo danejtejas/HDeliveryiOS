@@ -18,8 +18,8 @@ struct HDeliveryApp: App {
 //        let mananer = LocationManager.shared
         GMSServices.provideAPIKey(AppSetting.GoogleKeySetting.mapKey)
         GMSPlacesClient.provideAPIKey(AppSetting.GoogleKeySetting.mapKey)
-        try? StorageManager.shared.storeAuthToken("c08ae527ff9c471d9ebd95dad8e4f564") // driver
-        try? StorageManager.shared.setUserId(userId: "204")
+        try? StorageManager.shared.storeAuthToken("4c940abd4a09f1fe5b831a74726bdaec") // user
+//        try? StorageManager.shared.setUserId(userId: "204")
 ////        
 //        try? StorageManager.shared.storeAuthToken("176a3c27d36f65ec2fa2c15960b61fed") // driver
 //        try? StorageManager.shared.setUserId(userId: "207")

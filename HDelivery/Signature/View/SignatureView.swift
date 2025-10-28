@@ -18,6 +18,8 @@ struct SignatureScreen: View {
     @StateObject private var viewModel: SignatureViewModel = .init()
     var tripData : TripHistory?
     
+    @Environment(\.presentationMode) var presentationMode
+    
     var body: some View {
         VStack(spacing: 20) {
             
@@ -160,6 +162,7 @@ struct SignatureScreen: View {
         
         Task{
             await viewModel.submit()
+            presentationMode.wrappedValue.dismiss()
         }
     }
 }
