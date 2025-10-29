@@ -29,18 +29,23 @@ struct TermConditionView: View {
                             onSelectTab()
                         }) {
                             HStack(spacing: 4) {
-                                Image(systemName: "chevron.left")
-                                    .foregroundColor(.white)
-                                Text("Back")
+                                Image(systemName: "line.horizontal.3")
                                     .foregroundColor(.white)
                             }
                         }
+                    }
+                    
+                    // Title Customization
+                    ToolbarItem(placement: .principal) {
+                        Text("Terms and Conditions")
+                            .foregroundColor(.white)  // Title color set to white
+                            .font(.system(size: 22, weight: .medium))
                     }
                 }
         
         .navigationViewStyle(StackNavigationViewStyle())
         .accentColor(.white) // ensure back button tint color is white
-        .toolbarBackground(Color.blue, for: .navigationBar) // change bar color
+        .toolbarBackground(AppSetting.ColorSetting.navigationBarBg, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
     }
 }
