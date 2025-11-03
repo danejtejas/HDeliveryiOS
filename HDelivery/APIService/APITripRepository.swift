@@ -43,5 +43,5 @@ final class APITripRepository: TripRepository {
     func changeStatus(token: String, tripId: String, status: String) async throws -> APIResponse<String> { try await network.execute(ChangeStatusRequest(token: token, tripId: tripId, status: status)) }
     
     func showTripDetail(token: String, tripId: String) async throws -> APIResponse<TripHistory> { try await network.execute(ShowTripDetailRequest(token: token, tripId: tripId)) }
-    func showDistance(token: String, tripId: String) async throws -> APIResponse<String> { try await network.execute(ShowDistanceRequest(token: token, tripId: tripId)) }
+    func showDistance(token: String, tripId: String) async throws -> APIResponse<Int> { try await network.execute(ShowDistanceRequest(token: token, tripId: tripId)) }
 }

@@ -32,5 +32,5 @@ protocol TripRepository {
     
     func showTripDetail(token: String, tripId: String) async throws -> APIResponse<TripHistory>
     
-    func showDistance(token: String, tripId: String) async throws -> APIResponse<String>
+    func showDistance(token: String, tripId: String) async throws -> APIResponse<Int>
 }

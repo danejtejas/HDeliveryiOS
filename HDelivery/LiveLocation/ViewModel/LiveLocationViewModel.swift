@@ -23,6 +23,11 @@ class LiveLocationViewModel: ObservableObject {
     
     @Published var isTripEnd: Bool = false
     
+    @Published var isGotDistance: Bool = false
+    
+    @Published var totalDistance: String = ""
+     
+    
     init(tripHistory: TripHistory? = nil) {
         self.tripData = tripHistory
     }
@@ -150,6 +155,43 @@ class LiveLocationViewModel: ObservableObject {
         }
         
     }
+    
+    
+    func getDistance(_ tripId: String) async  {
+        isShowToast = false
+        isLoading = true
+        defer {
+            isLoading = false
+        }
+        
+        let rep = AppDependencies.shared.makeTripRepository()
+        do {
+            guard let token = try StorageManager.shared.getAuthToken() else { print("No Token Found");  return  }
+            let response  =   try await rep.showDistance(token: token, tripId: tripId)
+            errorMessage = response.message
+            if  response.isSuccess{
+                print(response)
+//                isTripEnd = true
+                if let data = response.data {
+                    totalDistance = "\(data)"
+                    isGotDistance = true
+                }
+                
+             }
+             else {
+                 print(response.message ?? "")
+                  errorMessage =  response.message
+                 isShowToast = true
+             }
+        }
+        catch {
+            print("eror message = > " ,error.localizedDescription)
+            errorMessage = error.localizedDescription
+            isShowToast = true
+
+        }
+    }
+    
     
     func endTripArrivedB(_ tripId: String)  async {
         isShowToast = false

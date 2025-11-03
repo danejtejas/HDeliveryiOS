@@ -312,7 +312,7 @@ struct ShowTripDetailRequest: APIRequest {
 
 // MARK: - Show Distance
 struct ShowDistanceRequest: APIRequest {
-    typealias Response = APIResponse<String>
+    typealias Response = APIResponse<Int>
     var path: String { "api/showDistance" }
     var method: HTTPMethod { .post }
     
