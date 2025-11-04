@@ -88,6 +88,10 @@ struct UserRateView: View {
                 LoadView()
             }
         }
+        .onReceive(NotificationCenter.default.publisher(for: .driverConfirmPaymentTripAccept)) { data in
+            alertMessage = "The Driver has accepted your payment."
+            showAlert = true
+        }
         
     }
 }

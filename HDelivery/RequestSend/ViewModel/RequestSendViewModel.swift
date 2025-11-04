@@ -20,7 +20,7 @@ final class RequestSendViewModel: ObservableObject {
     
     @Published var tripDetails : [TripDetailResponse] = []
     @Published var driverCount : Int = 0
-    
+    @Published var showAlert = false
     
     var timer: Timer?
 
@@ -37,6 +37,9 @@ final class RequestSendViewModel: ObservableObject {
     func cancelTripRequest() async {
         isLoading = true
         errorMessage = nil
+        defer{
+            isLoading = false
+        }
         
         do {
             let token = try  StorageManager.shared.getAuthToken()  ?? ""
@@ -44,14 +47,12 @@ final class RequestSendViewModel: ObservableObject {
             self.isSuccess = request.isSuccess
             if !isSuccess {
                 errorMessage = request.message
+                showAlert = true
             }
         } catch {
             self.errorMessage = error.localizedDescription
             self.isSuccess = false
         }
-        
-        isLoading = false
-       
     }
     
     

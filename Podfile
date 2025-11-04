@@ -21,6 +21,7 @@ target 'HDelivery' do
   pod 'Firebase/Messaging'
 
   pod 'GoogleSignIn'
+  pod 'GoogleSignInSwift'
   
   pod 'ToastSwiftUI'
   

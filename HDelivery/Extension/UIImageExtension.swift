@@ -10,11 +10,16 @@ import SwiftUI
 
 extension UIImage {
     /// Converts UIImage to a Base64 encoded string (JPEG)
-    func toBase64(compressionQuality: CGFloat = 0.8) -> String? {
-        guard let imageData = self.jpegData(compressionQuality: compressionQuality) else {
+    func toBase64(compressionQuality: CGFloat = 0.7) -> String? {
+//        guard let imageData = self.jpegData(compressionQuality: compressionQuality) else {
+//            return nil
+//        }
+//        return imageData.base64EncodedString()
+        
+        guard let imageData = self.pngData() else {
             return nil
         }
-        return imageData.base64EncodedString()
+        return imageData.base64EncodedString(options: .lineLength64Characters)
     }
     
     static func fromBase64(_ base64String: String) -> UIImage? {

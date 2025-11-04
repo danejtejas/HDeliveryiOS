@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import ToastSwiftUI
 
 struct RequestSendView: View {
     @State private var isTaskCancelled = false
@@ -13,6 +14,11 @@ struct RequestSendView: View {
     @Environment(\.dismiss) private var dismiss
     @State var tripData : TripHistory?
     @State var isNavToUserGoogleMap : Bool = false
+    
+    private var estimateFare : String = ""
+    init(estimateFare : String) {
+        self.estimateFare = estimateFare
+    }
     
     var body: some View {
         VStack {
@@ -81,7 +87,7 @@ struct RequestSendView: View {
             .padding(.horizontal, 40)
             
             // Fare Info
-            Text("Estimated fare: ₦12550 ~ 210.24KM")
+            Text(estimateFare)
                 .font(.subheadline)
                 .foregroundColor(.white)
                 .padding(.top, 20)
@@ -104,14 +110,7 @@ struct RequestSendView: View {
         .navigationBarHidden(true)
         .overlay {
             if viewModel.isLoading {
-                ZStack {
-                    Color.black.opacity(0.4).ignoresSafeArea()
-                    ProgressView("")
-                        .padding()
-                        .background(Color.white)
-                        .cornerRadius(10)
-                }
-                .transition(.opacity)
+                LoadView()
             }
         }
         .onChange(of: viewModel.isSuccess) { newValue in
@@ -128,14 +127,14 @@ struct RequestSendView: View {
             withAnimation {
                 isNavToUserGoogleMap = true
             }
-        }
+        }.toast(isPresenting: $viewModel.showAlert, message: viewModel.errorMessage ?? "")
 
         
     }
 }
 
 #Preview {
-    RequestSendView()
+    RequestSendView(estimateFare: "$1900 ~  5.2KM")
 }
 
 

@@ -17,6 +17,7 @@ enum NotificationActionType: String {
     case endTrip
     case passengerPaymentPending
     case cancelTrip
+    case driverConfirmPaymentTripAccept
 }
 
 
@@ -29,6 +30,7 @@ extension Notification.Name {
     static let tripEnded = Notification.Name("tripEnded")
     static let paymentPending = Notification.Name("paymentPending")
     static let cancelTrip = Notification.Name("cancelTrip")
+    static let driverConfirmPaymentTripAccept = Notification.Name("driverConfirmPaymentTripAccept")
 }
 
 
@@ -109,6 +111,8 @@ class NotificationManager: NSObject {
             
         case .cancelTrip:
             handleCancelTripBuyDriver(data)
+        case .driverConfirmPaymentTripAccept:
+            handleDriverConfirmPaymentTripAccept(data)
         }
     }
 }
@@ -119,14 +123,14 @@ extension NotificationManager {
         print("✅ Driver confirmed trip.")
         
         
+//        
+//        guard let tripIdString = data["tripId"] as? String ?? (data["tripId"] as? NSNumber)?.stringValue else {
+//            print("🚗 Trip ID: nont")
+//            return
+//        }
+//        print("🚗 Trip ID: \(tripIdString)")
         
-        guard let tripIdString = data["tripId"] as? String ?? (data["tripId"] as? NSNumber)?.stringValue else {
-            print("🚗 Trip ID: nont")
-            return
-        }
-        print("🚗 Trip ID: \(tripIdString)")
-        
-          let  tripId = tripIdString
+          let  tripId = ""
         
 //        guard let tripId = data["tripId"] as? Int else {
 //            print("⚠️ Missing tripId in notification data")
@@ -163,15 +167,15 @@ extension NotificationManager {
     func handleDriverArrived(_ data: [AnyHashable: Any]) {
         print("📍 Driver has arrived at the pickup location.")
         // Example:
-        guard let tripId = data["tripId"] as? Int else {
-            print("⚠️ Missing tripId in notification data")
-            return
-        }
-        
+//        guard let tripId = data["tripId"] as? Int else {
+//            print("⚠️ Missing tripId in notification data")
+//            return
+//        }
+//        
         Task {
             // Fetch trip details asynchronously
             do {
-                let tripHistoryData = try await getTripData(tripId: "\(tripId)")
+                let tripHistoryData = try await getTripData(tripId: "")
                 
                 // ✅ Always post notifications on main thread
                 await MainActor.run {
@@ -200,15 +204,15 @@ extension NotificationManager {
         print("🚕 Trip started.")
         // Example:
          
-        guard let tripId = data["tripId"] as? Int else {
-            print("⚠️ Missing tripId in notification data")
-            return
-        }
+//        guard let tripId = data["tripId"] as? Int else {
+//            print("⚠️ Missing tripId in notification data")
+//            return
+//        }
         
         Task {
             // Fetch trip details asynchronously
             do {
-                let tripHistoryData = try await getTripData(tripId: "\(tripId)")
+                let tripHistoryData = try await getTripData(tripId: "")
                 
                 // ✅ Always post notifications on main thread
                 await MainActor.run {
@@ -236,15 +240,15 @@ extension NotificationManager {
         // Example:
         
         
-        guard let tripId = data["tripId"] as? Int else {
-            print("⚠️ Missing tripId in notification data")
-            return
-        }
+//        guard let tripId = data["tripId"] as? Int else {
+//            print("⚠️ Missing tripId in notification data")
+//            return
+//        }
         
         Task{
             // Fetch trip details asynchronously
             do {
-                let tripHistoryData = try await getTripData(tripId: "\(tripId)")
+                let tripHistoryData = try await getTripData(tripId: "")
                 
                 // ✅ Always post notifications on main thread
                 await MainActor.run {
@@ -275,15 +279,15 @@ extension NotificationManager {
         
         
 
-        guard let tripId = data["tripId"] as? Int else {
-            print("⚠️ Missing tripId in notification data")
-            return
-        }
+//        guard let tripId = data["tripId"] as? Int else {
+//            print("⚠️ Missing tripId in notification data")
+//            return
+//        }
         
         Task{
             // Fetch trip details asynchronously
             do {
-                let tripHistoryData = try await getTripData(tripId: "\(tripId)")
+                let tripHistoryData = try await getTripData(tripId: "")
                 
                 // ✅ Always post notifications on main thread
                 await MainActor.run {
@@ -316,21 +320,37 @@ extension NotificationManager {
 }
 
 
+extension NotificationManager {
+    func handleDriverConfirmPaymentTripAccept(_ data: [AnyHashable: Any]) {
+        
+        print("💳 The driver accepted the payment ")
+        NotificationCenter.default.post(
+            name: .driverConfirmPaymentTripAccept,
+            object: nil)
+        
+    }
+}
 
 
 extension NotificationManager {
     private func getTripData( tripId : String) async throws -> TripHistory? {
         do {
-            let repso = AppDependencies.shared.makeTripRepository()
+            let repso = AppDependencies.shared.makeHistoryRepository()
             let token = try StorageManager.shared.getAuthToken() ?? ""
-            let response = try await  repso.showTripDetail(token: token, tripId: tripId)
+           
+            let response = try await repso.getTripHistory(token: token, page: "1")
             if response.isSuccess {
-                return  response.data
+                if  response.data?.count ?? 0 > 0 {
+                    if let tripData = response.data {
+                       return tripData[0]
+                    }
+                }
             }
+            return nil
         }
         catch {
             throw error
         }
-        return nil
     }
 }
+

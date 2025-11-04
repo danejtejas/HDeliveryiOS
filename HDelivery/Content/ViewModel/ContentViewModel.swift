@@ -47,7 +47,7 @@ class ContentViewModel: ObservableObject {
     @Published var  isNavToDriverRate : Bool = false
     
     @Published var  isNavUserRequest : Bool = false
-    
+    var estimateFare : String = ""
     
     init() {
         Task {
@@ -271,6 +271,7 @@ extension ContentViewModel {
                     let tripStaus = tripData[0].status
                     let requestId = tripData[0].id
                     isNavUserRequest = true
+                    self.estimateFare = tripData[0].estimateFare ?? ""
                 }
                 else {
                     await checkUserInTrip()

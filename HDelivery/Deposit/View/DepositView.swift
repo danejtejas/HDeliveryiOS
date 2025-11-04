@@ -1,6 +1,7 @@
 import SwiftUI
 import PaystackUI
 import PaystackCore
+import ToastSwiftUI
 
 struct DepositView: View {
     @State private var amount: String = ""
@@ -15,6 +16,9 @@ struct DepositView: View {
     
     @StateObject var viewModel = DepositViewModel()
     @State private var isLoading: Bool = false
+    
+    @State var message : String = ""
+
     
     var body: some View {
        
@@ -48,7 +52,7 @@ struct DepositView: View {
                                 .foregroundColor(.gray)
                         }
                         
-                        TextField("0", text: $amount)
+                        TextField("0", text: $viewModel.amount)
                             .keyboardType(.decimalPad)
                             .padding()
                             .background(Color.clear)
@@ -58,10 +62,12 @@ struct DepositView: View {
                             )
                             .foregroundColor(.white)
                     }
+            
                     
-                    // Pay Button
                     Button(action: {
-                        showBottomSheet.toggle()
+                        Task {
+                            await viewModel.doPaymentProcess()
+                        }
                     }) {
                         HStack {
                             Image(systemName: "arrow.triangle.2.circlepath.circle.fill")
@@ -107,16 +113,31 @@ struct DepositView: View {
             .navigationBarHidden(false)  // Ensure the navigation bar is visible
             .toolbarBackground(AppSetting.ColorSetting.navigationBarBg, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
-            
-            .sheet(isPresented: $showBottomSheet) {
-                
-                
-                
-//                BottomSheetView(email: $emyzail, sheetAmount: $sheetAmount) {
-//
-//                }
+            .fullScreenCover(isPresented: $viewModel.isDepositSuccess) {
+                PaystackPaymentScreen(checkoutURL: viewModel.checkoutURL)
             }
+            .onDisappear(
+                perform: {
+                    viewModel.stopRepeatingTask()
+                }
+            )
         
+        
+    }
+}
+
+
+extension DepositView {
+    fileprivate func paymentDone(_ result: TransactionResult) {
+        switch result {
+        case .completed(let details):
+            // IMPORTANT: Verify on your server using /transaction/verify before fulfilling value
+            message = "✅ Completed. Ref: \(details.reference)"
+        case .cancelled:
+            message = "⚠️ Cancelled by user"
+        case .error(let error, let reference):
+            message = "❌ Error: \(error.message) (ref: \(reference ?? "n/a"))"
+        }
     }
 }
 

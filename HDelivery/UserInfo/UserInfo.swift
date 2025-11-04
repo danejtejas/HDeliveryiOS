@@ -27,8 +27,7 @@ struct ShowUserInfoRequest: APIRequest {
 
 
 
-// MARK: - Trip Detail
-import Foundation
+
 
 struct TripDetailResponse: Codable, Identifiable {
     var id: String?
@@ -271,7 +270,8 @@ struct LoginSocialRequest: APIRequest {
     let image: String
     
     var body: Data? {
-        try? JSONEncoder().encode([
+        
+        let dic : [String : Any]  = [
             "gcm_id": gcmId,
             "email": email,
             "ime": ime,
@@ -281,7 +281,10 @@ struct LoginSocialRequest: APIRequest {
             "name": name,
             "gender": gender,
             "image": image
-        ])
+        ]
+        
+        return dic.toFormURLEncodedData()
+        
     }
 }
 

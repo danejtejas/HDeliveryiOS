@@ -7,8 +7,12 @@
 
 import SwiftUI
 import ToastSwiftUI
+import GoogleSignInSwift
+import GoogleSignIn
 
 struct DeliveryLoginView: View {
+  
+    
     @State private var email = ""
     @State private var password = ""
     @State private var isPasswordVisible = false
@@ -16,6 +20,8 @@ struct DeliveryLoginView: View {
     @StateObject private var viewModel = LoginViewModel()
     
     @State private var isForgotPasswordTapped = false
+    
+    @StateObject private var googleSignInViewModel = GoogleSignInViewModel()
     
     
     var body: some View {
@@ -139,9 +145,12 @@ struct DeliveryLoginView: View {
                                 
                                 Button(action: {
                                     // Handle Google login
+                                    
+                                    Task {
+                                        await googleSignInViewModel.signIn()
+                                    }
+                                    
                                 }) {
-                                    
-                                    
                                     AsyncImage(url: URL(string: "https://developers.google.com/identity/images/g-logo.png")) { image in
                                         image
                                             .resizable()

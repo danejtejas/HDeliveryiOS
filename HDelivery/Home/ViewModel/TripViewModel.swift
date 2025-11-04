@@ -11,6 +11,8 @@ import Foundation
 import Combine
 import CoreLocation
 
+
+@MainActor
 final class TripViewModel: ObservableObject {
     @Published var trips: [TripDetail] = []
     @Published var errorMessage: String?
@@ -21,9 +23,16 @@ final class TripViewModel: ObservableObject {
     @Published var isSuccess = false
     @Published var itemDescription : String?
     
+   @Published var isValid : Bool = false
    
+    var  fareAmount : String = ""
+    
+    @Published var  estimateFare : String = ""
+    
     
     var selectedItem : [Item] = []
+    
+    @Published var showAlert : Bool = false
     
     init(repository: TripRepository = AppDependencies.shared.makeTripRepository()) {
         self.repository = repository
@@ -34,6 +43,9 @@ final class TripViewModel: ObservableObject {
     func createTripRequest(pickupCoordinate :CLLocationCoordinate2D?, dropCoordinate : CLLocationCoordinate2D?, pickupAddress : String?, dropAddress : String?, receiverPhone : String? ) async  {
         isLoading = true
         errorMessage = nil
+        defer {
+            isLoading = false
+        }
        
         do {
             let token = try  StorageManager.shared.getAuthToken() ?? ""
@@ -69,19 +81,17 @@ final class TripViewModel: ObservableObject {
             let response = try await repository.createTrip(request)
             print(response.data)
             if !response.isSuccess {
-                
                 errorMessage = response.message
+                showAlert = true
             }
             else {
-                
-                
-                
+                estimateFare = response.estimateFare ?? ""
                 isSuccess = true
             }
         } catch {
             errorMessage = error.localizedDescription
+            showAlert = true
         }
-        isLoading = false
     }
 }
 

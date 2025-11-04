@@ -43,7 +43,7 @@ class ItemViewModel: ObservableObject {
                 }
             } receiveValue: { [weak self] deliverItems in
                 self?.items = deliverItems.toItems()
-//                self?.items = []
+                self?.setSelectedItems()
                 print("Successfully fetched \(self?.items.count) items")
             }
             .store(in: &cancellables)
@@ -94,6 +94,17 @@ class ItemViewModel: ObservableObject {
     
     private func updateSelectedItems() {
         selectedItems = items.filter { $0.isSelected }
+    }
+    
+    private func setSelectedItems() {
+        
+        for preItem in  selectedItems {
+            if let index = self.items.firstIndex(where: { $0.id == preItem.id }) {
+                self.items[index].isSelected = true
+                self.items[index].quantity = preItem.quantity
+                self.items[index].description = preItem.description
+            }
+        }
     }
     
     /// Clear all selections

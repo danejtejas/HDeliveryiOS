@@ -20,6 +20,13 @@ protocol TripRepository {
     
     func cancelRequest(token: String, driver: String) async throws -> APIResponse<String>
     
+    
+    
+    /// Description
+    /// - Parameters:
+    ///   - token: token description
+    ///   - driver: default value is 0
+    /// - Returns: [TripDetailResponse] \
     func showMyUserRequests(token: String, driver: String?) async throws -> APIResponse<[TripDetailResponse]>
     
     func showMyDriverRequests(token: String) async throws -> APIResponse<[TripDetailResponse]>
@@ -33,4 +40,9 @@ protocol TripRepository {
     func showTripDetail(token: String, tripId: String) async throws -> APIResponse<TripHistory>
     
     func showDistance(token: String, tripId: String) async throws -> APIResponse<Int>
+
+   
+    
+    func showMyUserRequests(token: String) async throws -> APIResponse<[TripHistory]> 
+
 }

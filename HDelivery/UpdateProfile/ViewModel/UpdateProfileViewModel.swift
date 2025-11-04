@@ -44,15 +44,15 @@ class UpdateProfileViewModel: ObservableObject {
         address = user?.address ?? ""
         state = user?.stateName ?? ""
         city = user?.cityName ?? ""
-        postCode = "post code"
-        
+        postCode = user?.postcode ?? ""
+        description = user?.description ?? ""
         profileImageUrl = user?.image ?? ""
         
         let arr = user?.account?.split(separator: "*") ?? []
-        if arr.count > 1 {
+        if arr.count >= 1 {
             bankName = String(arr[0])
         }
-        if arr.count  > 2 {
+        if arr.count  >= 2 {
             bankAccountNo = String(arr[1])
         }
         
@@ -89,10 +89,10 @@ class UpdateProfileViewModel: ObservableObject {
             
             let response = try await repository.updateProfile(request: request)
             message = response.message ?? ""
-            if response.isSuccess {
-                user = response.data
-            }
-            else {
+           
+            if response.isSuccess, let user: UserInfo  = response.data {
+              await  showUserInfo()
+            } else {
                 isToastShow = true
             }
         } catch {
@@ -100,6 +100,25 @@ class UpdateProfileViewModel: ObservableObject {
             isToastShow = true
         }
     }
+    
+    func showUserInfo() async  {
+        let repository =  AppDependencies.shared.makeUserRepository()
+        do {
+            let token = try StorageManager.shared.getAuthToken() ?? ""
+            let request = try await repository.showUserInfo(token: token)
+            if request.isSuccess, let userInfo = request.data {
+                try StorageManager.shared.setUserInfo(userInfo)
+                isToastShow = true
+                message = "User updated successfully"
+            }
+        } catch {
+            print("error \(error.localizedDescription)")
+            message = error.localizedDescription
+            isToastShow = true
+        }
+    }
+    
+    
 }
 
 

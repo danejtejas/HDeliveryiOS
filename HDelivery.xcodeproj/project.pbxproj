@@ -89,6 +89,9 @@
 		96AFF6762E9682F40013B937 /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF6192E9682F40013B937 /* TestView.swift */; };
 		96AFF67B2E96830C0013B937 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF67A2E9683090013B937 /* WebView.swift */; };
 		96AFF6812E9684180013B937 /* TermConditionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96AFF6802E9684180013B937 /* TermConditionView.swift */; };
+		96BF00E02EB8FF04003F17C3 /* GoogleLoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BF00DF2EB8FF04003F17C3 /* GoogleLoginViewModel.swift */; };
+		96BF00E22EB8FF2B003F17C3 /* FareAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BF00E12EB8FF2B003F17C3 /* FareAlertView.swift */; };
+		96BF00E52EB8FFFA003F17C3 /* PaymentWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96BF00E32EB8FFFA003F17C3 /* PaymentWebView.swift */; };
 		96D782B12EA4B83F0011328B /* PaystackCore in Frameworks */ = {isa = PBXBuildFile; productRef = 96D782B02EA4B83F0011328B /* PaystackCore */; };
 		96D782B32EA4B83F0011328B /* PaystackPusherWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 96D782B22EA4B83F0011328B /* PaystackPusherWrapper */; };
 		96D782B52EA4B83F0011328B /* PaystackUI in Frameworks */ = {isa = PBXBuildFile; productRef = 96D782B42EA4B83F0011328B /* PaystackUI */; };
@@ -180,6 +183,9 @@
 		96AFF6192E9682F40013B937 /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 		96AFF67A2E9683090013B937 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		96AFF6802E9684180013B937 /* TermConditionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TermConditionView.swift; sourceTree = "<group>"; };
+		96BF00DF2EB8FF04003F17C3 /* GoogleLoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleLoginViewModel.swift; sourceTree = "<group>"; };
+		96BF00E12EB8FF2B003F17C3 /* FareAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FareAlertView.swift; sourceTree = "<group>"; };
+		96BF00E32EB8FFFA003F17C3 /* PaymentWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentWebView.swift; sourceTree = "<group>"; };
 		CD91FE622B385766C4AA3EB4 /* Pods_HDelivery.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HDelivery.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E955E7BE10A6A89176DFFC6D /* Pods-HDelivery.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HDelivery.debug.xcconfig"; path = "Target Support Files/Pods-HDelivery/Pods-HDelivery.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -491,6 +497,7 @@
 		96AFF5B12E9682F40013B937 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				96BF00E12EB8FF2B003F17C3 /* FareAlertView.swift */,
 				96AFF5B02E9682F40013B937 /* HomeView.swift */,
 			);
 			path = View;
@@ -631,6 +638,7 @@
 		96AFF5D32E9682F40013B937 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				96BF00DF2EB8FF04003F17C3 /* GoogleLoginViewModel.swift */,
 				96AFF5D22E9682F40013B937 /* LoginViewModel.swift */,
 			);
 			path = ViewModel;
@@ -830,6 +838,7 @@
 		96AFF61C2E9682F40013B937 /* HDelivery */ = {
 			isa = PBXGroup;
 			children = (
+				96BF00E42EB8FFFA003F17C3 /* PaymentWebView */,
 				96C7EF662EA0E5DF00927C69 /* Signature */,
 				96AFC5062E9F70BC00BEB5E5 /* Notification */,
 				96B284A62E9D36CF000E0FBF /* Extension */,
@@ -923,6 +932,14 @@
 				96B5EE062E98F02B005796E1 /* View */,
 			);
 			path = DriverRate;
+			sourceTree = "<group>";
+		};
+		96BF00E42EB8FFFA003F17C3 /* PaymentWebView */ = {
+			isa = PBXGroup;
+			children = (
+				96BF00E32EB8FFFA003F17C3 /* PaymentWebView.swift */,
+			);
+			path = PaymentWebView;
 			sourceTree = "<group>";
 		};
 		96C7EF662EA0E5DF00927C69 /* Signature */ = {
@@ -1135,6 +1152,7 @@
 				96AFF6272E9682F40013B937 /* ContentView.swift in Sources */,
 				96AFF6282E9682F40013B937 /* ContentViewModel.swift in Sources */,
 				96AFF6292E9682F40013B937 /* AppDependencies.swift in Sources */,
+				96BF00E52EB8FFFA003F17C3 /* PaymentWebView.swift in Sources */,
 				96AFF62A2E9682F40013B937 /* DriverRepository.swift in Sources */,
 				96AFF62B2E9682F40013B937 /* HistoryRepository.swift in Sources */,
 				96AFF62C2E9682F40013B937 /* PaymentRepository.swift in Sources */,
@@ -1169,6 +1187,7 @@
 				96AFF6482E9682F40013B937 /* LoginRepositoryAPI.swift in Sources */,
 				96AFF6492E9682F40013B937 /* LoginService.swift in Sources */,
 				96AFF64A2E9682F40013B937 /* DeliveryLoginView.swift in Sources */,
+				96BF00E22EB8FF2B003F17C3 /* FareAlertView.swift in Sources */,
 				96AFF64B2E9682F40013B937 /* LoginViewModel.swift in Sources */,
 				96AFF64C2E9682F40013B937 /* MapViewWrapper.swift in Sources */,
 				96AFF64E2E9682F40013B937 /* model.swift in Sources */,
@@ -1204,6 +1223,7 @@
 				96AFF6732E9682F40013B937 /* ShareScreen.swift in Sources */,
 				96AFF6752E9682F40013B937 /* Task.swift in Sources */,
 				96AFF6762E9682F40013B937 /* TestView.swift in Sources */,
+				96BF00E02EB8FF04003F17C3 /* GoogleLoginViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

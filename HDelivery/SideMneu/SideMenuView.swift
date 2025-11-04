@@ -65,16 +65,40 @@ struct SideMenuView: View {
                         .clipShape(Circle())
                         .padding(.top, 40)
                 } else {
-                    AsyncImage(url: viewModel.prfileImageUrl )
-//                        .resizable()
-                        .frame(width: 100, height: 100)
-                        .clipShape(Circle())
-                        .padding(.top, 40)
+                    AsyncImage(url: viewModel.prfileImageUrl) { phase in
+                        switch phase {
+                        case .empty:
+                            ProgressView()
+                                .frame(width: 100, height: 100)
+                                .padding(.top, 20)
+                        case .success(let image):
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: 100, height: 100)
+                                .clipShape(Circle())
+                                .padding(.top, 20)
+                        case .failure:
+                            Image(systemName: "user")
+                                .font(.system(size: 50))
+                                .foregroundColor(.gray)
+                        @unknown default:
+                            Circle()
+                                .fill(Color.black)
+                                .frame(width: 100, height: 100)
+                                .overlay(
+                                    Circle()
+                                        .stroke(Color.white, lineWidth: 3)
+                                )
+                        
+                            .padding(.top, 20)
+                        }
+                    }
                 }
 
-                    
                 
-                Text(viewModel.fullName ?? "Test Name")
+                
+                Text(viewModel.fullName ?? "")
                     .foregroundColor(.white)
                     .font(.headline)
                 

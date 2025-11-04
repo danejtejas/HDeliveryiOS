@@ -12,13 +12,14 @@ class OnlineViewModel: ObservableObject {
     
     private let repository:  DriverRepository
     @Published var isOnline: Bool = false
-    @Published var error: String?
+    @Published var error: String? = ""
     @Published var isLoading: Bool = false
     @Published var trips = [TripDetailResponse] ()
     @Published var isRequestConformed: Bool = false
     
     var tripData : TripData?
     @Published var tripHistory : TripHistory?
+    @Published var showAlert: Bool = false
     
     init(repository: DriverRepository = AppDependencies.shared.makeDriverRepository()){
         self.repository = repository
@@ -44,11 +45,13 @@ class OnlineViewModel: ObservableObject {
             }
             else {
                 error = requset.message
+                showAlert = true
             }
             
         }catch {
-//            error = error.localizedDescription
             print("Error ==> \(error.localizedDescription)")
+            showAlert = true
+            self.error = error.localizedDescription
         }
         
     }
@@ -75,11 +78,14 @@ class OnlineViewModel: ObservableObject {
             else  {
                 error = request.message
                 print("error = \(String(describing: error))")
+                showAlert = true
             }
         }
         catch {
             self.error = error.localizedDescription
             print("error = \(String(describing: error))")
+            showAlert = true
+           
         }
     }
     
@@ -97,10 +103,15 @@ class OnlineViewModel: ObservableObject {
             }
             else {
                 print(repsone.message ?? "")
+                showAlert = true
+                error = repsone.message ?? ""
             }
         }
         catch {
             print(error.localizedDescription)
+            showAlert = true
+            self.error = error.localizedDescription
+            
         }
     }
     

@@ -34,16 +34,45 @@ struct ProfileView: View {
                         
                         // Profile Image
                         if viewModel.prfileImageUrl != nil {
-                            AsyncImage(url:viewModel.prfileImageUrl)
-//                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 100, height: 100)
-                                .clipShape(Circle())
-                                .overlay(Circle().stroke(Color.white, lineWidth: 3))
+                            
+                            AsyncImage(url: viewModel.prfileImageUrl) { phase in
+                                switch phase {
+                                case .empty:
+                                    ProgressView()
+                                        .frame(width: 100, height: 100)
+                                        .padding(.top, 20)
+                                case .success(let image):
+                                    image
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fill)
+                                        .frame(width: 100, height: 100)
+                                        .clipShape(Circle())
+                                        .padding(.top, 20)
+                                case .failure:
+                                    Image(systemName: "user")
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 100, height: 100)
+                                        .clipShape(Circle())
+                                        .overlay(Circle().stroke(Color.white, lineWidth: 3))
+                                @unknown default:
+                                    Circle()
+                                        .fill(Color.black)
+                                        .frame(width: 100, height: 100)
+                                        .overlay(
+                                            Circle()
+                                                .stroke(Color.white, lineWidth: 3)
+                                        )
+                                
+                                    .padding(.top, 20)
+                                }
+                            }
+                            
+                            
                             
                         }
                         else {
-                            Image(systemName: "pepeal") //
+                            Image(systemName: "user")
                                 .resizable()
                                 .scaledToFill()
                                 .frame(width: 100, height: 100)

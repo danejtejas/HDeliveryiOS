@@ -6,6 +6,15 @@ struct ItemSelectionView: View {
    
     var onDismiss: ((_ selectedItem: [Item]) -> Void)?
    
+    fileprivate var preselectedItems : [Item] = []
+    
+    
+    init(preselectedItems:   [Item], onSelect : @escaping ((_ selectedItem: [Item]) -> Void)) {
+        self.preselectedItems = preselectedItems
+        onDismiss = onSelect
+        
+    }
+    
     
     var body: some View {
         
@@ -118,6 +127,9 @@ struct ItemSelectionView: View {
             }
         }
         .onAppear {
+            if viewModel.selectedItems.isEmpty {
+                viewModel.selectedItems = self.preselectedItems
+            }
             viewModel.fetchAllItems()
         }
         
@@ -203,5 +215,6 @@ struct ItemRowView: View {
 
 
 #Preview {
-    ItemSelectionView()
+    ItemSelectionView(preselectedItems: [], onSelect: { items in })
 }
+

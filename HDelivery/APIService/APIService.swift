@@ -46,6 +46,9 @@ struct APIResponse<T: Decodable>: Decodable {
     let message: String?
     let count: Int?
     
+    let estimateFare: String?
+    let payBeforeDelivery: String?
+    
     var isSuccess: Bool {
         status.uppercased() == "SUCCESS"
     }
@@ -53,6 +56,9 @@ struct APIResponse<T: Decodable>: Decodable {
     // MARK: - Coding Keys
     private enum CodingKeys: String, CodingKey {
         case status, data, message, count
+        case estimateFare = "estimate_fare"
+        case payBeforeDelivery = "PayBeforeDelivery"
+        
     }
     
     // MARK: - Custom Decoder
@@ -77,13 +83,12 @@ struct APIResponse<T: Decodable>: Decodable {
         
         // Decode data generically — fallback to nil if missing or mismatched
         self.data = try? container.decodeIfPresent(T.self, forKey: .data)
+        
+        self.estimateFare = try? container.decode(String.self, forKey: .estimateFare)
+        self.payBeforeDelivery = try? container.decode(String.self, forKey: .payBeforeDelivery)
     }
 
-    
 }
-
-
-
 
 
 

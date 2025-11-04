@@ -43,5 +43,44 @@ final class APITripRepository: TripRepository {
     func changeStatus(token: String, tripId: String, status: String) async throws -> APIResponse<String> { try await network.execute(ChangeStatusRequest(token: token, tripId: tripId, status: status)) }
     
     func showTripDetail(token: String, tripId: String) async throws -> APIResponse<TripHistory> { try await network.execute(ShowTripDetailRequest(token: token, tripId: tripId)) }
+
     func showDistance(token: String, tripId: String) async throws -> APIResponse<Int> { try await network.execute(ShowDistanceRequest(token: token, tripId: tripId)) }
+
+    
+    func showMyUserRequests(token: String) async throws -> APIResponse<[TripHistory]> {
+        try await network.execute(ShowMyRequestForUserTest(token: token, driver: "0"))
+    }
+}
+
+
+// MARK: - Show My Request
+struct ShowMyRequestForUserTest: APIRequest {
+    typealias Response = APIResponse<[TripHistory]>
+    var path: String { "api/showMyRequest" }
+    var method: HTTPMethod { .post }
+    
+    let token: String
+    let driver: String?
+    
+    var parameters: [String: String]? {
+        return  [
+            "token": token,
+            "driver": driver ?? ""
+        ]
+    }
+    
+    var body: Data? {
+        var parts: [String] = []
+
+        for key in parameters!.keys.sorted() {
+            let value = parameters![key] ?? ""
+            let stringValue = "\(value)"
+            let encoded = stringValue.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
+            parts.append("\(key)=\(encoded)")
+        }
+        
+        let formString = parts.joined(separator: "&")
+
+        return formString.data(using: .utf8)
+    }
 }
