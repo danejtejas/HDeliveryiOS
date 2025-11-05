@@ -42,5 +42,9 @@ final class AppDependencies {
     
     func makeSignupRepository() -> APISignup { APISignup(networkService: apiService)  }
     
+    func makeGoogleLoginRepository() -> SocailLogin {
+     return   APIGoogleLoging(networkService: apiService)
+    }
+    
     
 }

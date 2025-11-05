@@ -21,7 +21,7 @@ struct ShowCarTypesRequest: APIRequest {
 
 // MARK: - Show State & City
 struct ShowStateCityRequest: APIRequest {
-    typealias Response = APIResponse<[String]> // Replace with proper state/city model if defined
+    typealias Response = APIResponse<[States]> // Replace with proper state/city model if defined
     var path: String { "api/showStateCity" }
     var method: HTTPMethod { .get }
     

@@ -33,6 +33,8 @@ class UpdateProfileViewModel: ObservableObject {
     
     @Published var profileImageUrl : String = ""
     
+    @Published var states : [States] =  []
+    
     init(repository: UserRepository =  AppDependencies.shared.makeUserRepository()) {
         self.repository = repository
         var user = StorageManager.shared.getUserInfo()
@@ -47,6 +49,7 @@ class UpdateProfileViewModel: ObservableObject {
         postCode = user?.postcode ?? ""
         description = user?.description ?? ""
         profileImageUrl = user?.image ?? ""
+   
         
         let arr = user?.account?.split(separator: "*") ?? []
         if arr.count >= 1 {
@@ -110,6 +113,21 @@ class UpdateProfileViewModel: ObservableObject {
                 try StorageManager.shared.setUserInfo(userInfo)
                 isToastShow = true
                 message = "User updated successfully"
+            }
+        } catch {
+            print("error \(error.localizedDescription)")
+            message = error.localizedDescription
+            isToastShow = true
+        }
+    }
+    
+    
+    func getCity() async {
+        let repository =  AppDependencies.shared.makeUtilityRepository()
+        do {
+            let request = try await repository.showStateCity()
+            if request.isSuccess, let state = request.data {
+                self.states = state
             }
         } catch {
             print("error \(error.localizedDescription)")

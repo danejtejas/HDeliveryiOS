@@ -24,7 +24,13 @@ struct UpdateProfileScreen: View {
     
     @State private var tempImage: UIImage? = nil
     
+  
     
+    @State private var selectedOption = "Option 1"
+    @State private var tempSelection = "Option 1"
+    @State private var showPicker = false
+
+  
 
     
     var body: some View {
@@ -141,12 +147,44 @@ struct UpdateProfileScreen: View {
                             text: $viewModel.address
                         )
                         
-                        ProfileFormField(
-                            icon: "building.2",
-                            label: "State",
-                            text: $viewModel.state
-                        )
                         
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack(spacing: 12) {
+                                Image(systemName: "building.2")
+                                    .font(.system(size: 18))
+                                    .foregroundColor(.white)
+                                    .frame(width: 20)
+                                
+                                Text("State")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(.white)
+                            }
+                            Button(action : {
+                                tempSelection = selectedOption
+                                showPicker = true
+                            }) {
+                                
+                                HStack {
+                                    Text(viewModel.state .isEmpty ? "Select State" : viewModel.state)
+                                        .foregroundColor(selectedOption.isEmpty ? .gray : .white)
+                                    Spacer()
+                                }
+                                .padding(.horizontal, 15)
+                                .padding(.vertical, 12)
+                                .background(Color.clear)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 5)
+                                        .stroke(Color.white.opacity(0.5), lineWidth: 1)
+                                )
+                                
+                            }
+                            
+                           
+                        }
+                        
+                        
+                        
+
                         ProfileFormField(
                             icon: "location.circle",
                             label: "City",
@@ -214,12 +252,17 @@ struct UpdateProfileScreen: View {
         }
         .toolbarBackground(AppSetting.ColorSetting.navigationBarBg, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
-        
+        .onAppear(perform: {
+            Task{
+                await viewModel.getCity()
+            }
+        })
         .overlay {
             if viewModel.isLoading {
                 LoadView()
             }
         }.toast(isPresenting: $viewModel.isToastShow, message: viewModel.message ?? "")
+           
         .sheet(item: $tempImage) { image in
                 SquareCropView(image: image) { croppedImage in
                     avatarImage = Image(uiImage: croppedImage)
@@ -231,6 +274,39 @@ struct UpdateProfileScreen: View {
                     
                 }
             }
+        .sheet(isPresented: $showPicker) {
+            VStack {
+                // Toolbar with Cancel / Done buttons
+                HStack {
+                    Button("Cancel") {
+                        showPicker = false
+                    }
+                    Spacer()
+                    Button("Done") {
+                        selectedOption = tempSelection
+                        showPicker = false
+                    }
+                    .bold()
+                }
+                .padding()
+                .background(Color(UIColor.secondarySystemBackground))
+
+                Divider()
+
+                // The actual picker
+                Picker("Select States", selection: $viewModel.state) {
+                    ForEach(viewModel.states) { op in
+                        Text(op.stateName).tag(op.stateName)
+                    }
+                }
+                .labelsHidden()
+                .pickerStyle(WheelPickerStyle())
+                .frame(maxHeight: 200)
+                .padding(.bottom, 30)
+            }
+            .presentationDetents([.height(300)]) // iOS 16+ only
+        }
+        
 
     }
 }
@@ -299,6 +375,3 @@ extension UIImage : @retroactive Identifiable {
         return 1
     }
 }
-
-
-

@@ -11,7 +11,7 @@ import Foundation
 
 protocol UtilityRepository {
     func showCarTypes() async throws -> APIResponse<[String]>
-    func showStateCity() async throws -> APIResponse<[String]>
+    func showStateCity() async throws -> APIResponse<[States]>
 //    func getItems(jobType: String) async throws -> APIResponse<[String]>
     func generalSettings(token: String) async throws -> SettingsResponse
     func shareApp(token: String, type: String, social: String) async throws -> APIResponse<String>
@@ -26,7 +26,7 @@ final class APIUtilityRepository: UtilityRepository {
         try await network.execute(ShowCarTypesRequest())
     }
     
-    func showStateCity() async throws -> APIResponse<[String]> {
+    func showStateCity() async throws -> APIResponse<[States]> {
         try await network.execute(ShowStateCityRequest())
     }
     

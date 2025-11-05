@@ -52,10 +52,10 @@ class ProfileViewModel: ObservableObject {
          if  let driver = StorageManager.shared.getUserInfo()?.driver {
              postCode = ""
              let arr = driver.bankAccount?.split(separator: "*") ?? []
-             if arr.count > 1 {
+             if arr.count >= 1 {
                  bankName = String(arr[0])
              }
-             if arr.count > 2 {
+             if arr.count >= 2 {
                  bankACNumber = String(arr[1])
              }
         }

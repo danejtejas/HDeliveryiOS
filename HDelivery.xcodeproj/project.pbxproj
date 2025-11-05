@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		319E2446AB83B46FD4CA1828 /* Pods_HDelivery.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD91FE622B385766C4AA3EB4 /* Pods_HDelivery.framework */; };
+		967CF34A2EBB37F100510AD0 /* APIGoogleLoging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 967CF3492EBB37EF00510AD0 /* APIGoogleLoging.swift */; };
 		96AFF61D2E9682F40013B937 /* API_DOCUMENTATION.md in Resources */ = {isa = PBXBuildFile; fileRef = 96AFF6052E9682F40013B937 /* API_DOCUMENTATION.md */; };
 		96AFF61E2E9682F40013B937 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 96AFF6062E9682F40013B937 /* Assets.xcassets */; };
 		96AFF61F2E9682F40013B937 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 96AFF60A2E9682F40013B937 /* GoogleService-Info.plist */; };
@@ -100,6 +101,7 @@
 /* Begin PBXFileReference section */
 		675F9C82CF820082FE01F321 /* Pods-HDelivery.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HDelivery.release.xcconfig"; path = "Target Support Files/Pods-HDelivery/Pods-HDelivery.release.xcconfig"; sourceTree = "<group>"; };
 		7C244F752E8809E300BF2D48 /* HDelivery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HDelivery.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		967CF3492EBB37EF00510AD0 /* APIGoogleLoging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIGoogleLoging.swift; sourceTree = "<group>"; };
 		96AFF58A2E9682F40013B937 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		96AFF58B2E9682F40013B937 /* APITripRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITripRepository.swift; sourceTree = "<group>"; };
 		96AFF58D2E9682F40013B937 /* AppDelegate.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift.swift; sourceTree = "<group>"; };
@@ -191,6 +193,16 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		967CF3422EBA341C00510AD0 /* Model */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Model;
+			sourceTree = "<group>";
+		};
+		967CF3482EBB376F00510AD0 /* Model */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Model;
+			sourceTree = "<group>";
+		};
 		96AE26012E9A897F00EDD088 /* Payout */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Payout;
@@ -613,6 +625,7 @@
 		96AFF5CD2E9682F40013B937 /* Repository */ = {
 			isa = PBXGroup;
 			children = (
+				967CF3492EBB37EF00510AD0 /* APIGoogleLoging.swift */,
 				96AFF5CB2E9682F40013B937 /* LoginRepository.swift */,
 				96AFF5CC2E9682F40013B937 /* LoginRepositoryAPI.swift */,
 			);
@@ -647,6 +660,7 @@
 		96AFF5D42E9682F40013B937 /* Login */ = {
 			isa = PBXGroup;
 			children = (
+				967CF3482EBB376F00510AD0 /* Model */,
 				96AFF5CD2E9682F40013B937 /* Repository */,
 				96AFF5CF2E9682F40013B937 /* Service */,
 				96AFF5D12E9682F40013B937 /* View */,
@@ -812,6 +826,7 @@
 		96AFF5F92E9682F40013B937 /* UpdateProfile */ = {
 			isa = PBXGroup;
 			children = (
+				967CF3422EBA341C00510AD0 /* Model */,
 				96AFF5F62E9682F40013B937 /* View */,
 				96AFF5F82E9682F40013B937 /* ViewModel */,
 			);
@@ -987,6 +1002,8 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
+				967CF3422EBA341C00510AD0 /* Model */,
+				967CF3482EBB376F00510AD0 /* Model */,
 				96AE26012E9A897F00EDD088 /* Payout */,
 				96AFC5062E9F70BC00BEB5E5 /* Notification */,
 				96AFF6852E968B4D0013B937 /* View */,
@@ -1173,6 +1190,7 @@
 				96AFF63B2E9682F40013B937 /* HomeViewModel.swift in Sources */,
 				96AFF63C2E9682F40013B937 /* TripViewModel.swift in Sources */,
 				96AFF63D2E9682F40013B937 /* UserViewModel.swift in Sources */,
+				967CF34A2EBB37F100510AD0 /* APIGoogleLoging.swift in Sources */,
 				96AFF63E2E9682F40013B937 /* ItemRepositoryAPI.swift in Sources */,
 				96AFF63F2E9682F40013B937 /* ItemService.swift in Sources */,
 				96AFF6402E9682F40013B937 /* ItemViewModel.swift in Sources */,

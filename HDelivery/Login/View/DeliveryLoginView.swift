@@ -194,9 +194,13 @@ struct DeliveryLoginView: View {
                     }
                 }
             }.toast(isPresenting: $viewModel.isShowToast, message: viewModel.error)
+            .toast(isPresenting: $googleSignInViewModel.showToast, message: googleSignInViewModel.message)
         }
         .ignoresSafeArea(.all, edges: .bottom)
         .fullScreenCover(isPresented: $viewModel.isLoggedIn) {
+            ContentView()
+        }
+        .fullScreenCover(isPresented: $googleSignInViewModel.isLoggedIn){
             ContentView()
         }
         
@@ -207,7 +211,7 @@ struct DeliveryLoginView: View {
             
         }
         .overlay {
-            if self.viewModel.isLoading {
+            if self.viewModel.isLoading || self.googleSignInViewModel.isLoading {
                 LoadView()
             }
             
