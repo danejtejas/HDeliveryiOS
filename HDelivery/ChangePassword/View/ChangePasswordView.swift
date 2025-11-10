@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import ToastSwiftUI
 
 struct ChangePasswordView: View {
     @State private var currentPassword = ""
@@ -55,7 +56,7 @@ struct ChangePasswordView: View {
                     // handle submit logic
                     
                     Task{
-                        await viewModel.changePassword(oldPassword: currentPassword, newPassword: newPassword)
+                        await viewModel.changePassword(oldPassword: currentPassword, newPassword: newPassword, confirmPassword: confirmPassword)
                     }
                     
                 }) {
@@ -103,6 +104,7 @@ struct ChangePasswordView: View {
             }
         }.toolbarBackground(AppSetting.ColorSetting.navigationBarBg, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
+            .toast(isPresenting: $viewModel.showTotash, message: viewModel.message ?? "")
         
     }
 }
@@ -121,6 +123,9 @@ struct CustomSecureField: View {
                 .font(.headline)
             
             SecureField(placeholder, text: $text)
+                .placeholder(when: text.isEmpty, placeholder: {
+                    Text(placeholder).foregroundColor(.white.opacity(0.7))
+                })
                 .padding(10)
                 .overlay(
                     RoundedRectangle(cornerRadius: 2)
