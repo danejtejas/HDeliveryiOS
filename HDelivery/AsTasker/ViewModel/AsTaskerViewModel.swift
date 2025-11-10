@@ -91,10 +91,10 @@ class DriverRegisterViewModel: ObservableObject {
             
             let arr = driver.bankAccount?.split(separator: "*") ?? []
             
-            if arr.count > 1 {
+            if arr.count >= 1 {
                 bankName = String(arr[0])
             }
-            if arr.count > 2 {
+            if arr.count >= 2 {
                 bankAccountNo = String(arr[1])
             }
        }
@@ -141,7 +141,7 @@ class DriverRegisterViewModel: ObservableObject {
                 isRegistered = true
             }
         } catch {
-            message = "❌ \(error.localizedDescription)"
+            message = "\(error.localizedDescription)"
             showToast = true
         }
     }

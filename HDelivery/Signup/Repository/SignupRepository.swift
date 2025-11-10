@@ -22,7 +22,7 @@ import Combine
 struct CreateSignupRequestAPIRequest: APIRequest {
     typealias Response = APIResponse<String>
     
-    var path: String = "signupAndroid"
+    var path: String = "api/signupAndroid"
     
     var method: HTTPMethod = .post
     var singupModel : SignupModel

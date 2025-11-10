@@ -32,6 +32,13 @@ struct SignUpView: View {
     
     @StateObject var viewmodel: SignupViewModel = .init()
     
+    @State private var selectedOption = "Option 1"
+    @State private var tempSelection = "Option 1"
+    @State private var showPicker = false
+    
+    @State private var stateId : String? = ""
+    
+    
     var body: some View {
         
         ScrollView(showsIndicators: false) {
@@ -125,14 +132,55 @@ struct SignUpView: View {
                         placeholder: "Address",
                         text: $address
                     )
+                 
                     
-                    // State
-                    FormFieldView(
-                        icon: "building.2.fill",
-                        label: "State",
-                        placeholder: "Rivers",
-                        text: $state
-                    )
+                    
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack(spacing: 12) {
+                            Image(systemName: "building.2")
+                                .font(.system(size: 18))
+                                .foregroundColor(.white)
+                                .frame(width: 20)
+                            
+                            Text("State")
+                                .font(.system(size: 16))
+                                .foregroundColor(.white)
+                        }
+                        Button(action : {
+                            tempSelection = state
+                            showPicker = true
+                        }) {
+                            
+                            HStack {
+                                if  state.isEmpty {
+                                    Text(state.isEmpty ? "Select State" : state)
+                                        .foregroundColor(state.isEmpty ? .white.opacity(0.7) : .white)
+                                        .font(.system(size: 16))
+                                        .italic()
+                                }
+                                else {
+                                    Text( state)
+                                        .foregroundColor( .white)
+                                        .font(.system(size: 16))
+                                        .font(.system(size: 16))
+                                }
+                               
+                                Spacer()
+                            }
+                            .padding(.horizontal, 15)
+                            .padding(.vertical, 12)
+                            .background(Color.clear)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 5)
+                                    .stroke(Color.white.opacity(0.5), lineWidth: 1)
+                            )
+                            
+                        }
+                        
+                       
+                    }
+                    
+                    
                     
                     // City
                     FormFieldView(
@@ -196,7 +244,7 @@ struct SignUpView: View {
                 Button(action: {
                     // Handle save/submit
                     Task {
-                       await viewmodel.signup(fullName: fullName, phone: phone, email: email, password: password, address: address, state: state, city: city, postCode: postCode, account : account)
+                       await viewmodel.signup(fullName: fullName, phone: phone, email: email, password: password, address: address, state: stateId ?? "1", city: city, postCode: postCode, account : account)
                     }
                     
                     
@@ -236,7 +284,48 @@ struct SignUpView: View {
                 
             }
         }
-        
+        .sheet(isPresented: $showPicker) {
+            VStack {
+                // Toolbar with Cancel / Done buttons
+                HStack {
+                    Button("Cancel") {
+                        showPicker = false
+                    }
+                    Spacer()
+                    Button("Done") {
+                        selectedOption = tempSelection
+                        showPicker = false
+                    }
+                    .bold()
+                }
+                .padding()
+                .background(Color(UIColor.secondarySystemBackground))
+
+                Divider()
+
+                // The actual picker
+                Picker("Select States", selection: $stateId) {
+                    ForEach(viewmodel.states) { op in
+                        Text(op.stateName).tag(op.id)
+                    }
+                }
+                .labelsHidden()
+                .pickerStyle(WheelPickerStyle())
+                .frame(maxHeight: 200)
+                .padding(.bottom, 30)
+               
+                // Whenever selection changes, update the name automatically
+                .onChange(of: stateId) { oldValue, newValue in
+                    if let id = newValue,
+                       let state = viewmodel.states.first(where: { $0.id == id }) {
+                        self.state = state.stateName
+                    } else {
+                        state = ""
+                    }
+                }
+            }
+            .presentationDetents([.height(300)]) // iOS 16+ only
+        }
         
     }
 }

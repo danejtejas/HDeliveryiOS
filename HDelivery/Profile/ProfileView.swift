@@ -125,28 +125,51 @@ struct ProfileView: View {
                         ProfileRow(title: "State", value: viewModel.state)
                         ProfileRow(title: "City", value: viewModel.cityName ?? "")
                         ProfileRow(title: "Post code", value: viewModel.postCode ?? "")
+                      
+                        if viewModel.typeAccount == "1" {
+                            ProfileRow(title: "Car Plate", value: viewModel.carPlate ?? "")
+                            ProfileRow(title: "Brand of Vihicle", value: viewModel.yearOfManufacture ?? "")
+                            
+                            ProfileRow(title: "Model", value: viewModel.make ?? "")
+                            
+                            ProfileRow(title: "Task Type", value: viewModel.taskType)
+                            ProfileRow(title: "Year", value: viewModel.yearOfManufacture ?? "")
+                            
+                        }
                         
-                        ProfileRow(title: "Car Plate", value: viewModel.carPlate ?? "")
-                        ProfileRow(title: "Brand of Vihicle", value: viewModel.yearOfManufacture ?? "")
-                        
-                        ProfileRow(title: "Model", value: viewModel.make ?? "")
-                        
-                        ProfileRow(title: "Task Type", value: viewModel.taskType)
-                        ProfileRow(title: "Year", value: viewModel.yearOfManufacture ?? "")
-                        
+
                         
                         ProfileRow(title: "Bank Name", value: viewModel.bankName)
                     
                         ProfileRow(title: "Bank Account No", value: viewModel.bankACNumber ?? "")
-                        NavigationLink(destination: UpdateProfileScreen()) {
-                            Text("Update Profile")
-                                .font(.headline)
-                                .foregroundColor(.white)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.blue)
-                                .cornerRadius(8)
-                        }.padding(.trailing, 20)
+                        
+                        
+                        if viewModel.typeAccount == "1" {
+                            
+                            NavigationLink(destination: AsTaskerView(isEditing: true, onSelectTab: {}) ) {
+                                Text("Update Profile")
+                                    .font(.headline)
+                                    .foregroundColor(.white)
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(Color.blue)
+                                    .cornerRadius(8)
+                            }.padding(.trailing, 20)
+                            
+                        }
+                        else {
+                            NavigationLink(destination: UpdateProfileScreen()) {
+                                Text("Update Profile")
+                                    .font(.headline)
+                                    .foregroundColor(.white)
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(Color.blue)
+                                    .cornerRadius(8)
+                            }.padding(.trailing, 20)
+                        }
+                        
+                        
                         
                     }
                     .padding(.leading, 30)
@@ -157,6 +180,10 @@ struct ProfileView: View {
             
             //
         }
+        .onAppear( perform : {
+            self.viewModel.fetchData()
+        })
+        
     }
 }
 

@@ -30,8 +30,13 @@ class SignupViewModel: ObservableObject {
     
     private var repository:  SignupRepository
     
+    @Published var states : [States] =  []
+    
     init(repository : SignupRepository = AppDependencies.shared.makeSignupRepository()) {
         self.repository = repository
+        Task{
+            await getCity()
+        }
     }
     
     
@@ -52,25 +57,12 @@ class SignupViewModel: ObservableObject {
         signupModel.email = email
         signupModel.password = password
         signupModel.address = address
-        signupModel.state =  "7" //state
-        signupModel.city = "7"
+        signupModel.state =  state
+        signupModel.city =  city
         signupModel.postCode = postCode
         signupModel.imageData = self.imageBase64String
         signupModel.account = account
         
-        
-        //        signupModel.fullName = "OM dave"
-        //        signupModel.phone = "1234567890"
-        //        signupModel.email = "om@gmail.com"
-        //        signupModel.password = "1234567"
-        //        signupModel.address = "Surat"
-        //        signupModel.state =  "7" //state
-        //        signupModel.city = "Surat"
-        //        signupModel.postCode = "394210"
-        //        signupModel.imageData = Base64EncodingOptions()
-        //        signupModel.account = "123456"
-        //        signupModel.country = "7"
-        //
         
         isLoading = true
         defer {
@@ -95,24 +87,43 @@ class SignupViewModel: ObservableObject {
         }
     }
     
+    
+    func getCity() async {
+        let repository =  AppDependencies.shared.makeUtilityRepository()
+        do {
+            let request = try await repository.showStateCity()
+            if request.isSuccess, let state = request.data {
+                self.states = state
+            }
+        } catch {
+            print("error \(error.localizedDescription)")
+            message = error.localizedDescription
+            isToastShow = true
+        }
+    }
+    
+    
 }
 
 extension SignupViewModel : FormValidatable  {
     
     
     func validate() throws {
-
-        try ValidationManager.shared.validate(fields: [
-            "Full Name": (value:   signupModel.fullName, rules: [RequiredRule(fieldName: "Full Name")]),
-            "Phone": (value:  signupModel.phone, rules: [RequiredRule(fieldName: "Phone"), PhoneRule()]),
-            "Email": (value:  signupModel.email , rules: [RequiredRule(fieldName: "Email"), EmailRule()]),
-            "Password": (value:   signupModel.password , rules: [RequiredRule(fieldName: "Password"), PasswordRule()]),
-            "Address": (value: signupModel.address, rules: [RequiredRule(fieldName: "Address")]),
-            "PostCode": (value:  signupModel.postCode, rules: [RequiredRule(fieldName: "PostCode"), PostCodedRule()]),
-            "City": (value:  signupModel.city, rules: [RequiredRule(fieldName: "City")]),
-            "State": (value: signupModel.state, rules: [RequiredRule(fieldName: "State")]),
-            "Account": (value: signupModel.account, rules: [AccountRule()])
-        ])
-    }
+        
+        let filedOrder : [String] = ["Full Name", "Phone", "Email", "Password", "Address", "PostCode", "City", "State", "Account"]
+       
+       try ValidationManager.shared.validate(fields: [
+           "Full Name": (value:   signupModel.fullName, rules: [RequiredRule(fieldName: "Full Name")]),
+           "Phone": (value:  signupModel.phone, rules: [RequiredRule(fieldName: "Phone"), PhoneRule()]),
+           "Email": (value:  signupModel.email , rules: [RequiredRule(fieldName: "Email"), EmailRule()]),
+           "Password": (value:   signupModel.password , rules: [RequiredRule(fieldName: "Password"), PasswordRule()]),
+           "Address": (value: signupModel.address, rules: [RequiredRule(fieldName: "Address")]),
+           "PostCode": (value:  signupModel.postCode, rules: [RequiredRule(fieldName: "PostCode"), PostCodedRule()]),
+           "City": (value:  signupModel.city, rules: [RequiredRule(fieldName: "City")]),
+           "State": (value: signupModel.state, rules: [RequiredRule(fieldName: "State")]),
+           "Account": (value: signupModel.account, rules: [AccountRule()])
+       ],
+        fieldOrders : filedOrder)
+   }
     
 }

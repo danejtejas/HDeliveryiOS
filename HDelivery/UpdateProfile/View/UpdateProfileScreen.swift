@@ -166,7 +166,7 @@ struct UpdateProfileScreen: View {
                                 
                                 HStack {
                                     Text(viewModel.state .isEmpty ? "Select State" : viewModel.state)
-                                        .foregroundColor(selectedOption.isEmpty ? .gray : .white)
+                                        .foregroundColor(viewModel.state.isEmpty ? .gray : .white)
                                     Spacer()
                                 }
                                 .padding(.horizontal, 15)
@@ -294,15 +294,25 @@ struct UpdateProfileScreen: View {
                 Divider()
 
                 // The actual picker
-                Picker("Select States", selection: $viewModel.state) {
+                Picker("Select States", selection: $viewModel.stateId) {
                     ForEach(viewModel.states) { op in
-                        Text(op.stateName).tag(op.stateName)
+                        Text(op.stateName).tag(op.id)
                     }
                 }
                 .labelsHidden()
                 .pickerStyle(WheelPickerStyle())
                 .frame(maxHeight: 200)
                 .padding(.bottom, 30)
+               
+                // Whenever selection changes, update the name automatically
+                .onChange(of: viewModel.stateId) { oldValue, newValue in
+                    if let id = newValue,
+                       let state = viewModel.states.first(where: { $0.id == id }) {
+                        viewModel.state = state.stateName
+                    } else {
+                        viewModel.state = ""
+                    }
+                }
             }
             .presentationDetents([.height(300)]) // iOS 16+ only
         }
@@ -375,3 +385,57 @@ extension UIImage : @retroactive Identifiable {
         return 1
     }
 }
+
+
+import SwiftUI
+
+struct StateOption: Identifiable, Hashable {
+    let id: Int
+    let stateName: String
+}
+
+//@MainActor
+//class ViewModel: ObservableObject {
+//    @Published var states: [StateOption] = [
+//        StateOption(id: 1, stateName: "California"),
+//        StateOption(id: 2, stateName: "Texas"),
+//        StateOption(id: 3, stateName: "Florida")
+//    ]
+//    
+//    @Published var selectedStateId: Int? = nil
+//    @Published var selectedStateName: String = ""
+//}
+
+//struct StatePickerView: View {
+//    @StateObject private var viewModel = ViewModel()
+//    
+//    var body: some View {
+//        VStack(spacing: 20) {
+//            TextField("Selected State", text: $viewModel.selectedStateName)
+//                .textFieldStyle(RoundedBorderTextFieldStyle())
+//                .disabled(true)
+//            
+//            Picker("Select State", selection: $viewModel.selectedStateId) {
+//                Text("Select a state").tag(Int?.none)
+//                ForEach(viewModel.states, id: \.id) { state in
+//                    Text(state.stateName).tag(Optional(state.id))
+//                }
+//            }
+//            .pickerStyle(MenuPickerStyle())
+//            
+//            if let id = viewModel.selectedStateId {
+//                Text("Selected ID: \(id)")
+//            }
+//        }
+//        .padding()
+//        // ✅ Updated onChange syntax (iOS 17+)
+//        .onChange(of: viewModel.selectedStateId) { oldValue, newValue in
+//            if let id = newValue,
+//               let state = viewModel.states.first(where: { $0.id == id }) {
+//                viewModel.selectedStateName = state.stateName
+//            } else {
+//                viewModel.selectedStateName = ""
+//            }
+//        }
+//    }
+//}

@@ -116,7 +116,7 @@ struct SideMenuView: View {
             
             // Menu List
             List {
-                ForEach(MenuOption.allCases) { option in
+                ForEach(viewModel.menuItems) { option in
                     Button {
                         withAnimation {
                             self.selectedTab = option

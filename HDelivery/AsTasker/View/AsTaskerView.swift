@@ -44,7 +44,18 @@ struct AsTaskerView: View {
     
     var onSelectTab : () -> Void
     
+    var isEditing = false
+    
+    
     @StateObject private var viewModel = DriverRegisterViewModel()
+    
+    @Environment(\.presentationMode) var presentationMode
+    
+    init(isEditing : Bool = false, onSelectTab : @escaping () -> Void ) {
+        self.isEditing = isEditing
+        self.onSelectTab = onSelectTab
+    }
+    
     
     var body: some View {
         
@@ -185,15 +196,23 @@ struct AsTaskerView: View {
             
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("As Tasker")
+                    Text(isEditing ? "Update Profile" : "As Tasker")
                         .font(.title2)
                         .fontWeight(.medium)
                         .foregroundColor(.white)
                 }
                 
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: { onSelectTab() }) {
-                        Image(systemName: "line.3.horizontal")
+                    Button(action: {
+                        if isEditing {
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                        else {
+                            onSelectTab()
+                        }
+                    }) {
+                       
+                        Image(systemName: isEditing ? "chevron.left" : "line.3.horizontal")
                             .foregroundColor(.white)
                     }
                 }
@@ -210,7 +229,12 @@ struct AsTaskerView: View {
                             }
                            
 //                            await viewModel.registerDriver()
-                            await  viewModel.updateDriver()
+                            if isEditing {
+                                await  viewModel.updateDriver()
+                            }
+                            else {
+                                await viewModel.registerDriver()
+                            }
                         }
                         
                     }) {

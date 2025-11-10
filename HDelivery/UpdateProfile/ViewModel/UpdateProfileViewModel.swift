@@ -35,6 +35,8 @@ class UpdateProfileViewModel: ObservableObject {
     
     @Published var states : [States] =  []
     
+    @Published var stateId: String?  = ""
+    
     init(repository: UserRepository =  AppDependencies.shared.makeUserRepository()) {
         self.repository = repository
         var user = StorageManager.shared.getUserInfo()
@@ -50,6 +52,7 @@ class UpdateProfileViewModel: ObservableObject {
         description = user?.description ?? ""
         profileImageUrl = user?.image ?? ""
    
+        stateId  = user?.stateId ?? ""
         
         let arr = user?.account?.split(separator: "*") ?? []
         if arr.count >= 1 {
@@ -67,10 +70,8 @@ class UpdateProfileViewModel: ObservableObject {
         defer { isLoading = false }
         do {
             
-            let cityId = "7"
-            let stateId = "1"
             let account = "\(bankName)*\(bankAccountNo)"
-            let typeDevice = "2"
+            let typeDevice = "1"
             
             
             try self.validate()
@@ -83,7 +84,7 @@ class UpdateProfileViewModel: ObservableObject {
                 fullName: fullName,
                 address: address,
                 phone: phone,
-                cityId: cityId,
+                cityId: city,
                 stateId: stateId,
                 account: account,
                 typeDevice: typeDevice,
@@ -144,6 +145,9 @@ extension UpdateProfileViewModel : @preconcurrency FormValidatable  {
     
     
     func validate() throws {
+        
+        let fieldOrders : [String] = ["Full Name", "Phone", "Email", "Address", "City", "State", "Account"]
+        
         try ValidationManager.shared.validate(fields: [
             "Full Name": (value: fullName, rules: [RequiredRule(fieldName: "Full Name")]),
             "Phone": (value: phone, rules: [RequiredRule(fieldName: "Phone"), PhoneRule()]),
@@ -152,7 +156,7 @@ extension UpdateProfileViewModel : @preconcurrency FormValidatable  {
             "City": (value: city, rules: [RequiredRule(fieldName: "City")]),
             "State": (value: state, rules: [RequiredRule(fieldName: "State")]),
             "Account": (value: bankAccountNo, rules: [AccountRule()])
-        ])
+        ], fieldOrders: fieldOrders)
     }
     
 }

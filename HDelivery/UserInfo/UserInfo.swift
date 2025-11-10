@@ -359,6 +359,7 @@ struct UpdateProfileRequest: APIRequest {
     let typeDevice: String?
     let image: String? // base64
     
+    
     var body: Data? {
         var dict: [String: Any] = ["token": token]
         if let description = description { dict["description"] = description }

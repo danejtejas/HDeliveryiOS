@@ -34,6 +34,8 @@ final class TripViewModel: ObservableObject {
     
     @Published var showAlert : Bool = false
     
+    var  estimateDistance : String = ""
+    
     init(repository: TripRepository = AppDependencies.shared.makeTripRepository()) {
         self.repository = repository
     }
@@ -48,6 +50,8 @@ final class TripViewModel: ObservableObject {
         }
        
         do {
+            
+            
             let token = try  StorageManager.shared.getAuthToken() ?? ""
             
             let startLat = pickupCoordinate?.lat() ?? ""
@@ -59,7 +63,12 @@ final class TripViewModel: ObservableObject {
             let startLocation = pickupAddress ?? ""
             let endLocation = dropAddress ?? ""
             
-            var selectItemForPickup = selectedItem.toSelectIem()
+          
+            
+            let selectItemForPickup = selectedItem.toSelectIem()
+            
+        
+          
             
             let jsonEndodeData = try! JSONEncoder().encode(selectItemForPickup)
             let jsonString = String(data: jsonEndodeData, encoding: .utf8) ?? ""
@@ -73,7 +82,7 @@ final class TripViewModel: ObservableObject {
                 endLat: endLat,
                 endLong: endLong,
                 endLocation: endLocation,
-                estimateDistance: "5.2",
+                estimateDistance: estimateDistance,
                 itemId: jsonString,
                 receiver_phone : receiverPhone ?? ""
             )
@@ -95,6 +104,35 @@ final class TripViewModel: ObservableObject {
     }
 }
 
+
+extension TripViewModel {
+    func validation(pickupAddress: String,
+                    dropAddress: String,
+                    receiverPhone: String,
+                    itemDescription: String) throws {
+        
+        do {
+            
+            
+            let fieldOrders =  ["Pickup Address", "Drop Address", "Item Description", "Receiver Phone" ]
+            
+            try  ValidationManager.shared.validate(fields: [
+                "Pickup Address" : (value: pickupAddress, rules: [RequiredRule(fieldName:"Pickup Address" )]),
+                "Drop Address" : (value: dropAddress, rules: [RequiredRule(fieldName:"Drop Address" )]),
+                "Item Description" : (value: itemDescription, rules: [SelectedItemRule()]),
+                "Receiver Phone" :  (value: receiverPhone, rules: [PhoneRule()]) ],
+                fieldOrders: fieldOrders)
+            
+             
+            
+        } catch {
+            throw error
+        }
+       
+    }
+    
+    
+}
 
 
 
@@ -126,3 +164,9 @@ extension Array where Element == Item {
         self.map { $0.toSelectItem() }
     }
 }
+
+
+
+
+
+

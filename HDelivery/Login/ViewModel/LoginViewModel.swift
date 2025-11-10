@@ -105,13 +105,17 @@ class LoginViewModel: ObservableObject {
     
     func validation() throws {
         
+        
+        let fildOrder : [String] = ["Email","Password"]
+        
        try ValidationManager.shared.validate(fields:
                                             ["Email" : (value: loginRequest?.email,
                                                         rules: [RequiredRule(fieldName: "Email"),
                                                                 EmailRule()]) ,
                                              "Password" : (value: loginRequest?.password,
                                                            rules: [ RequiredRule(fieldName: "Password"),
-                                                                  PasswordRule()])])
+                                                                  PasswordRule()])],
+                                             fieldOrders: fildOrder)
         
     }
         

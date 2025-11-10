@@ -126,9 +126,16 @@ struct AccountRule: ValidationRule {
 }
 
 struct PasswordRule: ValidationRule {
+    
+    let fieldName: String
+    
+    init(fieldName: String = "Password") {
+        self.fieldName = fieldName
+    }
+    
     func validate(_ value: String?) -> ValidationError? {
         guard let value = value, value.count >= 6 else {
-            return .custom(message: "Password must be at least 6 characters.")
+            return .custom(message: "\(fieldName) must be at least 6 characters.")
         }
         return nil
     }
@@ -165,6 +172,55 @@ struct IdentityRule: ValidationRule {
     func validate(_ value: String?) -> ValidationError? {
         guard let value = value,  Validator.isValidIdentity(value)else {
             return .custom(message: "Please enter a valid Identity.")
+        }
+        return nil
+    }
+}
+
+struct ConfirmPasswordRule: ValidationRule {
+    let newPassword: String
+    let fieldName: String
+
+    func validate(_ value: String?) -> ValidationError? {
+        guard let confirmPassword = value else {
+            return .custom(message: "\(fieldName) is required.")
+        }
+        guard confirmPassword == newPassword else {
+            return .custom(message: "New password and \(fieldName.lowercased()) do not match.")
+        }
+        return nil
+    }
+}
+
+
+struct PickupAddressRule: ValidationRule {
+    func validate(_ value: String?) -> ValidationError? {
+        guard let address = value,
+              !address.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return .custom(message: "Please enter a valid pickup address.")
+        }
+        return nil
+    }
+}
+
+
+struct DropAddressRule: ValidationRule {
+    func validate(_ value: String?) -> ValidationError? {
+        guard let address = value,
+              !address.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            return .custom(message: "Please enter a valid drop address.")
+        }
+        return nil
+    }
+}
+
+
+
+struct SelectedItemRule: ValidationRule {
+    func validate(_ value: String?) -> ValidationError? {
+        guard let items = value?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !items.isEmpty else {
+            return .custom(message: "Please select at least one item for pickup.")
         }
         return nil
     }
@@ -227,5 +283,23 @@ final class ValidationManager {
                 }
             }
         }
+    }
+    
+    
+    
+    func validate(fields: [String: (value: String?, rules: [ValidationRule])], fieldOrders : [String] ) throws {
+        for field in fieldOrders {
+            if let field = fields[field] {
+                for rule in field.rules {
+                    if let error = rule.validate(field.value) {
+                        throw error
+                       
+                        
+                    }
+                }
+            }
+        }
+        
+       
     }
 }

@@ -39,7 +39,7 @@ protocol TripRepository {
     
     func showTripDetail(token: String, tripId: String) async throws -> APIResponse<TripHistory>
     
-    func showDistance(token: String, tripId: String) async throws -> APIResponse<Int>
+    func showDistance(token: String, tripId: String) async throws -> APIResponse<Double>
 
    
     

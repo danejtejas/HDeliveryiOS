@@ -51,11 +51,27 @@ class ContentViewModel: ObservableObject {
     
     init() {
         Task {
-            await self.gernalSettings()
+//            await self.gernalSettings()
+            await self.getCarType()
         }
     }
     
     
+    func getCarType() async {
+        let repository =  AppDependencies.shared.makeUtilityRepository()
+        do {
+          
+            let request = try await repository.showCarTypes()
+            if request.isSuccess {
+                let appConfig = request.data
+                
+               
+            }
+        } catch {
+            print("error \(error.localizedDescription)")
+        }
+        
+    }
     
     func gernalSettings() async {
         let repository =  AppDependencies.shared.makeUtilityRepository()
@@ -67,7 +83,9 @@ class ContentViewModel: ObservableObject {
                 try StorageManager.shared.setAppConfig(appConfig: appConfig)
                 let link_type = request.listJob.first?.link ?? ""
                 StorageManager.shared.setLinkType(link: link_type)
-                
+                if let jobType =  request.listJob.first {
+                    StorageManager.shared.setJobType(jobType: jobType)
+                }
                 Task {
                     await showUserInfo()
                     //await showMyTripHistoryDriver()
@@ -186,14 +204,14 @@ extension ContentViewModel {
                                 countMyRequest()
             } else {
                 switch status {
-                case "3", "4":break
+                case "3", "4":
                     
-//                    if let rate = passengerRate, !rate.isEmpty {
-//                        countMyRequest()
-//                    }
-//                    else {
-//                        isNavToDriverRate = true
-//                    }
+                    if let rate = passengerRate, !rate.isEmpty {
+                        countMyRequest()
+                    }
+                    else {
+                        isNavToDriverRate = true
+                    }
                     
                 default:
                     countMyRequest()
@@ -295,6 +313,7 @@ extension ContentViewModel {
                 let trip = data[0]
                 let status = trip.status
                 let tripRate = trip.passengerRate
+                let driverRate = trip.driverRate
                 tripHistory = trip
                 let tripStatus =  TripStatus(rawValue: status ?? "") ?? .unknown
                 switch tripStatus {
@@ -307,7 +326,12 @@ extension ContentViewModel {
 //                      GoogleMapNavigationView() // navigate to start screen
                     isNavToUserGoogleMap = true
                 case .pendingPayment:
-                    isNavToPayment = true
+                    if driverRate == "" {
+                        isNavToPayment = true
+                    }else {
+                        isNavToPayment = false
+                    }
+                   
                 case .finished:break
                     
                 case .arrivedA:

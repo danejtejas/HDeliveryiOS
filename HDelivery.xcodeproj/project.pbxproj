@@ -96,6 +96,7 @@
 		96D782B12EA4B83F0011328B /* PaystackCore in Frameworks */ = {isa = PBXBuildFile; productRef = 96D782B02EA4B83F0011328B /* PaystackCore */; };
 		96D782B32EA4B83F0011328B /* PaystackPusherWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 96D782B22EA4B83F0011328B /* PaystackPusherWrapper */; };
 		96D782B52EA4B83F0011328B /* PaystackUI in Frameworks */ = {isa = PBXBuildFile; productRef = 96D782B42EA4B83F0011328B /* PaystackUI */; };
+		96E976EF2EBE26C80082D87A /* EstimateFare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96E976EE2EBE26C80082D87A /* EstimateFare.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -188,6 +189,7 @@
 		96BF00DF2EB8FF04003F17C3 /* GoogleLoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleLoginViewModel.swift; sourceTree = "<group>"; };
 		96BF00E12EB8FF2B003F17C3 /* FareAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FareAlertView.swift; sourceTree = "<group>"; };
 		96BF00E32EB8FFFA003F17C3 /* PaymentWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentWebView.swift; sourceTree = "<group>"; };
+		96E976EE2EBE26C80082D87A /* EstimateFare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EstimateFare.swift; sourceTree = "<group>"; };
 		CD91FE622B385766C4AA3EB4 /* Pods_HDelivery.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HDelivery.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E955E7BE10A6A89176DFFC6D /* Pods-HDelivery.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HDelivery.debug.xcconfig"; path = "Target Support Files/Pods-HDelivery/Pods-HDelivery.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -431,6 +433,7 @@
 		96AFF5962E9682F40013B937 /* Comman */ = {
 			isa = PBXGroup;
 			children = (
+				96E976EE2EBE26C80082D87A /* EstimateFare.swift */,
 				96AFF5952E9682F40013B937 /* Untitled.swift */,
 			);
 			path = Comman;
@@ -1242,6 +1245,7 @@
 				96AFF6752E9682F40013B937 /* Task.swift in Sources */,
 				96AFF6762E9682F40013B937 /* TestView.swift in Sources */,
 				96BF00E02EB8FF04003F17C3 /* GoogleLoginViewModel.swift in Sources */,
+				96E976EF2EBE26C80082D87A /* EstimateFare.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

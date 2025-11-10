@@ -21,42 +21,12 @@ struct RequestScreen: View {
     var body: some View {
         ZStack {
             // Background gradient
-            LinearGradient(
-                gradient: Gradient(colors: [
-                    Color(red: 0.28, green: 0.42, blue: 0.71),
-                    Color(red: 0.20, green: 0.31, blue: 0.58)
-                ]),
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .ignoresSafeArea()
+            AppSetting.ColorSetting.appBg.edgesIgnoringSafeArea(.all)
             
             VStack(spacing: 0) {
-                // Top menu button
-                HStack {
-                    Button(action: {
-                        onSelectTab()
-                        
-                    }) {
-                        VStack(spacing: 4) {
-                            Rectangle()
-                                .fill(Color.white)
-                                .frame(width: 30, height: 3)
-                            Rectangle()
-                                .fill(Color.white)
-                                .frame(width: 30, height: 3)
-                            Rectangle()
-                                .fill(Color.white)
-                                .frame(width: 30, height: 3)
-                        }
-                    }
-                    .padding(.leading, 20)
-                    
-                    Spacer()
-                }
-                .padding(.top, 20)
+               
                 
-                Spacer()
+//                Spacer()
                 
                 // Main content
                 VStack(spacing: 30) {
@@ -104,30 +74,76 @@ struct RequestScreen: View {
                     .padding(.top, 20)
                     
                     // GPS warning text
-                    Text("Make sure device's GPS is good and have a\nclear sky view")
-                        .font(.system(size: 16))
-                        .foregroundColor(.yellow)
-                        .multilineTextAlignment(.center)
-                        .lineSpacing(4)
-                        .padding(.top, 10)
+                    if  onllineViewModel.isOnline == false {
+                        Text("Make sure device's GPS is good and have a\nclear sky view")
+                            .font(.system(size: 16))
+                            .foregroundColor(.yellow)
+                            .multilineTextAlignment(.center)
+                            .lineSpacing(4)
+                            .padding(.top, 10)
+                    }
                 }
-                Spacer()
-                if onllineViewModel.isOnline && onllineViewModel.trips.count > 0 {
-                    
-                   
-                    TripRowRequestView(trips: $onllineViewModel.trips) { index in
-                        Task {
-                            let trip = onllineViewModel.trips[index]
-                            await onllineViewModel.confrimDriverRequest(requestId: trip.id ?? "" , startLat: trip.startLat ?? "", startLong: trip.startLong ?? "", startLocation: trip.startLocation ?? "")
+                Spacer().frame(height: 100)
+                
+                if onllineViewModel.isOnline {
+                    if onllineViewModel.trips.isEmpty {
+                        VStack(spacing: 10) {
+                            Image(systemName: "tray")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 80, height: 80)
+                                .foregroundColor(.white.opacity(0.7))
+                            
+                            Text("No Requests Found")
+                                .font(.system(size: 20, weight: .semibold))
+                                .foregroundColor(.white.opacity(0.9))
+                            
+                            Text("You’ll see new trip requests here when they arrive.")
+                                .font(.system(size: 16))
+                                .foregroundColor(.white.opacity(0.7))
+                                .multilineTextAlignment(.center)
+                                .padding(.horizontal, 20)
+                        }
+                        .padding(.bottom, 40)
+                        .transition(.opacity)
+                    } else {
+                        TripRowRequestView(trips: $onllineViewModel.trips) { index in
+                            Task {
+                                let trip = onllineViewModel.trips[index]
+                                await onllineViewModel.confrimDriverRequest(
+                                    requestId: trip.id ?? "",
+                                    startLat: trip.startLat ?? "",
+                                    startLong: trip.startLong ?? "",
+                                    startLocation: trip.startLocation ?? ""
+                                )
+                            }
                         }
                     }
-                    
-                    
-                    
                 }
+
                 
             }
         }
+        .navigationBarTitle("", displayMode: .inline)  // Set the navigation title
+        .toolbar {
+            // Menu button (left side of the navigation bar)
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: {
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        onSelectTab()
+                    }
+                }) {
+                    Image(systemName: "line.horizontal.3")
+                        .font(.title2)
+                        .foregroundColor(.white)
+                }
+            }
+            
+        
+        }
+        .toolbarBackground(AppSetting.ColorSetting.navigationBarBg, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        
         .fullScreenCover(isPresented:$onllineViewModel.isRequestConformed) {
             GoogleMapNavigationView(liveLocationViewModel: LiveLocationViewModel(tripHistory: onllineViewModel.tripHistory))
         }.onReceive(NotificationCenter.default.publisher(for: .createRequest)) { _ in
@@ -180,10 +196,6 @@ struct TripRowRequestView : View {
                 .cornerRadius(12)
                 .shadow(radius: 1)
             }
-            
-            
-            
-        
-        
     }
 }
+
