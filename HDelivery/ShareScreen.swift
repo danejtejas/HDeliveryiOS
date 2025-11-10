@@ -6,62 +6,26 @@
 //
 
 import SwiftUI
+import ToastSwiftUI
 
 struct ShareScreen: View {
   
     var onSelectTab : () -> Void
-
+    @State var isToastVisible: Bool = false
+    @State var toastMessage: String? = ""
     var body: some View {
         ZStack {
-            // Background gradient
-//            LinearGradient(
-//                gradient: Gradient(colors: [
-//                    AppConstants.Colors.primaryBlue,
-//                    AppConstants.Colors.primaryBlue.opacity(0.8)
-//                ]),
-//                startPoint: .top,
-//                endPoint: .bottom
-//            )
-            Color.blue.ignoresSafeArea()
+            AppSetting.ColorSetting.appBg.edgesIgnoringSafeArea(.all)
 
             VStack(spacing: AppConstants.Spacing.xl) {
-                // Header
-                HStack {
-                    Button(action: { onSelectTab() }) {
-                        Image(systemName: "line.3.horizontal")
-                            .font(.title2)
-                            .foregroundColor(.white)
-                    }
-
-                    Spacer()
-
-                    Text("Share")
-                        .font(AppConstants.Typography.headingFont)
-                        .foregroundColor(.white)
-
-                    Spacer()
-
-                   
-                }
-                .padding(.horizontal, AppConstants.Spacing.md)
-                .padding(.top, AppConstants.Spacing.sm)
+                
 
                 Spacer()
 
                 // Content
                 VStack(spacing: AppConstants.Spacing.lg) {
-//                    Text("WhatsApp sharing functionality")
-//                        .font(AppConstants.Typography.headingFont)
-//                        .foregroundColor(.white)
-//                        .multilineTextAlignment(.center)
 //
-//                    Text("This screen contains the complete implementation\nwith all features and functionality.")
-//                        .font(AppConstants.Typography.bodyFont)
-//                        .foregroundColor(.white.opacity(0.9))
-//                        .multilineTextAlignment(.center)
-
-                    // Action button
-                    Button(action: {}) {
+                    Button(action: openWhatsApp) {
                         HStack {
                             Image(systemName: "phone.circle.fill")
                                 .foregroundColor(Color.white)
@@ -85,9 +49,69 @@ struct ShareScreen: View {
                 Spacer()
                 Spacer()
             }
+        }.toast(isPresenting: $isToastVisible, message: toastMessage ?? "")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarHidden(false)
+            .toolbar {
+                toolbarContent
+            }
+            .navigationTitle("Home")
+            .navigationBarBackButtonHidden()
+            .toolbarBackground(AppSetting.ColorSetting.navigationBarBg, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+    }
+    
+    // Just open WhatsApp (home)
+    func openWhatsApp() {
+        if let url = URL(string: "whatsapp://") {
+            if UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url)
+            } else {
+                toastMessage = "WhatsApp not installed"
+                isToastVisible = true
+                print("WhatsApp not installed")
+            }
         }
     }
+
+    // Open chat with specific phone number
+    func openWhatsAppChat(phone: String) {
+        let urlString = "https://wa.me/\(phone)"
+        if let url = URL(string: urlString) {
+            if UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url)
+            } else {
+                print("WhatsApp not installed")
+            }
+        }
+    }
+    
 }
+
+extension ShareScreen {
+    
+    private var toolbarContent: some ToolbarContent {
+        Group {
+            ToolbarItem(placement: .topBarLeading) {
+                Button(action: { withAnimation { onSelectTab() } }) {
+                    Image(systemName: "line.horizontal.3")
+                        .font(.title3)
+                        .foregroundColor(.white)
+                }
+            }
+
+            ToolbarItem(placement: .principal) {
+                Text("Share")
+                    .foregroundColor(.white)
+                    .font(.system(size: 22, weight: .medium))
+            }
+
+           
+        }
+    }
+    
+}
+
 
 #Preview {
     ShareScreen(onSelectTab : {})
