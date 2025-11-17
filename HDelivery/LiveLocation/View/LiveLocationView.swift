@@ -23,7 +23,7 @@ struct GoogleMapNavigationView: View {
     
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var viewModel: LiveLocationViewModel   // 👈 changed
-    
+    @State var showCancelAlert : Bool = false
 
     init(liveLocationViewModel: LiveLocationViewModel) {
        
@@ -41,10 +41,9 @@ struct GoogleMapNavigationView: View {
             // Top bar
             HStack {
                 Button(action: {
-                    Task{
-                        await  viewModel.cancelTrip(viewModel.tripData?.id ?? "")
-                        dismiss()
-                    }
+                    
+                    showCancelAlert = true
+                    
                     
                 }) {
                     HStack {
@@ -134,7 +133,17 @@ struct GoogleMapNavigationView: View {
         .fullScreenCover(isPresented: $viewModel.isTripEnd) {
             DriverRateView(tripData: $viewModel.tripData)
         }
-        
+        .alert("Cancel Trip?", isPresented: $showCancelAlert) {
+            Button("Yes, Cancel", role: .destructive) {
+                Task{
+                    await  viewModel.cancelTrip(viewModel.tripData?.id ?? "")
+                    dismiss()
+                }
+            }
+            Button("No", role: .cancel) { }
+        } message: {
+            Text("Are you sure you want to cancel this trip?")
+        }
         
     }
     
@@ -325,8 +334,7 @@ final class GMSLocationManager: NSObject, ObservableObject, CLLocationManagerDel
             let repo =   AppDependencies.shared.makeDriverRepository()
             guard let token = try StorageManager.shared.getAuthToken() else { print("No Token Found");  return  }
             let response = try await repo.updateCoordinate(token: token, lat: lat, long: long)
-            //            message = response.message
-            //            isSuccess = response.isSuccess
+            
         } catch {
         print("\(error.localizedDescription)")
            

@@ -17,6 +17,8 @@ struct RequestScreen: View {
      
     @State private var isNavToUserGoogleMap: Bool = false
     @State private var tripHistory : TripHistory?
+    @Binding var selectedTab : MenuOption
+    @State private var showOfflineAlert = false
     
     var body: some View {
         ZStack {
@@ -53,11 +55,16 @@ struct RequestScreen: View {
                     // Online button
                     Button(action: {
                         Task {
-                            await onllineViewModel.setOnlineDrivers()
+                            
+                            if onllineViewModel.isOnline {
+                                showOfflineAlert = true
+                            } else {
+                                await onllineViewModel.setOnlineDrivers()
+                            }
                         }
                         
                     }) {
-                        Text( onllineViewModel.isOnline ? "OFF LINE" : "ONLINE")
+                        Text( onllineViewModel.isOnline ? "OFFLINE" : "ONLINE")
                             .font(.system(size: 24, weight: .medium))
                             .italic()
                             .foregroundColor(.white)
@@ -146,6 +153,11 @@ struct RequestScreen: View {
         
         .fullScreenCover(isPresented:$onllineViewModel.isRequestConformed) {
             GoogleMapNavigationView(liveLocationViewModel: LiveLocationViewModel(tripHistory: onllineViewModel.tripHistory))
+                .onDisappear(
+                    perform: {
+                        selectedTab = .home
+                    }
+                )
         }.onReceive(NotificationCenter.default.publisher(for: .createRequest)) { _ in
             
             Task{
@@ -153,12 +165,24 @@ struct RequestScreen: View {
             }
             
         }.toast(isPresenting: $onllineViewModel.showAlert,  message: onllineViewModel.error ?? "")
+            .alert("Go Offline?", isPresented: $showOfflineAlert) {
+                Button("Yes, Go Offline", role: .destructive) {
+                    Task{
+                        await onllineViewModel.setOnlineDrivers()
+                        selectedTab = .home
+                    }
+                }
+                Button("Cancel", role: .cancel) { }
+            } message: {
+                Text("Are you sure you want to go offline? You won’t receive any new ride requests.")
+            }
+
     }
 }
 
 
 #Preview {
-    RequestScreen(onSelectTab:{})
+    RequestScreen(onSelectTab:{}, selectedTab: .constant(.online))
 }
 
 
@@ -198,4 +222,3 @@ struct TripRowRequestView : View {
             }
     }
 }
-

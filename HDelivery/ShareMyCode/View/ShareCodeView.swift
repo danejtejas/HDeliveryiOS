@@ -133,7 +133,7 @@ struct ShareCodeView: View {
     }
     
     func shareContent() {
-        var code = viewModel.promotionCode ?? ""
+        let code = viewModel.promotionCode ?? ""
         
         let text = "Join H Delivery and use my code \(code) to earn money!"
         let activityVC = UIActivityViewController(activityItems: [text], applicationActivities: nil)

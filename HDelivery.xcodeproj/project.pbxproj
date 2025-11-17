@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		319E2446AB83B46FD4CA1828 /* Pods_HDelivery.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD91FE622B385766C4AA3EB4 /* Pods_HDelivery.framework */; };
+		963125762EC371BB000C2029 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963125752EC371BB000C2029 /* Router.swift */; };
 		967CF34A2EBB37F100510AD0 /* APIGoogleLoging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 967CF3492EBB37EF00510AD0 /* APIGoogleLoging.swift */; };
 		96AFF61D2E9682F40013B937 /* API_DOCUMENTATION.md in Resources */ = {isa = PBXBuildFile; fileRef = 96AFF6052E9682F40013B937 /* API_DOCUMENTATION.md */; };
 		96AFF61E2E9682F40013B937 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 96AFF6062E9682F40013B937 /* Assets.xcassets */; };
@@ -102,6 +103,7 @@
 /* Begin PBXFileReference section */
 		675F9C82CF820082FE01F321 /* Pods-HDelivery.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HDelivery.release.xcconfig"; path = "Target Support Files/Pods-HDelivery/Pods-HDelivery.release.xcconfig"; sourceTree = "<group>"; };
 		7C244F752E8809E300BF2D48 /* HDelivery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HDelivery.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		963125752EC371BB000C2029 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		967CF3492EBB37EF00510AD0 /* APIGoogleLoging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIGoogleLoging.swift; sourceTree = "<group>"; };
 		96AFF58A2E9682F40013B937 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		96AFF58B2E9682F40013B937 /* APITripRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITripRepository.swift; sourceTree = "<group>"; };
@@ -435,6 +437,7 @@
 			children = (
 				96E976EE2EBE26C80082D87A /* EstimateFare.swift */,
 				96AFF5952E9682F40013B937 /* Untitled.swift */,
+				963125752EC371BB000C2029 /* Router.swift */,
 			);
 			path = Comman;
 			sourceTree = "<group>";
@@ -1194,6 +1197,7 @@
 				96AFF63C2E9682F40013B937 /* TripViewModel.swift in Sources */,
 				96AFF63D2E9682F40013B937 /* UserViewModel.swift in Sources */,
 				967CF34A2EBB37F100510AD0 /* APIGoogleLoging.swift in Sources */,
+				963125762EC371BB000C2029 /* Router.swift in Sources */,
 				96AFF63E2E9682F40013B937 /* ItemRepositoryAPI.swift in Sources */,
 				96AFF63F2E9682F40013B937 /* ItemService.swift in Sources */,
 				96AFF6402E9682F40013B937 /* ItemViewModel.swift in Sources */,
@@ -1388,6 +1392,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HDelivery/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need your location to show you on the map";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -1426,6 +1431,7 @@
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HDelivery/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.travel";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "We need your location to show you on the map";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

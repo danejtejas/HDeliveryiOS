@@ -51,7 +51,7 @@ class ContentViewModel: ObservableObject {
     
     init() {
         Task {
-//            await self.gernalSettings()
+            await self.gernalSettings()
             await self.getCarType()
         }
     }

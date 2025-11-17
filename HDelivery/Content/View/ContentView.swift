@@ -15,6 +15,7 @@ struct ContentView: View {
     
     @StateObject private var viewModel = ContentViewModel()
   
+    @State private var path = NavigationPath()
     
     var body: some View {
         
@@ -65,7 +66,7 @@ struct ContentView: View {
                     AsTaskerView(onSelectTab: { isSideMenuOpen.toggle()})
                     
                 case .online:
-                    RequestScreen(onSelectTab: { isSideMenuOpen.toggle()})
+                    RequestScreen(onSelectTab: { isSideMenuOpen.toggle()} , selectedTab: $selectedTab)
                     
                 case .terms:
                      TermConditionView(onSelectTab: { isSideMenuOpen.toggle()})
@@ -119,6 +120,7 @@ struct ContentView: View {
                 viewModel.tripHistory = data
                
                 viewModel.isNavToUserGoogleMap = true
+                path.append(Route.userMapScreen)
                 
             }
            
@@ -130,8 +132,8 @@ struct ContentView: View {
                 guard let data =  notificaton.object as? TripHistory else {return}
                 
                 viewModel.tripHistory = data
-               
                 viewModel.isNavToUserGoogleMap = true
+                path.append(Route.userMapScreen)
                 
             }
         }
@@ -140,34 +142,26 @@ struct ContentView: View {
            
             DispatchQueue.main.async {
                 guard let data =  notificaton.object as? TripHistory else {return}
-                
                 viewModel.tripHistory = data
-                
                 viewModel.isNavToUserGoogleMap = true
+                path.append(Route.userMapScreen)
             }
-                
-            
         }
         .onReceive(NotificationCenter.default.publisher(for: .tripEnded)) { notificaton in
             print("Trip ended 🏁")
-            
             DispatchQueue.main.async {
                 guard let data =  notificaton.object as? TripHistory else {return}
-                
                 viewModel.tripHistory = data
-                
                 viewModel.isNavToPayment = true
+                path.append(Route.userPaymentScreen)
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: .paymentPending)) { notificaton in
             print("Payment pending 💳")
-            
             DispatchQueue.main.async {
                 guard let data =  notificaton.object as? TripHistory else {return}
-                
                 viewModel.tripHistory = data
-                
-                viewModel.isNavToDriverRate = true
+                viewModel.isNavToPaymentDriver = true
             }
         }
     }
