@@ -23,13 +23,10 @@ struct ShareCodeView: View {
             VStack(spacing: 0) {
                 // Logo and title section
                 VStack(spacing: 20) {
-                    Image(systemName: "shippingbox.fill")
-                        .font(.system(size: 80))
-                        .foregroundColor(.blue)
-                    
-                    Text("H Delivery")
-                        .font(.system(size: 48, weight: .light))
-                        .foregroundColor(.black)
+                    Image("splash_logo")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 200, height:100 )
                 }
                 .padding(.top, 40)
                 

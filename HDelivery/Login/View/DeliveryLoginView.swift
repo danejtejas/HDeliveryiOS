@@ -33,29 +33,10 @@ struct DeliveryLoginView: View {
                         VStack {
                             Spacer()
                             
-                            // H Delivery Logo
-                            HStack(spacing: 8) {
-                                // H Logo
-                                ZStack {
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .fill(
-                                            LinearGradient(
-                                                gradient: Gradient(colors: [Color.green, Color.blue]),
-                                                startPoint: .topLeading,
-                                                endPoint: .bottomTrailing
-                                            )
-                                        )
-                                        .frame(width: 60, height: 60)
-                                    
-                                    Text("H")
-                                        .font(.system(size: 32, weight: .bold, design: .rounded))
-                                        .foregroundColor(.white)
-                                }
-                                
-                                Text("Delivery")
-                                    .font(.system(size: 36, weight: .light))
-                                    .foregroundColor(.primary)
-                            }
+                            Image("splash_logo")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 300, height:150 )
                             
                             Spacer()
                         }
@@ -151,17 +132,10 @@ struct DeliveryLoginView: View {
                                     }
                                     
                                 }) {
-                                    AsyncImage(url: URL(string: "https://developers.google.com/identity/images/g-logo.png")) { image in
-                                        image
-                                            .resizable()
-                                            .aspectRatio(contentMode: .fit)
-                                            .frame(width: 24, height: 24)
-                                    } placeholder: {
-                                        // Fallback if image doesn't load
-                                        Text("G")
-                                            .font(.system(size: 16, weight: .bold))
-                                            .foregroundColor(.blue)
-                                    }
+                                   Image("google")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(width: 24, height: 24)
                                 }
                             }
                             .padding(.top, 20)
