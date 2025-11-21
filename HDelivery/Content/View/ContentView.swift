@@ -104,7 +104,7 @@ struct ContentView: View {
                 UserGoogleMap(tripData: $viewModel.tripHistory)
             }.fullScreenCover(isPresented: $viewModel.isNavUserRequest) {
 //                RequestScreen(onSelectTab: { })
-                RequestSendView(estimateFare: viewModel.estimateFare)
+                RequestSendView(estimateFare: viewModel.estimateFare, driverCount: 0)
             }.fullScreenCover(isPresented: $viewModel.isNavToPaymentDriver) {
                 ConfirmPaymentView(tripId: viewModel.tripHistory?.id ?? "")
             }

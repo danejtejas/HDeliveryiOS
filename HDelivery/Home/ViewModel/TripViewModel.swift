@@ -35,6 +35,7 @@ final class TripViewModel: ObservableObject {
     @Published var showAlert : Bool = false
     
     var  estimateDistance : String = ""
+    var driverCount : Int = 0
     
     init(repository: TripRepository = AppDependencies.shared.makeTripRepository()) {
         self.repository = repository
@@ -68,7 +69,6 @@ final class TripViewModel: ObservableObject {
             let selectItemForPickup = selectedItem.toSelectIem()
             
         
-          
             
             let jsonEndodeData = try! JSONEncoder().encode(selectItemForPickup)
             let jsonString = String(data: jsonEndodeData, encoding: .utf8) ?? ""
@@ -95,6 +95,7 @@ final class TripViewModel: ObservableObject {
             }
             else {
                 estimateFare = response.estimateFare ?? ""
+                driverCount = response.count ?? 0
                 isSuccess = true
             }
         } catch {
@@ -148,13 +149,13 @@ extension CLLocationCoordinate2D {
 
 extension Item {
     func toSelectItem() -> SelectItem {
-        .init(item_id: id, itme_qty: "\(quantity)", item_desc: description)
+        .init(item_id: id, item_qty: "\(quantity)", item_desc: description)
     }
 }
 
 struct SelectItem : Codable {
     let item_id: String
-    let itme_qty: String
+    let item_qty: String
     let item_desc: String
 }
 

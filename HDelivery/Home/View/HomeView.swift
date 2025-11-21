@@ -108,7 +108,7 @@ struct HomeView: View {
         .toolbarBackground(AppSetting.ColorSetting.navigationBarBg, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
         .fullScreenCover(isPresented: $viewModel.isSuccess) {
-            RequestSendView(estimateFare: viewModel.estimateFare)
+            RequestSendView(estimateFare: viewModel.estimateFare, driverCount: viewModel.driverCount)
         }
     }
 }

@@ -34,6 +34,7 @@ struct CreateTripRequest: APIRequest {
         return ["Content-Type": "application/x-www-form-urlencoded"]
     }
     
+    
     var parameters: [String: String]? {
       return  [
             "token": token,
@@ -58,12 +59,9 @@ struct CreateTripRequest: APIRequest {
         for key in parameters!.keys.sorted() {
             let value = parameters![key] ?? ""
             let stringValue = "\(value)"
-            let encoded = stringValue.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-            parts.append("\(key)=\(encoded)")
+            parts.append("\(key)=\(stringValue)")
         }
-        
         let formString = parts.joined(separator: "&")
-
         return formString.data(using: .utf8)
         
        }

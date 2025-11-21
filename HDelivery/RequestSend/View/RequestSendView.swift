@@ -16,8 +16,10 @@ struct RequestSendView: View {
     @State var isNavToUserGoogleMap : Bool = false
     
     private var estimateFare : String = ""
-    init(estimateFare : String) {
+    private var driverCount : Int = 0
+    init(estimateFare : String, driverCount : Int) {
         self.estimateFare = estimateFare
+        self.driverCount = driverCount
     }
     
     var body: some View {
@@ -95,7 +97,7 @@ struct RequestSendView: View {
             Spacer()
             
             // Footer
-            Text("\(viewModel.driverCount) tasker has received your request. Your request will auto refresh every 10 seconds")
+            Text("\(driverCount) tasker has received your request. Your request will auto refresh every 10 seconds")
                 .font(.footnote)
                 .foregroundColor(.white.opacity(0.9))
                 .multilineTextAlignment(.center)
@@ -134,7 +136,7 @@ struct RequestSendView: View {
 }
 
 #Preview {
-    RequestSendView(estimateFare: "$1900 ~  5.2KM")
+    RequestSendView(estimateFare: "$1900 ~  5.2KM", driverCount: 0)
 }
 
 
